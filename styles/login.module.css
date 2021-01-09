@@ -1,0 +1,6 @@
+.tableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  padding: 1.5rem;
+  color: white;
+}

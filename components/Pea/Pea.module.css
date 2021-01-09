@@ -1,0 +1,104 @@
+.pea {
+  background: linear-gradient(#c0e5c8, rgb(44, 96, 86));
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  margin: auto;
+  border: 2px solid #16302b;
+  transition: all 1s ease-in-out;
+  text-align: center;
+  z-index: 4;
+}
+
+.peaText {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 8px;
+}
+
+.pea:hover {
+  transform: scale3d(1.15, 1.15, 1.15);
+  transform-origin: center;
+  transition: all 0.5s ease-in;
+  -webkit-transition: all 0.5s ease-in;
+}
+
+.peaContainer {
+  position: relative;
+  height: 4rem;
+  width: 4rem;
+  margin: auto;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.peaContainer:nth-child(1) {
+  margin-top: 1rem;
+}
+
+.slideOutText {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  border-radius: 50%;
+  left: 0;
+  width: 0;
+  opacity: 0;
+  line-height: 4rem;
+  visibility: hidden;
+  height: 4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  background: white;
+  color: white;
+  z-index: -1;
+  border: 2px solid #16302b;
+  transition: all 0.4s ease-in-out;
+  text-transform: uppercase;
+}
+
+.slideOutTextTransition::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.slideOutTextTransition {
+  position: absolute;
+  top: 0;
+  padding-left: 5rem;
+  padding-right: 4rem;
+  border-radius: 5rem;
+  overflow-y: hidden;
+  left: 0;
+  bottom: 0;
+  color: black;
+  width: 20rem;
+  border: 2px solid #16302b;
+  line-height: 3.5rem;
+  height: 4rem;
+  max-height: 4rem;
+  opacity: 1;
+  text-align: center;
+  visibility: visible;
+  text-transform: uppercase;
+  transition: width 0.6s, opacity 0.6s;
+  white-space: nowrap;
+  background: white;
+  z-index: -1;
+}
+
+.slideOutBar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  background-color: 'red';
+}
+
+.innerText {
+  margin: auto;
+}

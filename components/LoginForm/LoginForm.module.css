@@ -1,0 +1,12 @@
+.tableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  padding: 1.5rem;
+}
+
+.inputStyle {
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 0.25rem;
+}

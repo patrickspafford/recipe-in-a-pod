@@ -1,0 +1,36 @@
+.outerContainer {
+  display: flex;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.podContainer {
+  height: 20rem;
+  width: 7rem;
+  background: rgba(133, 183, 157, 0.95);
+  border-radius: 50%;
+  border: 3px solid #16302b;
+  text-align: center;
+  transition: all 0.8s ease-in-out;
+}
+
+.podContainerRotated {
+  height: 20rem;
+  width: 7rem;
+  background: rgba(133, 183, 157, 0.95);
+  border-radius: 50%;
+  border: 3px solid #16302b;
+  text-align: center;
+  transform: rotate(45deg) translate(97px, -86px);
+  transition: 0.4s ease-in-out transform;
+}
+
+.imageContainer {
+  margin-left: -5rem;
+  border-radius: 2rem;
+}
+
+.image {
+  border-radius: 1.6rem;
+  border: 3px solid #16302b !important;
+}

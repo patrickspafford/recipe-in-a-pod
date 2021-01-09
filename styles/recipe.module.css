@@ -1,0 +1,22 @@
+.recipeImage {
+  border-radius: 1rem !important;
+}
+
+.recipeContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.ingredientDirectionsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 3rem;
+}
+
+.tableContainer {
+  margin: auto;
+}
+
+.directionsContainer {
+  margin: auto;
+}

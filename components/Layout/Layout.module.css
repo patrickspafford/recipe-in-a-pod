@@ -1,0 +1,11 @@
+.imageContainer {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.childrenContainer {
+    padding: 2rem;
+}
