@@ -1,7 +1,11 @@
+import { ChangeEvent } from 'react'
 
 type Action = {
     type: string,
     payload: any,
+}
+type FirebaseError = {
+    code: string
 }
 
 type PseudoEvent = {
@@ -9,6 +13,8 @@ type PseudoEvent = {
         value: any
     }
 }
+
+type TextFieldChange = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
 type FirebaseUser = {
     uid: string
@@ -18,4 +24,6 @@ type FirebaseUser = {
 
 type PeaType = 'name' | 'duration' | 'cost' | 'rating'
 
-export type { Action, PeaType, FirebaseUser, PseudoEvent }
+export type {
+  Action, PeaType, FirebaseUser, PseudoEvent, FirebaseError, TextFieldChange,
+}

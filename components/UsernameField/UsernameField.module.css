@@ -1,0 +1,14 @@
+.tableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 0.6fr));
+  padding: 1.5rem;
+  padding-top: 5rem;
+  justify-content: center;
+}
+
+.textField {
+  background-color: white;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10rem;
+}

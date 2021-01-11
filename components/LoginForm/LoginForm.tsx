@@ -1,12 +1,12 @@
 import { useState, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
-import { useAuth } from '../../hooks/useAuth'
 import { useRouter } from 'next/router'
-import { TextField, Button } from '@material-ui/core'
-import { SnackBar } from '../../components'
-import colors from '../../utils/colors'
+import { useAuth } from '../../hooks/useAuth'
+import {
+  SnackBar, EmailField, PasswordField, SubmitButton,
+} from '../../components'
 import { emailPattern } from '../../utils/regex'
-import { PseudoEvent } from '../../types'
+import { PseudoEvent, FirebaseError } from '../../types'
 import styles from './LoginForm.module.css'
 
 interface LoginData {
@@ -15,144 +15,118 @@ interface LoginData {
 }
 
 const LoginForm = () => {
+  // Form field values
+  const [password, setPassword] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  // Validation errors
+  const [emailError, setEmailError] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<string>('')
+  // Error after submit
+  const [loginError, setLoginError] = useState<string>('')
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+  // Other state
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [hasEditedEmail, setHasEditedEmail] = useState<boolean>(false)
+  const [hasEditedPassword, setHasEditedPassword] = useState<boolean>(false)
 
-    // Form field values
-    const [password, setPassword] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    // Validation errors
-    const [emailError, setEmailError] = useState<string>('')
-    const [passwordError, setPasswordError] = useState<string>('')
-    // Error after submit
-    const [loginError, setLoginError] = useState<string>('')
-    const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-    // Other state
-    const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [hasEditedEmail, setHasEditedEmail] = useState<boolean>(false)
-    const [hasEditedPassword, setHasEditedPassword] = useState<boolean>(false)
+  const { handleSubmit, register } = useForm()
+  const auth = useAuth()
+  const router = useRouter()
 
-    const { handleSubmit, register } = useForm()
-    const auth = useAuth()
-    const router = useRouter()
+  const handlePasswordChange = (e:
+    ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
+  ignoreHasEditedPassword?: boolean) => {
+    const currentPasswordValue = e.target.value
+    setPassword(currentPasswordValue)
+    if (!hasEditedPassword) setHasEditedPassword(true)
+    if (currentPasswordValue.length === 0 && hasEditedPassword && !ignoreHasEditedPassword) {
+      setPasswordError('Please enter a password.')
+    } else if (currentPasswordValue.length < 6 && hasEditedPassword && !ignoreHasEditedPassword) {
+      setPasswordError('Password must be at least 6 characters.')
+    } else if (currentPasswordValue.length > 128) {
+      setPasswordError('Password must not exceed 128 characters.')
+    } else if (currentPasswordValue.length === 1) {
+      setPasswordError('Password must be at least 6 characters.')
+    } else setPasswordError('')
+  }
 
-    const onSubmit = (data: LoginData) => {
-        setHasEditedEmail(true)
-        setHasEditedPassword(true)
-        return auth.signIn(data)
-            .then(() => {
-            setLoginError('')
-            router.push('/')
-                .then(() => console.log('Signed in successfully.'))
-                .catch(e => console.error(e))
-            })
-            .catch((err: any) => {
-                if (err.code && err.code.includes('wrong-password')) {
-                    setLoginError('Incorrect password.')
-                } else {
-                    setLoginError('Something went wrong. Please check that the email you entered is correct.')
-                }
-                setSnackbarOpen(true)
-                const pseudoEvent = {
-                    target: {
-                        value: '',
-                    },
-                }
-                const ignoreHasEditedPassword = true
-                handlePasswordChange(pseudoEvent, ignoreHasEditedPassword)
-            })
-        
-    }
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const currentEmailValue = e.target.value
+    setEmail(currentEmailValue)
+    if (!hasEditedEmail) setHasEditedEmail(true)
+    if (currentEmailValue.length === 0 && hasEditedEmail) {
+      setEmailError('Please enter an email address.')
+    } else if (!currentEmailValue.match(emailPattern)) {
+      setEmailError('Please enter a valid email address.')
+    } else if (currentEmailValue.length > 128) {
+      setEmailError('Email address must not exceed 128 characters.')
+    } else setEmailError('')
+  }
 
-    const handleEmailChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const currentEmailValue = e.target.value
-        setEmail(currentEmailValue)
-        if (!hasEditedEmail) setHasEditedEmail(true)
-        if (currentEmailValue.length === 0 && hasEditedEmail) {
-            setEmailError('Please enter an email address.')
+  const onSubmit = (data: LoginData) => {
+    setHasEditedEmail(true)
+    setHasEditedPassword(true)
+    return auth.signIn(data)
+      .then(() => {
+        setLoginError('')
+        router.push('/')
+          .then(() => console.log('Signed in successfully.'))
+          .catch((e) => console.error(e))
+      })
+      .catch((err: FirebaseError) => {
+        if (err.code && err.code.includes('wrong-password')) {
+          setLoginError('Incorrect password.')
+        } else {
+          setLoginError('Something went wrong. Please check that the email you entered is correct.')
         }
-        else if (!currentEmailValue.match(emailPattern)) {
-            setEmailError('Please enter a valid email address.')
+        setSnackbarOpen(true)
+        const pseudoEvent = {
+          target: {
+            value: '',
+          },
         }
-        else if (currentEmailValue.length > 128) {
-            setEmailError('Email address must not exceed 128 characters.')
-        } else setEmailError('')
-    }
+        const ignoreHasEditedPassword = true
+        handlePasswordChange(pseudoEvent, ignoreHasEditedPassword)
+      })
+  }
 
-    const handlePasswordChange =
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
-     ignoreHasEditedPassword?: boolean
-    ) => {
-        const currentPasswordValue = e.target.value
-        setPassword(currentPasswordValue)
-        if (!hasEditedPassword) setHasEditedPassword(true)
-        if (currentPasswordValue.length === 0 && hasEditedPassword && !ignoreHasEditedPassword) {
-            setPasswordError('Please enter a password.')
-        }
-        else if (currentPasswordValue.length < 6 && hasEditedPassword && !ignoreHasEditedPassword) {
-            setPasswordError('Password must be at least 6 characters.')
-        }
-        else if (currentPasswordValue.length > 128)  {
-            setPasswordError('Password must not exceed 128 characters.')
-        } else setPasswordError('')
-    }
+  const disableSubmit = emailError.length > 0 || passwordError.length > 0
+  || !hasEditedEmail || !hasEditedPassword || password.length < 6
 
-    const disableSubmit = emailError.length > 0 || passwordError.length > 0 || !hasEditedEmail || !hasEditedPassword
-
-    return (
-            <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className={styles.tableStyle}>
-                    <TextField
-                        id='email'
-                        className={styles.inputStyle}
-                        type='email'
-                        name='email'
-                        variant='filled'
-                        label='Email'
-                        value={email}
-                        error={emailError.length > 0}
-                        helperText={emailError}
-                        onChange={e => handleEmailChange(e)}
-                        inputRef={register({
-                            required: true,
-                        })}
-                    />
-                </div>
-                <div className={styles.tableStyle}>
-                    <TextField
-                        id='currentPassword'
-                        type={showPassword ? 'text' : 'password'}
-                        name='currentPassword'
-                        className={styles.inputStyle}
-                        label='Password'
-                        value={password}
-                        inputRef={register({
-                            required: true
-                        })}
-                        error={passwordError.length > 0}
-                        helperText={passwordError}
-                        onChange={e => handlePasswordChange(e)}
-                        variant='filled'
-                    />
-                </div>
-                <div className={styles.tableStyle}>
-                    <Button
-                    type='submit'
-                    disabled={disableSubmit}
-                    size='large'
-                    style={{ backgroundColor: colors.quinary }}
-                    >
-                        Log in
-                    </Button>
-                </div>
-            </form>
-            <SnackBar
-              open={snackbarOpen}
-              setOpen={(bool: boolean) => setSnackbarOpen(bool)}
-              message={loginError}
-              severity='error'
-            />
-            </>
-    )
+  return (
+    <>
+      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+        <EmailField
+          id="email"
+          name="email"
+          value={email}
+          error={emailError}
+          onChange={(e) => handleEmailChange(e)}
+          inputRef={register({
+            required: true,
+          })}
+        />
+        <PasswordField
+          id="currentPassword"
+          showPassword={showPassword}
+          value={password}
+          inputRef={register({
+            required: true,
+          })}
+          error={passwordError}
+          onChange={(e) => handlePasswordChange(e)}
+          setShowPassword={() => setShowPassword(!showPassword)}
+        />
+        <SubmitButton disabled={disableSubmit}>Log In</SubmitButton>
+      </form>
+      <SnackBar
+        open={snackbarOpen}
+        setOpen={(bool: boolean) => setSnackbarOpen(bool)}
+        message={loginError}
+        severity="error"
+      />
+    </>
+  )
 }
 
 export default LoginForm

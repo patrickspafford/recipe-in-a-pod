@@ -1,15 +1,11 @@
-import Link from 'next/link'
-import { SignUpForm }  from '../components'
+import { SignUpForm, Layout, FormLayout } from '../components'
 
 const SignUpPage = () => (
-    <div>
-        <p>Sign up</p>
-        <p>Already have an account?</p>
-        <Link href='/login'>
-            <a>Log in</a>
-        </Link>
-        <SignUpForm />
-    </div>
+  <Layout title="Sign Up">
+    <FormLayout>
+      <SignUpForm />
+    </FormLayout>
+  </Layout>
 )
 
 export default SignUpPage

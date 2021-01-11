@@ -1,0 +1,11 @@
+.tableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  padding: 1.5rem;
+  color: white;
+}
+
+.button {
+  margin-left: 1rem;
+  padding: 0.15rem 0.5rem;
+}
