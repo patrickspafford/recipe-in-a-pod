@@ -1,31 +1,45 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // tslint:disable-next-line: no-import-side-effect
 import '../styles/globals.css'
-import { AuthProvider } from '../hooks/useAuth'
-import { CookiesProvider } from 'react-cookie' 
+import { ReactNode } from 'react'
+import { CookiesProvider } from 'react-cookie'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { AuthProvider } from '../hooks/useAuth'
+import { ProfilePhotoProvider } from '../contexts/ProfilePhotoContext'
 import colors from '../utils/colors'
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: colors.primary
-    }
-  }
+      main: colors.primary,
+    },
+  },
 })
 
-const SafeHydrate = ({ children }) => (
+interface ISafeHydrate {
+  children: ReactNode
+}
+
+const SafeHydrate = ({ children }: ISafeHydrate) => (
   <div suppressHydrationWarning>
     {typeof window === 'undefined' ? null : children}
   </div>
 )
 
-function MyApp({ Component, pageProps }) {
+interface IMyApp {
+  Component: any
+  pageProps: any
+}
+
+function MyApp({ Component, pageProps }: IMyApp) {
   return (
     <SafeHydrate>
       <CookiesProvider>
         <ThemeProvider theme={theme}>
           <AuthProvider>
-            <Component {...pageProps} />
+            <ProfilePhotoProvider>
+              <Component {...pageProps} />
+            </ProfilePhotoProvider>
           </AuthProvider>
         </ThemeProvider>
       </CookiesProvider>

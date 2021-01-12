@@ -1,5 +1,5 @@
 import {
-  IconButton, MenuItem, Menu, MenuList,
+  IconButton, MenuItem, Menu,
 } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 import Image from 'next/image'
@@ -13,14 +13,15 @@ interface IProfileMenu {
     handleLogInOut: any
     isLoggedIn: boolean
     username: string
+    imageSrc: string
 }
 const ProfileMenu = ({
-  anchor, handleClose, handleClick, isLoggedIn, username, handleLogInOut,
+  anchor, handleClose, handleClick, imageSrc, isLoggedIn, username, handleLogInOut,
 }: IProfileMenu) => (
   <div>
     <IconButton aria-controls="recipe-menu" aria-haspopup="true" onClick={handleClick}>
       {isLoggedIn
-        ? (<Image className={styles.profilePhoto} id="profile-photo" width={35} height={35} src="/shrimp.jpg" alt="Profile" />)
+        ? (<Image className={styles.profilePhoto} id="profile-photo" width={35} height={35} src={imageSrc || '/shrimp.jpg'} alt="Profile" />)
         : <AccountCircle fontSize="large" style={{ color: 'white' }} />}
     </IconButton>
     <Menu
@@ -37,11 +38,15 @@ const ProfileMenu = ({
               {username}
             </MenuItem>
           </Link>
-          <MenuItem onClick={handleLogInOut}>Log Out</MenuItem>
+          <MenuItem onClick={handleLogInOut}>
+            Log Out
+          </MenuItem>
         </div>
       )
         : (
-          <MenuItem onClick={handleLogInOut}>Log In</MenuItem>
+          <MenuItem onClick={handleLogInOut}>
+            Log In
+          </MenuItem>
         )}
     </Menu>
   </div>

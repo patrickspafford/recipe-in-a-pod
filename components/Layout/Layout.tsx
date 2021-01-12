@@ -1,4 +1,6 @@
-import { ReactNode, useState, MouseEvent } from 'react'
+import {
+  ReactNode, useState, useContext, MouseEvent,
+} from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { AppBar, Typography, IconButton } from '@material-ui/core'
@@ -7,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import { ProfileMenu } from '../../components'
 import { useAuth } from '../../hooks/useAuth'
+import { ProfilePhotoContext } from '../../contexts/ProfilePhotoContext'
 import colors from '../../utils/colors'
 import styles from './Layout.module.css'
 
@@ -91,6 +94,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         {!hideLogInOut ? (
           <ProfileMenu
             anchor={menuAnchor}
+            imageSrc={auth.profilePhoto}
             isLoggedIn={auth.loggedIn}
             username={auth.username}
             handleClose={handleMenuClose}

@@ -1,4 +1,6 @@
-import { useContext, createContext, ReactNode } from 'react'
+import {
+  useContext, createContext, ReactNode, useState,
+} from 'react'
 import { useCookies } from 'react-cookie'
 import { auth, db, storage } from '../firebase'
 import { FirebaseUser } from '../types'
@@ -10,6 +12,7 @@ export const useAuthProvider = () => {
     userCookieKey,
     usernameCookieKey,
   ])
+  const [profilePhoto, setProfilePhoto] = useState<string>('/pods.svg')
 
   const createUser = async (firebaseUser: FirebaseUser) => db
     .collection('users')
@@ -64,15 +67,37 @@ export const useAuthProvider = () => {
     return alreadyExists
   }
 
-  const setProfilePhoto = async (file: File) => {
+  const setProfilePhotoInStorage = async (file: File) => {
     const storageRef = storage.ref()
+    if (!userCookie[usernameCookieKey]) {
+      throw new Error('Username not found for profile photo setting.')
+    }
     const profilePhotoRef = storageRef.child(
-      `profile-photos/${userCookie[userCookieKey]}`,
+      `profile-photos/${userCookie[usernameCookieKey]}`,
     )
     return profilePhotoRef
       .put(file)
       .then(() => 'Successfully uploaded profile photo!')
       .catch((err) => (err))
+  }
+
+  const getProfilePhoto = async () => {
+    const storageRef = storage.ref()
+    storageRef.child(`profile-photos/${userCookie[usernameCookieKey]}`).getDownloadURL()
+      .then((url) => {
+        const xhr = new XMLHttpRequest()
+        xhr.responseType = 'blob'
+        // eslint-disable-next-line no-unused-vars
+        xhr.onload = (e) => {
+          // eslint-disable-next-line no-unused-vars
+          const blob = xhr.response
+        }
+        xhr.open('GET', url)
+        xhr.send()
+        setProfilePhoto(url)
+      })
+      .then(() => console.log('Got profile photo!'))
+      .catch((err) => console.error(err))
   }
 
   const signUp = async ({ name, email, currentPassword }) => {
@@ -93,20 +118,6 @@ export const useAuthProvider = () => {
       await createUser({ uid: response.user.uid, email, name })
       console.log('Created username successfully')
       await getUsername(response.user)
-
-      /*
-      return auth
-        .createUserWithEmailAndPassword(email, currentPassword)
-        .then((response) => {
-          auth.currentUser.sendEmailVerification()
-            .then(() => console.log('Created user successfully!'))
-            .then(() => createUser({ uid: response.user.uid, email, name }))
-            .then(() => console.log('Created username successfully!'))
-            .then(() => getUsername(response.user))
-            .catch((err) => err)
-        })
-        .catch((err: Error) => err)
-        */
     }
   }
 
@@ -149,7 +160,10 @@ export const useAuthProvider = () => {
     user,
     username,
     loggedIn: user && username,
+    profilePhoto,
     setUserCookie,
+    setProfilePhotoInStorage,
+    getProfilePhoto,
     signUp,
     signIn,
     logOut,
@@ -157,7 +171,7 @@ export const useAuthProvider = () => {
   }
 }
 
-const authContext = createContext({ user: {} })
+const authContext = createContext({ user: {}, profilePhoto: '/pods.svg' })
 const { Provider } = authContext
 
 interface IAuthProvider {
