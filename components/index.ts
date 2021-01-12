@@ -12,6 +12,7 @@ import SubmitButton from './SubmitButton'
 import FormLayout from './FormLayout'
 import FormExtra from './FormExtra'
 import LoadingIndicator from './LoadingIndicator'
+import ProfileMenu from './ProfileMenu'
 
 export {
   Layout,
@@ -19,6 +20,7 @@ export {
   IngredientTable,
   UsernameField,
   Directions,
+  ProfileMenu,
   SignUpForm,
   LoginForm,
   SnackBar,

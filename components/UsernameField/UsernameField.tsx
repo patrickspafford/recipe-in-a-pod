@@ -28,9 +28,24 @@ const UsernameField = ({
     <TextField
       id={id}
       autoFocus={autoFocus}
+      inputProps={{
+        style: {
+          marginLeft: '1rem',
+        },
+      }}
       name={name}
       className={styles.textField}
       type="text"
+      InputLabelProps={{
+        style: {
+          marginLeft: '1rem',
+        },
+      }}
+      FormHelperTextProps={{
+        style: {
+          marginLeft: '2rem',
+        },
+      }}
       variant="filled"
       label={label}
       error={error.length > 0}

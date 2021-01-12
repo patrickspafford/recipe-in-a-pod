@@ -55,10 +55,13 @@ const Pod = ({ imageSrc }) => {
   return (
     <Link href="/recipes/1">
       <div className={styles.outerContainer}>
-        <div className={rotated ? styles.podContainerRotated : styles.podContainer} style={{ zIndex: 3 }}>
-          {peas.map((pea, i) => (
+        <div
+          className={rotated ? styles.podContainerRotated : styles.podContainer}
+          style={{ zIndex: 3 }}
+        >
+          {peas.map((pea) => (
             <Pea
-              key={i}
+              key={pea.title}
               title={pea.title}
               value={pea.value}
               type={pea.type}

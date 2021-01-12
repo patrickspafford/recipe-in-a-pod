@@ -1,6 +1,7 @@
 import { TextField } from '@material-ui/core'
 import { ChangeEvent } from 'react'
 import styles from './EmailField.module.css'
+import colors from '../../utils/colors'
 
 interface IEmailField {
     value: string
@@ -26,7 +27,22 @@ const EmailField = ({
       id={id}
       type="email"
       label={label}
+      inputProps={{
+        style: {
+          marginLeft: '1rem',
+        },
+      }}
       className={styles.textField}
+      InputLabelProps={{
+        style: {
+          marginLeft: '1rem',
+        },
+      }}
+      FormHelperTextProps={{
+        style: {
+          marginLeft: '2rem',
+        },
+      }}
       name={name}
       variant="filled"
       value={value}

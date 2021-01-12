@@ -56,6 +56,9 @@ const PasswordField = ({
         htmlFor={id}
         error={error.length > 0}
         variant="filled"
+        style={{
+          marginLeft: '1rem',
+        }}
       >
         {label}
       </InputLabel>
@@ -68,6 +71,9 @@ const PasswordField = ({
         disableUnderline={error.length === 0}
         error={error.length > 0}
         onChange={onChange}
+        style={{
+          marginLeft: '1rem',
+        }}
         inputRef={inputRef}
         endAdornment={(
           <InputAdornment position="end">
@@ -84,9 +90,11 @@ const PasswordField = ({
       <FormHelperText
         error={error.length > 0}
         variant="filled"
+        style={{
+          marginLeft: '2rem',
+        }}
       >
         {error}
-
       </FormHelperText>
     </FormControl>
   </div>

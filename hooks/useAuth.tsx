@@ -1,12 +1,15 @@
 import { useContext, createContext, ReactNode } from 'react'
 import { useCookies } from 'react-cookie'
-import { auth, db } from '../firebase'
+import { auth, db, storage } from '../firebase'
 import { FirebaseUser } from '../types'
 
 export const useAuthProvider = () => {
   const userCookieKey = 'recipe-user'
   const usernameCookieKey = 'recipe-username'
-  const [userCookie, setUserCookie] = useCookies([userCookieKey, usernameCookieKey])
+  const [userCookie, setUserCookie] = useCookies([
+    userCookieKey,
+    usernameCookieKey,
+  ])
 
   const createUser = async (firebaseUser: FirebaseUser) => db
     .collection('users')
@@ -36,7 +39,7 @@ export const useAuthProvider = () => {
         })
         return foundUsername
       }
-      const usernameNotFound = 'Username Not Found'
+      const usernameNotFound = ''
       setUserCookie(usernameCookieKey, usernameNotFound, {
         path: '/',
         maxAge: 3600,
@@ -48,8 +51,10 @@ export const useAuthProvider = () => {
 
   const usernameAlreadyExists = async (username: string) => {
     let alreadyExists = false
-    await db.collection('users')
-      .get().then((snapshot) => {
+    await db
+      .collection('users')
+      .get()
+      .then((snapshot) => {
         snapshot.forEach((doc) => {
           if (doc.data().name === username) {
             alreadyExists = true
@@ -57,6 +62,17 @@ export const useAuthProvider = () => {
         })
       })
     return alreadyExists
+  }
+
+  const setProfilePhoto = async (file: File) => {
+    const storageRef = storage.ref()
+    const profilePhotoRef = storageRef.child(
+      `profile-photos/${userCookie[userCookieKey]}`,
+    )
+    return profilePhotoRef
+      .put(file)
+      .then(() => 'Successfully uploaded profile photo!')
+      .catch((err) => (err))
   }
 
   const signUp = async ({ name, email, currentPassword }) => {
@@ -68,7 +84,10 @@ export const useAuthProvider = () => {
     if (await usernameAlreadyExists(name)) {
       throw new Error(`Username ${name} already exists.`)
     } else {
-      const response = await auth.createUserWithEmailAndPassword(email, currentPassword)
+      const response = await auth.createUserWithEmailAndPassword(
+        email,
+        currentPassword,
+      )
       await auth.currentUser.sendEmailVerification()
       console.log('Created user successfully')
       await createUser({ uid: response.user.uid, email, name })
@@ -92,7 +111,8 @@ export const useAuthProvider = () => {
   }
 
   const sendForgotPasswordEmail = async ({ email }) => {
-    const sentEmailSuccessfully = await auth.sendPasswordResetEmail(email)
+    const sentEmailSuccessfully = await auth
+      .sendPasswordResetEmail(email)
       .then(() => true)
       .catch((err) => {
         console.error(err)
@@ -106,24 +126,24 @@ export const useAuthProvider = () => {
     setUserCookie(usernameCookieKey, '')
   }
 
-  const signIn = ({ email, currentPassword }) => (
-    new Promise<void>((resolve, reject) => auth
-      .signInWithEmailAndPassword(email, currentPassword)
-      .then((response) => {
-        setUserCookie(userCookieKey, JSON.stringify(response.user), {
-          path: '/',
-          maxAge: 3600,
-          sameSite: true,
-        })
-        return response.user
+  const signIn = ({ email, currentPassword }) => new Promise<void>((resolve, reject) => auth
+    .signInWithEmailAndPassword(email, currentPassword)
+    .then((response) => {
+      setUserCookie(userCookieKey, JSON.stringify(response.user), {
+        path: '/',
+        maxAge: 3600,
+        sameSite: true,
       })
-      .then((signedInUser) => getUsername(signedInUser))
-      .then(() => resolve())
-      .catch((err) => reject(err)))
-  )
+      return response.user
+    })
+    .then((signedInUser) => getUsername(signedInUser))
+    .then(() => resolve())
+    .catch((err) => reject(err)))
 
   const user = userCookie[userCookieKey] ? userCookie[userCookieKey] : null
-  const username = userCookie[usernameCookieKey] ? userCookie[usernameCookieKey] : null
+  const username = userCookie[usernameCookieKey]
+    ? userCookie[usernameCookieKey]
+    : null
 
   return {
     user,
@@ -141,16 +161,12 @@ const authContext = createContext({ user: {} })
 const { Provider } = authContext
 
 interface IAuthProvider {
-    children: ReactNode
+  children: ReactNode
 }
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const authProviderContent = useAuthProvider()
-  return (
-    <Provider value={authProviderContent}>
-      {children}
-    </Provider>
-  )
+  return <Provider value={authProviderContent}>{children}</Provider>
 }
 
 export const useAuth: any = () => useContext(authContext)
