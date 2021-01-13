@@ -1,5 +1,5 @@
 import {
-  useContext, createContext, ReactNode, useState,
+  useContext, createContext, ReactNode,
 } from 'react'
 import { useCookies } from 'react-cookie'
 import { auth, db, storage } from '../firebase'
@@ -8,11 +8,12 @@ import { FirebaseUser } from '../types'
 export const useAuthProvider = () => {
   const userCookieKey = 'recipe-user'
   const usernameCookieKey = 'recipe-username'
+  const profilePhotoKey = 'recipe-profile-photo'
   const [userCookie, setUserCookie] = useCookies([
     userCookieKey,
     usernameCookieKey,
+    profilePhotoKey,
   ])
-  const [profilePhoto, setProfilePhoto] = useState<string>('/pods.svg')
 
   const createUser = async (firebaseUser: FirebaseUser) => db
     .collection('users')
@@ -81,9 +82,9 @@ export const useAuthProvider = () => {
       .catch((err) => (err))
   }
 
-  const getProfilePhoto = async () => {
+  const getProfilePhoto = async (username: string) => {
     const storageRef = storage.ref()
-    storageRef.child(`profile-photos/${userCookie[usernameCookieKey]}`).getDownloadURL()
+    storageRef.child(`profile-photos/${username}`).getDownloadURL()
       .then((url) => {
         const xhr = new XMLHttpRequest()
         xhr.responseType = 'blob'
@@ -94,7 +95,11 @@ export const useAuthProvider = () => {
         }
         xhr.open('GET', url)
         xhr.send()
-        setProfilePhoto(url)
+        setUserCookie(profilePhotoKey, url, {
+          path: '/',
+          maxAge: 3600,
+          sameSite: true,
+        })
       })
       .then(() => console.log('Got profile photo!'))
       .catch((err) => console.error(err))
@@ -135,6 +140,7 @@ export const useAuthProvider = () => {
   const logOut = () => {
     setUserCookie(userCookieKey, '')
     setUserCookie(usernameCookieKey, '')
+    setUserCookie(profilePhotoKey, '')
   }
 
   const signIn = ({ email, currentPassword }) => new Promise<void>((resolve, reject) => auth
@@ -148,6 +154,7 @@ export const useAuthProvider = () => {
       return response.user
     })
     .then((signedInUser) => getUsername(signedInUser))
+    .then((username) => getProfilePhoto(username))
     .then(() => resolve())
     .catch((err) => reject(err)))
 
@@ -155,6 +162,7 @@ export const useAuthProvider = () => {
   const username = userCookie[usernameCookieKey]
     ? userCookie[usernameCookieKey]
     : null
+  const profilePhoto = userCookie[profilePhotoKey] ? userCookie[profilePhotoKey] : null
 
   return {
     user,
@@ -171,8 +179,8 @@ export const useAuthProvider = () => {
   }
 }
 
-const authContext = createContext({ user: {}, profilePhoto: '/pods.svg' })
-const { Provider } = authContext
+export const AuthContext = createContext({ user: {}, username: '', loggedIn: false })
+const { Provider } = AuthContext
 
 interface IAuthProvider {
   children: ReactNode
@@ -183,4 +191,4 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
   return <Provider value={authProviderContent}>{children}</Provider>
 }
 
-export const useAuth: any = () => useContext(authContext)
+export const useAuth: any = () => useContext(AuthContext)
