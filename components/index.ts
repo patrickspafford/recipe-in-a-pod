@@ -13,6 +13,7 @@ import FormLayout from './FormLayout'
 import FormExtra from './FormExtra'
 import LoadingIndicator from './LoadingIndicator'
 import ProfileMenu from './ProfileMenu'
+import withConditionalRedirect from './withConditionalRedirect'
 
 export {
   Layout,
@@ -30,4 +31,5 @@ export {
   FormLayout,
   FormExtra,
   LoadingIndicator,
+  withConditionalRedirect,
 }
