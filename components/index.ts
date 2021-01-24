@@ -13,10 +13,15 @@ import FormLayout from './FormLayout'
 import FormExtra from './FormExtra'
 import LoadingIndicator from './LoadingIndicator'
 import ProfileMenu from './ProfileMenu'
-import withConditionalRedirect from './withConditionalRedirect'
+import AppBar from './AppBar'
+import Typography from './Typography'
+import IconButton from './IconButton'
 
 export {
+  AppBar,
   Layout,
+  Typography,
+  IconButton,
   Pod,
   IngredientTable,
   UsernameField,
@@ -31,5 +36,4 @@ export {
   FormLayout,
   FormExtra,
   LoadingIndicator,
-  withConditionalRedirect,
 }

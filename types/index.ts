@@ -24,6 +24,14 @@ type FirebaseUser = {
 
 type PeaType = 'name' | 'duration' | 'cost' | 'rating'
 
+type UserCookie = {
+    id: string,
+    email: string,
+    token: string,
+    username: string,
+    profilePhotoLink: string,
+}
+
 export type {
-  Action, PeaType, FirebaseUser, PseudoEvent, FirebaseError, TextFieldChange,
+  Action, PeaType, FirebaseUser, PseudoEvent, FirebaseError, TextFieldChange, UserCookie,
 }

@@ -1,20 +1,16 @@
 import Link from 'next/link'
 import { Layout, Pod } from '../components'
-import { useAuth } from '../hooks/useAuth'
+import useUser from '../hooks/useUser'
+import styles from '../styles/index.module.css'
 
 const Home = () => {
-  const auth = useAuth()
+  const { loggedIn } = useUser()
   return (
     <Layout title="My Pods">
       {
-          auth.loggedIn
+          loggedIn
             ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(22rem, 1fr))',
-                gap: '1.5rem',
-              }}
-              >
+              <div className={styles.podGrid}>
                 <Pod imageSrc="/shrimp.jpg" />
                 <Pod imageSrc="/shrimp.jpg" />
                 <Pod imageSrc="/shrimp.jpg" />
@@ -23,11 +19,7 @@ const Home = () => {
             )
             : (
               <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
-                🧁
-                {' '}
                 <Link href="/login">Sign in</Link>
-                {' '}
-                you little fudge muffin stick.
               </div>
             )
       }

@@ -50,7 +50,13 @@ const ProfileMenu = ({
     >
       {isLoggedIn ? (
         <div>
-          <Link href={`/profile/${username}`}>
+          <Link
+            href={{
+              pathname: '/profile/[id]',
+              query: { id: `${username}` },
+            }}
+            as={`/profile/${username}`}
+          >
             <MenuItem>{username}</MenuItem>
           </Link>
           <MenuItem onClick={handleLogInOut}>Log Out</MenuItem>

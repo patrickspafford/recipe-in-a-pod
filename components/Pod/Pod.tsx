@@ -62,12 +62,11 @@ const Pod = ({ imageSrc }) => {
           {peas.map((pea) => (
             <Pea
               key={pea.title}
+              allowHover={!rotated}
               title={pea.title}
               value={pea.value}
               type={pea.type}
               barColor={pea.color}
-              onMouseEnter={() => {}}
-              onMouseLeave={() => {}}
             />
           ))}
         </div>

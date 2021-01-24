@@ -1,11 +1,12 @@
 import { useRef, FormEvent } from 'react'
-import { Layout } from '../../components'
-import { useAuth, AuthContext } from '../../hooks/useAuth'
+import { Layout } from '../components'
+import { useAuth } from '../hooks/useAuth'
 
 const ProfilePage = () => {
   const auth = useAuth()
   const fileSubmissionRef = useRef<HTMLInputElement | null>(null)
 
+  /*
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const profilePhoto = fileSubmissionRef.current.files[0]
@@ -16,7 +17,9 @@ const ProfilePage = () => {
         .catch((err) => console.error(err)))
       .catch((err: Error) => console.error(err))
   }
+  */
 
+  /*
   return (
     <Layout title={auth.username || 'Username Not Found'}>
       {auth.loggedIn ? 'Profile Page' : 'Nope'}
@@ -26,6 +29,8 @@ const ProfilePage = () => {
       </form>
     </Layout>
   )
+  */
+  return <Layout title="Profile">{auth.username}</Layout>
 }
 
 export default ProfilePage

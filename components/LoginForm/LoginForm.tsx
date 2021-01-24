@@ -1,20 +1,20 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useAuth } from '../../hooks/useAuth'
 import {
   SnackBar, EmailField, PasswordField, SubmitButton,
 } from '../../components'
 import { emailPattern } from '../../utils/regex'
 import { PseudoEvent, FirebaseError } from '../../types'
-import styles from './LoginForm.module.css'
+import { ApiContext } from '../../contexts/apiContext'
 
 interface LoginData {
     email: string
-    password: string
+    currentPassword: string
 }
 
 const LoginForm = () => {
+  const { apiService } = useContext(ApiContext)
   // Form field values
   const [password, setPassword] = useState<string>('')
   const [email, setEmail] = useState<string>('')
@@ -30,7 +30,6 @@ const LoginForm = () => {
   const [hasEditedPassword, setHasEditedPassword] = useState<boolean>(false)
 
   const { handleSubmit, register } = useForm()
-  const auth = useAuth()
   const router = useRouter()
 
   const handlePasswordChange = (e:
@@ -66,7 +65,7 @@ const LoginForm = () => {
   const onSubmit = (data: LoginData) => {
     setHasEditedEmail(true)
     setHasEditedPassword(true)
-    return auth.signIn(data)
+    return apiService.signIn(data)
       .then(() => {
         setLoginError('')
         router.push('/')
@@ -95,7 +94,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <EmailField
           id="email"
           name="email"

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { MouseEvent, useState } from 'react'
 import { PeaType } from '../../types'
 import styles from './Pea.module.css'
 
@@ -7,8 +7,7 @@ interface IPea {
     type: PeaType
     value: number | string
     barColor: string
-    onMouseEnter: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-    onMouseLeave: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+    allowHover: boolean
 }
 
 const peaBarMax = {
@@ -18,18 +17,18 @@ const peaBarMax = {
 }
 
 const Pea = ({
-  title, type, onMouseEnter, onMouseLeave, barColor, value,
+  title, type, barColor, value, allowHover,
 }: IPea) => {
   const [showText, setShowText] = useState<boolean>(false)
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setShowText(true)
-    onMouseEnter(e)
+  const handleMouseEnter = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (allowHover) {
+      setShowText(true)
+    }
   }
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseLeave = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShowText(false)
-    onMouseLeave(e)
   }
 
   const adjustedBarWidth = () => {
@@ -44,7 +43,7 @@ const Pea = ({
   return (
     <div className={styles.peaContainer}>
       <div
-        className={styles.pea}
+        className={allowHover ? styles.pea : styles.peaStatic}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       />

@@ -1,7 +1,6 @@
 import {
   useContext, createContext, ReactNode,
 } from 'react'
-import { useCookies } from 'react-cookie'
 import { auth, db, storage } from '../firebase'
 import { FirebaseUser } from '../types'
 
@@ -9,11 +8,13 @@ export const useAuthProvider = () => {
   const userCookieKey = 'recipe-user'
   const usernameCookieKey = 'recipe-username'
   const profilePhotoKey = 'recipe-profile-photo'
-  const [userCookie, setUserCookie] = useCookies([
+  /*
+  const [userCookie, setUserCookie, removeUserCookie] = useCookies([
     userCookieKey,
     usernameCookieKey,
     profilePhotoKey,
   ])
+  */
 
   const createUser = async (firebaseUser: FirebaseUser) => db
     .collection('users')
@@ -88,9 +89,7 @@ export const useAuthProvider = () => {
       .then((url) => {
         const xhr = new XMLHttpRequest()
         xhr.responseType = 'blob'
-        // eslint-disable-next-line no-unused-vars
         xhr.onload = (e) => {
-          // eslint-disable-next-line no-unused-vars
           const blob = xhr.response
         }
         xhr.open('GET', url)
@@ -138,9 +137,9 @@ export const useAuthProvider = () => {
   }
 
   const logOut = () => {
-    setUserCookie(userCookieKey, '')
-    setUserCookie(usernameCookieKey, '')
-    setUserCookie(profilePhotoKey, '')
+    removeUserCookie(userCookieKey)
+    removeUserCookie(usernameCookieKey)
+    removeUserCookie(profilePhotoKey)
   }
 
   const signIn = ({ email, currentPassword }) => new Promise<void>((resolve, reject) => auth

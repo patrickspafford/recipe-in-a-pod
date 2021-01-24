@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import styles from './PasswordField.module.css'
-import colors from '../../utils/colors'
 
 interface IPasswordField {
     value: string
@@ -30,23 +29,6 @@ const PasswordField = ({
   onChange,
   inputRef,
 }: IPasswordField) => (
-  /*
-  <div className={styles.tableStyle}>
-    <TextField
-      id={id}
-      type={showPassword ? 'text' : 'password'}
-      name={name}
-      className={styles.textField}
-      label={label}
-      value={value}
-      inputRef={inputRef}
-      error={error.length > 0}
-      helperText={error}
-      onChange={onChange}
-      variant="filled"
-    />
-  </div>
-  */
   <div className={styles.tableStyle}>
     <FormControl
       style={{ backgroundColor: '#fff' }}

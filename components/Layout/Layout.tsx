@@ -1,16 +1,15 @@
 import {
-  ReactNode, useState, useContext, MouseEvent,
+  ReactNode, useState, MouseEvent,
 } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
-import { AppBar, Typography, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import { withStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { ProfileMenu } from '../../components'
-import { useAuth } from '../../hooks/useAuth'
-import { ProfilePhotoContext } from '../../contexts/ProfilePhotoContext'
-import colors from '../../utils/colors'
+import {
+  AppBar, Typography, ProfileMenu, IconButton,
+} from '../../components'
+
+import useUser from '../../hooks/useUser'
 import styles from './Layout.module.css'
 
 interface ILayout {
@@ -19,56 +18,14 @@ interface ILayout {
     hideLogInOut?: boolean
 }
 
-const StyledAppBar = withStyles({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-  },
-})(AppBar)
-
-const StyledTypography = withStyles({
-  root: {
-    color: 'white',
-    padding: '0.5rem',
-  },
-})(Typography)
-
-const StyledIconButton = withStyles({
-  root: {
-    color: 'white',
-  },
-})(IconButton)
-
 const Layout = ({ children, title, hideLogInOut }: ILayout) => {
-  const auth = useAuth()
+  const { user, loggedIn, logout } = useUser()
   const router = useRouter()
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLButtonElement>(null)
-
   const handleMenuClick = (e: MouseEvent<HTMLButtonElement>) => setMenuAnchor(e.currentTarget)
-
   const handleMenuClose = () => setMenuAnchor(null)
 
-  const handleLogOut = () => {
-    router.push('/login')
-      .then(() => {
-        console.log('Logged out successfully.')
-        auth.logOut()
-      })
-      .catch((err) => console.error(err))
-  }
-
-  const handleLogInOut = () => {
-    if (auth.loggedIn) {
-      handleLogOut()
-    } else {
-      router.push('/login')
-        .then(() => console.log('Routed to login page.'))
-        .catch((e) => console.error(e))
-    }
-  }
+  const handleLogInOut = () => (loggedIn ? logout() : router.push('/login'))
 
   return (
     <>
@@ -76,33 +33,33 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         <title>{title ? `${title} | Recipe In a Pod` : 'Recipe In a Pod'}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <StyledAppBar position="sticky">
+      <AppBar position="sticky">
         {
-                auth.loggedIn
+                loggedIn
                   ? (
-                    <StyledIconButton>
+                    <IconButton>
                       <MenuIcon />
-                    </StyledIconButton>
+                    </IconButton>
                   )
-                  : <StyledIconButton />
+                  : <IconButton />
             }
         <div className={styles.imageContainer}>
-          <StyledTypography variant="h6">Recipe</StyledTypography>
+          <Typography variant="h6">Recipe</Typography>
           <Image src="/pods.svg" alt="Site logo" height={55} width={55} />
-          <StyledTypography variant="h6">Pods</StyledTypography>
+          <Typography variant="h6">Pods</Typography>
         </div>
         {!hideLogInOut ? (
           <ProfileMenu
             anchor={menuAnchor}
-            imageSrc={auth.profilePhoto}
-            isLoggedIn={auth.loggedIn}
-            username={auth.username}
+            imageSrc={user.profilePhotoLink}
+            isLoggedIn={loggedIn}
+            username={user.username}
             handleClose={handleMenuClose}
             handleClick={handleMenuClick}
             handleLogInOut={handleLogInOut}
           />
-        ) : <StyledTypography variant="h6" />}
-      </StyledAppBar>
+        ) : <Typography variant="h6" />}
+      </AppBar>
       <div className={styles.childrenContainer}>
         {children}
       </div>
