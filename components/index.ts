@@ -16,12 +16,18 @@ import ProfileMenu from './ProfileMenu'
 import AppBar from './AppBar'
 import Typography from './Typography'
 import IconButton from './IconButton'
+import FileSubmission from './FileSubmission'
+import Drawer from './Drawer'
+import DrawerItem from './DrawerItem'
 
 export {
   AppBar,
   Layout,
+  Drawer,
   Typography,
+  DrawerItem,
   IconButton,
+  FileSubmission,
   Pod,
   IngredientTable,
   UsernameField,

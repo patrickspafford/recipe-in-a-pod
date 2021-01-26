@@ -7,6 +7,7 @@ import {
 import { emailPattern } from '../../utils/regex'
 import { PseudoEvent, FirebaseError } from '../../types'
 import { ApiContext } from '../../contexts/apiContext'
+import LoadingIndicator from '../LoadingIndicator'
 
 interface LoginData {
     email: string
@@ -18,6 +19,8 @@ const LoginForm = () => {
   // Form field values
   const [password, setPassword] = useState<string>('')
   const [email, setEmail] = useState<string>('')
+  // Loading
+  const [loading, setLoading] = useState<boolean>('')
   // Validation errors
   const [emailError, setEmailError] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string>('')
@@ -66,10 +69,10 @@ const LoginForm = () => {
     setHasEditedEmail(true)
     setHasEditedPassword(true)
     return apiService.signIn(data)
-      .then(() => {
+      .then((msg) => {
         setLoginError('')
         router.push('/')
-          .then(() => console.log('Signed in successfully.'))
+          .then(() => console.log(msg))
           .catch((e) => console.error(e))
       })
       .catch((err: FirebaseError) => {
@@ -116,7 +119,9 @@ const LoginForm = () => {
           onChange={(e) => handlePasswordChange(e)}
           setShowPassword={() => setShowPassword(!showPassword)}
         />
-        <SubmitButton disabled={disableSubmit}>Log In</SubmitButton>
+        <SubmitButton disabled={disableSubmit}>
+          {loading ? <LoadingIndicator /> : 'Log In'}
+        </SubmitButton>
       </form>
       <SnackBar
         open={snackbarOpen}

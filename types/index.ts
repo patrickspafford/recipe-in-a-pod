@@ -8,6 +8,27 @@ type FirebaseError = {
     code: string
 }
 
+type Ingredient = {
+    amount: string
+    name: string
+}
+type Duration = {
+    hours: number
+    minutes: number
+}
+
+type PodType = {
+    docId?: string
+    date: Date
+    duration: Duration
+    ingredients: Ingredient[]
+    instructions: string[]
+    name: string
+    photoLink?: string
+    price: number
+    uid: string
+}
+
 type PseudoEvent = {
     target: {
         value: any
@@ -33,5 +54,14 @@ type UserCookie = {
 }
 
 export type {
-  Action, PeaType, FirebaseUser, PseudoEvent, FirebaseError, TextFieldChange, UserCookie,
+  Action,
+  PeaType,
+  FirebaseUser,
+  PseudoEvent,
+  FirebaseError,
+  TextFieldChange,
+  UserCookie,
+  PodType,
+  Ingredient,
+  Duration,
 }

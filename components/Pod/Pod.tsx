@@ -45,7 +45,11 @@ const peas: IPeas[] = [
   },
 ]
 
-const Pod = ({ imageSrc }) => {
+interface IPod {
+  imageSrc: string
+}
+
+const Pod = ({ imageSrc }: IPod) => {
   const [rotated, setRotated] = useState(true)
 
   useEffect(() => {
@@ -71,7 +75,7 @@ const Pod = ({ imageSrc }) => {
           ))}
         </div>
         <div className={styles.imageContainer}>
-          <Image className={styles.image} src="/shrimp.jpg" height={320} width={320} />
+          <Image className={styles.image} src={imageSrc} height={320} width={320} />
         </div>
       </div>
     </Link>

@@ -2,6 +2,13 @@
   display: flex;
   margin: auto;
   margin-bottom: 2rem;
+  transition: transform .35s ease-in-out;
+  -webkit-transition: -webkit-transform .35s ease-in-out;
+}
+
+.outerContainer:hover {
+  transform: scale(1.025);
+  -webkit-transform: scale(1.025);
 }
 
 .podContainer {
@@ -33,4 +40,5 @@
 .image {
   border-radius: 1.6rem;
   border: 3px solid #16302b !important;
+  object-fit: cover !important;
 }

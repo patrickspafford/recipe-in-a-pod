@@ -6,7 +6,7 @@ import Image from 'next/image'
 import MenuIcon from '@material-ui/icons/Menu'
 import { useRouter } from 'next/router'
 import {
-  AppBar, Typography, ProfileMenu, IconButton,
+  AppBar, Typography, ProfileMenu, IconButton, Drawer,
 } from '../../components'
 
 import useUser from '../../hooks/useUser'
@@ -37,23 +37,21 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         {
                 loggedIn
                   ? (
-                    <IconButton>
-                      <MenuIcon />
-                    </IconButton>
+                    <Drawer />
                   )
                   : <IconButton />
             }
         <div className={styles.imageContainer}>
           <Typography variant="h6">Recipe</Typography>
-          <Image src="/pods.svg" alt="Site logo" height={55} width={55} />
+          <Image className={styles.image} src="/pods.svg" alt="Site logo" height={55} width={55} />
           <Typography variant="h6">Pods</Typography>
         </div>
         {!hideLogInOut ? (
           <ProfileMenu
             anchor={menuAnchor}
-            imageSrc={user.profilePhotoLink}
+            imageSrc={user ? user.profilePhotoLink : ''}
             isLoggedIn={loggedIn}
-            username={user.username}
+            username={user ? user.username : ''}
             handleClose={handleMenuClose}
             handleClick={handleMenuClick}
             handleLogInOut={handleLogInOut}

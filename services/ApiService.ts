@@ -1,10 +1,11 @@
+/* eslint-disable no-restricted-syntax */
 import firebase from 'firebase'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
 import cookie from 'js-cookie'
 import initFirebase from '../firebase/initFirebase'
-import { FirebaseUser, UserCookie } from '../types'
+import { FirebaseUser, UserCookie, PodType } from '../types'
 
 export default class ApiService {
     private firestore: firebase.firestore.Firestore
@@ -137,7 +138,7 @@ export default class ApiService {
         const { user } = response
         const username = await this.getUsername(user)
         const profilePhotoLink = await this.getProfilePhoto(username)
-        const xa = await response.user.getIdToken()
+        const xa = await user.getIdToken()
         const { uid } = user
         const userData: UserCookie = {
           id: uid,
@@ -149,10 +150,55 @@ export default class ApiService {
         cookie.set('auth', userData, {
           expires: 1,
         })
-        return 'Signed in successfully!'
+        return 'Signed in successfully'
       } catch (e) {
         console.error(e)
         return e
       }
+    }
+
+    async getPods(uid: string) {
+      const pods: PodType[] = []
+      await this.firestore.collection('recipes')
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            const recipe = doc.data()
+            if (recipe.uid === uid) {
+              recipe.docId = doc.id
+              pods.push((recipe as PodType))
+            }
+          })
+        })
+        .catch((err) => console.error(err))
+      const storageRef = this.storage.ref()
+      for (const pod of pods) {
+        // eslint-disable-next-line no-await-in-loop
+        pod.photoLink = await storageRef.child(`recipe-photos/${uid}/${pod.docId}/`)
+          .listAll()
+          .then((res) => res.items[0]
+            .getDownloadURL()
+            .then((url: string) => {
+              const xhr = new XMLHttpRequest()
+              xhr.responseType = 'blob'
+              // eslint-disable-next-line no-unused-vars
+              xhr.onload = (_e) => {
+              // eslint-disable-next-line no-unused-vars
+                const blob = xhr.response
+              }
+              xhr.open('GET', url)
+              xhr.send()
+              return url
+            })
+            .catch((err) => {
+              console.error(err)
+              return ''
+            }))
+          .catch((err) => {
+            console.error(err)
+            return ''
+          })
+      }
+      return pods
     }
 }

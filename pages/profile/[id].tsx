@@ -1,11 +1,12 @@
 import { useRef, FormEvent, useContext } from 'react'
 import { useRouter } from 'next/router'
-import { Layout } from '../../components'
+import { Layout, FileSubmission, SubmitButton } from '../../components'
 import useUser from '../../hooks/useUser'
 import { ApiContext } from '../../contexts/apiContext'
+import styles from '../../styles/profile.module.css'
 
 const ProfilePage = () => {
-  const { loggedIn, user, setUser } = useUser()
+  const { user, setUser } = useUser()
   const router = useRouter()
   const { apiService } = useContext(ApiContext)
   const fileSubmissionRef = useRef<HTMLInputElement | null>(null)
@@ -27,10 +28,9 @@ const ProfilePage = () => {
 
   return (
     <Layout title={user.username}>
-      {loggedIn ? 'Profile Page' : 'Not Signed In'}
-      <form onSubmit={handleSubmit}>
-        <input type="file" ref={fileSubmissionRef} accept="image/png, image/jpeg" />
-        <button type="submit">Submit</button>
+      <form className={styles.fileForm} onSubmit={handleSubmit}>
+        <FileSubmission ref={fileSubmissionRef} />
+        <SubmitButton disabled={!fileSubmissionRef}>Upload</SubmitButton>
       </form>
     </Layout>
   )

@@ -22,6 +22,7 @@ const FormExtra = ({
     <Link href={href}>
       <Button
         className={styles.button}
+        disableFocusRipple
         style={{ backgroundColor: colors.quinary }}
         size="small"
       >

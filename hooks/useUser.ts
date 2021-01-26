@@ -4,6 +4,7 @@ import cookies from 'js-cookie'
 import firebase from 'firebase'
 import initFirebase from '../firebase/initFirebase'
 import { UserCookie } from '../types'
+import isJSONString from '../utils/parsing'
 
 initFirebase()
 
@@ -31,17 +32,13 @@ const useUser = () => {
 
   useEffect(() => {
     const cookie = cookies.get(cookieKey)
-    if (!cookie) {
-      router.push('/login')
-      return
-    }
-    setUser(JSON.parse(cookie))
+    if (cookie && isJSONString(cookie)) setUser(JSON.parse(cookie))
   }, [])
 
   return {
     user,
     setUser,
-    loggedIn: user.username && user.token && user.email,
+    loggedIn: user ? !!(user.username && user.token && user.email) : false,
     logout,
   }
 }

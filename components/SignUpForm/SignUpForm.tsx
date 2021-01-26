@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import {
   EmailField, PasswordField, UsernameField, SubmitButton, SnackBar, LoadingIndicator,
 } from '../../components'
-import { useAuth } from '../../hooks/useAuth'
+import { ApiContext } from '../../contexts/apiContext'
 import { TextFieldChange, PseudoEvent } from '../../types'
 import { emailPattern, usernamePattern } from '../../utils/regex'
 
@@ -16,7 +16,7 @@ interface SignUpData {
 
 const SignUpForm = () => {
   const { register, handleSubmit } = useForm()
-  const auth = useAuth()
+  const { apiService } = useContext(ApiContext)
   const router = useRouter()
 
   // Form field values
@@ -102,7 +102,7 @@ const SignUpForm = () => {
 
   const onSubmit = (data: SignUpData) => {
     setLoading(true)
-    auth.signUp(data)
+    apiService.signUp(data)
       .then(() => router.push('/'))
       .catch((err: Error) => {
         setLoading(false)

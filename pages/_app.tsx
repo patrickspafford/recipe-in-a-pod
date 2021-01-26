@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 // tslint:disable-next-line: no-import-side-effect
 import '../styles/globals.css'
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core/styles'
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core'
 import { ApiProvider } from '../contexts/apiContext'
 import colors from '../utils/colors'
 

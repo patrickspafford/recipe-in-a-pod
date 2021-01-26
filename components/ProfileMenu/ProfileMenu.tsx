@@ -1,4 +1,9 @@
-import { IconButton, MenuItem, Menu } from '@material-ui/core'
+import {
+  IconButton, MenuItem, Menu, ListItemIcon,
+} from '@material-ui/core'
+import HomeIcon from '@material-ui/icons/Home'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import PersonIcon from '@material-ui/icons/Person'
 import { AccountCircle } from '@material-ui/icons'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -50,16 +55,30 @@ const ProfileMenu = ({
     >
       {isLoggedIn ? (
         <div>
-          <Link
-            href={{
-              pathname: '/profile/[id]',
-              query: { id: `${username}` },
-            }}
-            as={`/profile/${username}`}
-          >
-            <MenuItem>{username}</MenuItem>
+          <Link href="/">
+            <MenuItem>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              Home
+            </MenuItem>
           </Link>
-          <MenuItem onClick={handleLogInOut}>Log Out</MenuItem>
+          <Link
+            href={`/profile/${username}`}
+          >
+            <MenuItem>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              {username}
+            </MenuItem>
+          </Link>
+          <MenuItem onClick={handleLogInOut}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            Log Out
+          </MenuItem>
         </div>
       ) : (
         <MenuItem onClick={handleLogInOut}>Log In</MenuItem>

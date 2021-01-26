@@ -97,7 +97,7 @@
   text-transform: uppercase;
   transition: width 0.6s, opacity 0.6s;
   white-space: nowrap;
-  background: white;
+  background: #eee;
   z-index: -1;
 }
 
@@ -107,7 +107,7 @@
   bottom: 0;
   left: 0;
   width: 0;
-  background-color: 'red';
+  background-color: white;
 }
 
 .innerText {

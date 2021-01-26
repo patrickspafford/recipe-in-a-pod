@@ -1,4 +1,5 @@
-import { MouseEvent, useState } from 'react'
+import { useState } from 'react'
+import colors from '../../utils/colors'
 import { PeaType } from '../../types'
 import styles from './Pea.module.css'
 
@@ -21,13 +22,13 @@ const Pea = ({
 }: IPea) => {
   const [showText, setShowText] = useState<boolean>(false)
 
-  const handleMouseEnter = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseEnter = () => {
     if (allowHover) {
       setShowText(true)
     }
   }
 
-  const handleMouseLeave = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseLeave = () => {
     setShowText(false)
   }
 

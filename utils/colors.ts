@@ -4,4 +4,5 @@ export default {
   tertiary: '#8B728E',
   quaternary: '#85B79D',
   quinary: '#C0E5C8',
+  white: '#fff',
 }

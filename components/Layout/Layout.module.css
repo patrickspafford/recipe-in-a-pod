@@ -4,6 +4,19 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    border-radius: 50%;
+}
+
+.image {
+    -webkit-transition: -webkit-transform .8s ease-in-out;
+    transition: transform .8s ease-in-out;
+    overflow: visible;
+    padding: 0.4rem !important;
+}
+
+.image:hover {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .childrenContainer {

@@ -62,6 +62,7 @@ const PasswordField = ({
             <IconButton
               aria-label="toggle password visibility"
               onClick={setShowPassword}
+              disableFocusRipple
               style={{ marginRight: '1rem', marginBottom: error ? '1rem' : '1.1rem' }}
             >
               {showPassword ? <Visibility /> : <VisibilityOff />}
