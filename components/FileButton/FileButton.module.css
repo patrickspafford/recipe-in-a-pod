@@ -1,0 +1,22 @@
+.fileSubmitLabel {
+    background-color: #16302B;
+    padding: 0.5rem;
+    color: white;
+    margin: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.fileSubmitLabel:hover {
+    background-color: #16302B;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    margin: 0.5rem;
+    border-radius: 0.25rem;
+    opacity: 0.75;
+}
+
+.fileForm {
+    margin: 2rem;
+    text-align: center;
+}

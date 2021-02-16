@@ -201,4 +201,14 @@ export default class ApiService {
       }
       return pods
     }
+
+    async createPod(pod: PodType) {
+      await this.firestore.collection('recipes')
+        .doc(this.auth.currentUser.uid)
+        .set(pod)
+        .then(() => {
+          console.log('Created pod successfully!')
+        })
+        .catch((e) => console.error(e))
+    }
 }

@@ -8,8 +8,8 @@
 }
 
 .image {
-    -webkit-transition: -webkit-transform .8s ease-in-out;
-    transition: transform .8s ease-in-out;
+    -webkit-transition: -webkit-transform .4s ease-in-out;
+    transition: transform .4s ease-in-out;
     overflow: visible;
     padding: 0.4rem !important;
 }
@@ -17,6 +17,7 @@
 .image:hover {
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
+    cursor: pointer;
 }
 
 .childrenContainer {

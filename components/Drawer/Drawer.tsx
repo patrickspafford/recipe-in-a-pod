@@ -1,5 +1,5 @@
 import {
-  Drawer, List, IconButton,
+  Drawer, List, IconButton, Tooltip,
 } from '@material-ui/core'
 import {
   useState, KeyboardEvent, MouseEvent,
@@ -26,12 +26,17 @@ const TemporaryDrawer = () => {
 
   return (
     <div>
-      <IconButton
-        onClick={toggleDrawer(true)}
-        style={{ color: colors.white }}
+      <Tooltip
+        placement="bottom"
+        title="Menu"
       >
-        <MenuIcon />
-      </IconButton>
+        <IconButton
+          onClick={toggleDrawer(true)}
+          style={{ color: colors.white }}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Tooltip>
       <Drawer
         anchor="left"
         open={open}

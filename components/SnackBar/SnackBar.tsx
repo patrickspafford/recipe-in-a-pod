@@ -1,11 +1,10 @@
-import { useState } from 'react'
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar'
+import { SyntheticEvent } from 'react'
+import MuiAlert, { AlertProps, Color } from '@material-ui/lab/Alert'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const Alert = (props: AlertProps) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+// eslint-disable-next-line react/jsx-props-no-spreading
+const Alert = (props: AlertProps) => <MuiAlert elevation={6} variant="filled" {...props} />
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -14,11 +13,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
-}));
+}))
 
-const CustomizedSnackbar = ({ open, setOpen, message, severity }) => {
+interface ICustomizedSnackbar {
+  open: boolean,
+  setOpen: any
+  message: string
+  severity: Color
+}
+
+const CustomizedSnackbar = ({
+  open, setOpen, message, severity,
+}: ICustomizedSnackbar) => {
   const classes = useStyles()
-  const handleClose = (e?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = (e?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') return
     setOpen(false)
   }
@@ -35,7 +43,7 @@ const CustomizedSnackbar = ({ open, setOpen, message, severity }) => {
         </Alert>
       </Snackbar>
     </div>
-  );
+  )
 }
 
 export default CustomizedSnackbar

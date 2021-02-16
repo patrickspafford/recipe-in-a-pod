@@ -1,4 +1,4 @@
-import { useRef, FormEvent } from 'react'
+import { useRef } from 'react'
 import { Layout } from '../components'
 import { useAuth } from '../hooks/useAuth'
 

@@ -3,7 +3,7 @@ import {
 } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
-import MenuIcon from '@material-ui/icons/Menu'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
   AppBar, Typography, ProfileMenu, IconButton, Drawer,
@@ -41,11 +41,13 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
                   )
                   : <IconButton />
             }
-        <div className={styles.imageContainer}>
-          <Typography variant="h6">Recipe</Typography>
-          <Image className={styles.image} src="/pods.svg" alt="Site logo" height={55} width={55} />
-          <Typography variant="h6">Pods</Typography>
-        </div>
+        <Link href="/">
+          <div className={styles.imageContainer}>
+            <Typography variant="h6">Recipe</Typography>
+            <Image className={styles.image} src="/pods.svg" alt="Site logo" height={55} width={55} />
+            <Typography variant="h6">Pods</Typography>
+          </div>
+        </Link>
         {!hideLogInOut ? (
           <ProfileMenu
             anchor={menuAnchor}

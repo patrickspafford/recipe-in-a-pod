@@ -20,7 +20,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   // Loading
-  const [loading, setLoading] = useState<boolean>('')
+  const [loading, setLoading] = useState<boolean>(false)
   // Validation errors
   const [emailError, setEmailError] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string>('')
@@ -68,14 +68,19 @@ const LoginForm = () => {
   const onSubmit = (data: LoginData) => {
     setHasEditedEmail(true)
     setHasEditedPassword(true)
+    setLoading(true)
     return apiService.signIn(data)
       .then((msg) => {
         setLoginError('')
         router.push('/')
           .then(() => console.log(msg))
-          .catch((e) => console.error(e))
+          .catch((e) => {
+            setLoading(false)
+            console.error(e)
+          })
       })
       .catch((err: FirebaseError) => {
+        setLoading(false)
         if (err.code && err.code.includes('wrong-password')) {
           setLoginError('Incorrect password.')
         } else {

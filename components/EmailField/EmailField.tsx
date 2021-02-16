@@ -1,7 +1,6 @@
 import { TextField } from '@material-ui/core'
 import { ChangeEvent } from 'react'
 import styles from './EmailField.module.css'
-import colors from '../../utils/colors'
 
 interface IEmailField {
     value: string

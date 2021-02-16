@@ -8,9 +8,22 @@ type FirebaseError = {
     code: string
 }
 
+type Instruction = {
+    label: string
+    details: string
+    error?: {
+        label: string
+        details: string
+    }
+}
+
 type Ingredient = {
     amount: string
     name: string
+    error?: {
+        amount: string
+        name: string
+    }
 }
 type Duration = {
     hours: number
@@ -22,7 +35,7 @@ type PodType = {
     date: Date
     duration: Duration
     ingredients: Ingredient[]
-    instructions: string[]
+    instructions: Instruction[]
     name: string
     photoLink?: string
     price: number
@@ -63,5 +76,6 @@ export type {
   UserCookie,
   PodType,
   Ingredient,
+  Instruction,
   Duration,
 }

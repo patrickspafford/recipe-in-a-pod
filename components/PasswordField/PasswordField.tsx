@@ -57,6 +57,9 @@ const PasswordField = ({
           marginLeft: '1rem',
         }}
         inputRef={inputRef}
+        inputProps={{
+          'aria-autocomplete': 'none',
+        }}
         endAdornment={(
           <InputAdornment position="end">
             <IconButton
