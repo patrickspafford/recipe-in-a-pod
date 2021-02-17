@@ -14,9 +14,11 @@ const ProfilePage = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const profilePhoto = fileSubmissionRef.current.files[0]
-    apiService.setProfilePhotoInStorage(profilePhoto, user.username)
+    apiService
+      .setProfilePhotoInStorage(profilePhoto, user.id)
       .then(() => {
-        apiService.getProfilePhoto(user.username)
+        apiService
+          .getProfilePhoto(user.id)
           .then((newLink) => {
             setUser({ ...user, profilePhotoLink: newLink })
             setTimeout(() => router.push(`/profile/${user.username}`), 1000)

@@ -1,29 +1,42 @@
 import { useState } from 'react'
 import {
-  Stepper, Step, StepLabel, StepContent, Button, Paper, Typography,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Button,
+  Paper,
+  Typography,
 } from '@material-ui/core'
 import {
-  makeStyles, Theme, createStyles, withStyles, ThemeProvider, createMuiTheme,
+  makeStyles,
+  Theme,
+  createStyles,
+  withStyles,
+  ThemeProvider,
+  createMuiTheme,
 } from '@material-ui/core/styles'
 import colors from '../../utils/colors'
 
-const useStyles = makeStyles((myTheme: Theme) => createStyles({
-  root: {
-    width: '25rem',
-    height: '100%',
-    backgroundColor: 'transparent',
-  },
-  button: {
-    marginTop: myTheme.spacing(1),
-    marginRight: myTheme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: myTheme.spacing(2),
-  },
-  resetContainer: {
-    padding: myTheme.spacing(3),
-  },
-}))
+const useStyles = makeStyles((myTheme: Theme) =>
+  createStyles({
+    root: {
+      width: '25rem',
+      height: '100%',
+      backgroundColor: 'transparent',
+    },
+    button: {
+      marginTop: myTheme.spacing(1),
+      marginRight: myTheme.spacing(1),
+    },
+    actionsContainer: {
+      marginBottom: myTheme.spacing(2),
+    },
+    resetContainer: {
+      padding: myTheme.spacing(3),
+    },
+  }),
+)
 
 const theme = createMuiTheme({
   overrides: {
@@ -48,8 +61,7 @@ const StyledStepper = withStyles({
 })(Stepper)
 
 const StyledStep = withStyles({
-  root: {
-  },
+  root: {},
 })(Step)
 
 function getSteps() {
@@ -96,7 +108,7 @@ export default function VerticalLinearStepper() {
       <div className={classes.root}>
         <StyledStepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
-            <StyledStep key={label}>
+            <StyledStep key={index}>
               <StepLabel>{label}</StepLabel>
               <StepContent>
                 <Typography>{getStepContent(index)}</Typography>

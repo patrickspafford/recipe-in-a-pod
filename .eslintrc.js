@@ -17,16 +17,20 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-  ],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
     semi: ['error', 'never'],
-    'react/jsx-filename-extension': [1, {
-      extensions: ['.jsx', '.tsx'],
-    }],
+    'react/jsx-filename-extension': [
+      1,
+      {
+        extensions: ['.jsx', '.tsx'],
+      },
+    ],
+    indent: 'off',
+    '@typescript-eslint/indent': 'off',
     'import/extensions': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'operator-linebreak': 'off',
     'import/no-unresolved': 'off',
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

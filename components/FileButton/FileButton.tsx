@@ -13,7 +13,7 @@ const FileButton = ({ inputRef, setImage }: IFileButton) => (
       id="file-submit"
       type="file"
       ref={inputRef}
-      accept="image/jpeg, image/png"
+      accept="image/jpeg, image/png, image/jpg, image/heic"
       hidden
       onChange={setImage}
     />
@@ -23,7 +23,6 @@ const FileButton = ({ inputRef, setImage }: IFileButton) => (
       htmlFor="file-submit"
     >
       Choose Photo
-
     </label>
   </form>
 )

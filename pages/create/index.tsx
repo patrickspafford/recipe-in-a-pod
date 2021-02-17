@@ -1,6 +1,5 @@
-import {
-  useState, useRef, ChangeEvent, useContext,
-} from 'react'
+import { useState, useRef, ChangeEvent, useContext } from 'react'
+import { useRouter } from 'next/router'
 import {
   Layout,
   CreateDirections,
@@ -13,7 +12,11 @@ import {
   LoadingIndicator,
 } from '../../components'
 import {
-  Ingredient, TextFieldChange, Instruction, Duration, PodType,
+  Ingredient,
+  TextFieldChange,
+  Instruction,
+  Duration,
+  PodType,
 } from '../../types'
 import { ApiContext } from '../../contexts/apiContext'
 import useUser from '../../hooks/useUser'
@@ -22,8 +25,9 @@ import useWindowSize from '../../hooks/useWindowSize'
 const CreatePage = () => {
   // Hooks
   const { windowSize } = useWindowSize()
-  // const { apiService } = useContext(ApiContext)
+  const { apiService } = useContext(ApiContext)
   const { user } = useUser()
+  const router = useRouter()
   // Refs
   const recipePhotoRef = useRef<HTMLInputElement | null>(null)
   // States Section
@@ -37,14 +41,16 @@ const CreatePage = () => {
   })
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [activeStep, setActiveStep] = useState<number>(0)
-  const [steps, setSteps] = useState<Instruction[]>([{
-    label: '',
-    details: '',
-    error: {
-      label: 'You must specify a name for an instruction.',
-      details: 'You must give a description.',
+  const [steps, setSteps] = useState<Instruction[]>([
+    {
+      label: '',
+      details: '',
+      error: {
+        label: 'You must specify a name for an instruction.',
+        details: 'You must give a description.',
+      },
     },
-  }])
+  ])
   const [newIngredient, setNewIngredient] = useState<Ingredient>({
     amount: '',
     name: '',
@@ -58,7 +64,9 @@ const CreatePage = () => {
     hours: '',
     minutes: '',
   })
-  const [titleError, setTitleError] = useState<string>('You must give your recipe a title.')
+  const [titleError, setTitleError] = useState<string>(
+    'You must give your recipe a title.',
+  )
   // end States Section
   const handleRecipeTitleChange = (e: TextFieldChange) => {
     if (e.target.value.length === 0) {
@@ -69,15 +77,19 @@ const CreatePage = () => {
     setRecipeTitle(e.target.value)
   }
 
-  const handleUpdateTexts = (key: string, e: TextFieldChange,
-    index: number) => {
+  const handleUpdateTexts = (
+    key: string,
+    e: TextFieldChange,
+    index: number,
+  ) => {
     const newValue = e.target.value
     const stepsCopy = [...steps]
     stepsCopy[index][key] = newValue
     if (newValue.length === 0) {
-      stepsCopy[index].error[key] = key === 'details'
-        ? 'You must give a description'
-        : 'You must specify a name for an instruction.'
+      stepsCopy[index].error[key] =
+        key === 'details'
+          ? 'You must give a description'
+          : 'You must specify a name for an instruction.'
     } else {
       stepsCopy[index].error[key] = ''
     }
@@ -103,17 +115,23 @@ const CreatePage = () => {
     setSteps(stepsCopy)
     setActiveStep(activeStep - 1)
   }
-  const handleSetNewIngredient = (e: TextFieldChange, key: string) => (
+  const handleSetNewIngredient = (e: TextFieldChange, key: string) =>
     setNewIngredient({
       ...newIngredient,
       [key]: e.target.value,
       error: {
         ...newIngredient.error,
-        [key]: e.target.value.length > 0 ? '' : `You must specify an ${key === 'name' ? 'ingredient' : 'amount'}`,
+        [key]:
+          e.target.value.length > 0
+            ? ''
+            : `You must specify an ${key === 'name' ? 'ingredient' : 'amount'}`,
       },
     })
-  )
-  const handleSetIngredient = (e: TextFieldChange, index :number, key: string) => {
+  const handleSetIngredient = (
+    e: TextFieldChange,
+    index: number,
+    key: string,
+  ) => {
     const ingredientsCopy = [...ingredients]
     const newValue = e.target.value
     ingredientsCopy[index][key] = newValue
@@ -128,14 +146,23 @@ const CreatePage = () => {
 
   const handleAddIngredient = () => {
     if (ingredients.length < 99) {
-      setIngredients([...ingredients, {
-        name: newIngredient.name,
-        amount: newIngredient.amount,
-        error: {
-          name: newIngredient.name.length === 0 ? 'You must specify an ingredient.' : '',
-          amount: newIngredient.amount.length === 0 ? 'You must specify an amount.' : '',
+      setIngredients([
+        ...ingredients,
+        {
+          name: newIngredient.name,
+          amount: newIngredient.amount,
+          error: {
+            name:
+              newIngredient.name.length === 0
+                ? 'You must specify an ingredient.'
+                : '',
+            amount:
+              newIngredient.amount.length === 0
+                ? 'You must specify an amount.'
+                : '',
+          },
         },
-      }])
+      ])
       setNewIngredient({
         amount: '',
         name: '',
@@ -152,8 +179,10 @@ const CreatePage = () => {
       setNewIngredient({
         ...newIngredient,
         error: {
-          name: newIngredient.name === '' ? 'You must specify an ingredient' : '',
-          amount: newIngredient.amount === '' ? 'You must specify an amount.' : '',
+          name:
+            newIngredient.name === '' ? 'You must specify an ingredient' : '',
+          amount:
+            newIngredient.amount === '' ? 'You must specify an amount.' : '',
         },
       })
     }
@@ -231,47 +260,98 @@ const CreatePage = () => {
     }
   }
 
-  const handleSubmitRecipe = () => {
+  const handleSetImage = (e: ChangeEvent<HTMLInputElement>) => {
+    setImage(URL.createObjectURL(e.target.files[0]))
+  }
+
+  const handleSubmitRecipe = (e: any) => {
+    e.preventDefault()
     setLoading(true)
+    // const recipePhoto = recipePhotoRef.current.files[0]
     const newPod: PodType = {
       name: recipeTitle,
       duration: recipeDuration,
       price: recipePrice,
       uid: user.id,
-      ingredients: [...ingredients, newIngredient],
-      instructions: steps,
+      ingredients: [...ingredients, newIngredient].map((ingred) => ({
+        name: ingred.name,
+        amount: ingred.amount,
+      })),
+      instructions: steps.map((instruction: Instruction) => ({
+        label: instruction.label,
+        details: instruction.details,
+      })),
       date: new Date(),
     }
-    console.log(newPod)
-    setLoading(false)
+    console.log(recipePhotoRef.current.files[0].name)
+    apiService
+      .createPod(newPod)
+      .then((newPodId) => {
+        if (newPodId) {
+          apiService
+            .setRecipePhotoInStorage(
+              recipePhotoRef.current.files[0],
+              user.id,
+              newPodId,
+            )
+            .then((msg) => {
+              setLoading(false)
+              console.log(msg)
+            })
+            .catch((err) => {
+              setLoading(false)
+              console.error(err)
+            })
+        } else {
+          console.log('No pod id provided.')
+          setLoading(false)
+        }
+      })
+      .catch((error) => {
+        console.log('Could not create pod')
+        console.error(error)
+        setLoading(false)
+      })
+    /*
+    apiService.setRecipePhotoInStorage(recipePhoto, user.id)
+    */
   }
 
   return (
     <Layout title="Create a Pod">
-      <div style={windowSize > 800 ? {} : {
-        display: 'flex',
-        flexDirection: 'column-reverse',
-      }}
+      <div
+        style={
+          windowSize > 800
+            ? {}
+            : {
+                display: 'flex',
+                flexDirection: 'column-reverse',
+              }
+        }
       >
-        <div style={windowSize > 800 ? {
-          width: '45%',
-          borderRadius: '2rem',
-          position: 'fixed',
-          overflow: 'auto',
-          top: 75,
-          bottom: 0,
-          paddingLeft: '1rem',
-          marginLeft: '50%',
-          marginRight: '0%',
-          zIndex: 3,
-        } : {
-          borderRadius: '2rem',
-          overflowY: 'scroll',
-          marginBottom: '3rem',
-          zIndex: 3,
-        }}
+        <div
+          style={
+            windowSize > 800
+              ? {
+                  width: '45%',
+                  borderRadius: '2rem',
+                  position: 'fixed',
+                  overflow: 'auto',
+                  top: 75,
+                  bottom: 0,
+                  paddingLeft: '1rem',
+                  marginLeft: '50%',
+                  marginRight: '0%',
+                  zIndex: 3,
+                }
+              : {
+                  borderRadius: '2rem',
+                  overflowY: 'scroll',
+                  marginBottom: '3rem',
+                  zIndex: 3,
+                }
+          }
         >
-
           <CreateIngredients
             ingredients={ingredients}
             newIngredient={newIngredient}
@@ -291,17 +371,16 @@ const CreatePage = () => {
             onPriceChange={handlePriceChange}
           />
           <div style={{ width: '100%' }}>
-            <SubmitButton
-              disabled={loading}
-              onClick={handleSubmitRecipe}
-            >
+            <SubmitButton disabled={loading} onClick={handleSubmitRecipe}>
               {loading ? <LoadingIndicator /> : 'CREATE RECIPE'}
             </SubmitButton>
           </div>
         </div>
-        <div style={{
-          position: 'relative', overflow: 'auto',
-        }}
+        <div
+          style={{
+            position: 'relative',
+            overflow: 'auto',
+          }}
         >
           <CreateRecipeTitle
             onChange={handleRecipeTitleChange}
@@ -309,20 +388,13 @@ const CreatePage = () => {
           >
             {recipeTitle}
           </CreateRecipeTitle>
-          <div style={{
-            width: windowSize < 800 ? '100%' : '50%',
-          }}
+          <div
+            style={{
+              width: windowSize < 800 ? '100%' : '50%',
+            }}
           >
-            <PhotoFrame
-              imageTarget={image}
-              height={500}
-            />
-            <FileButton
-              inputRef={recipePhotoRef}
-              setImage={(e: ChangeEvent<HTMLInputElement>) => setImage(
-                URL.createObjectURL(e.target.files[0]),
-              )}
-            />
+            <PhotoFrame imageTarget={image} height={500} />
+            <FileButton inputRef={recipePhotoRef} setImage={handleSetImage} />
           </div>
           <CreateDirections
             activeStep={activeStep}
