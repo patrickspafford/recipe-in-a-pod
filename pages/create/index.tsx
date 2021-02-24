@@ -24,7 +24,7 @@ import useWindowSize from '../../hooks/useWindowSize'
 
 const CreatePage = () => {
   // Hooks
-  const { windowSize } = useWindowSize()
+  const { isLarge, isSmall } = useWindowSize()
   const { apiService } = useContext(ApiContext)
   const { user } = useUser()
   const router = useRouter()
@@ -273,14 +273,18 @@ const CreatePage = () => {
       duration: recipeDuration,
       price: recipePrice,
       uid: user.id,
-      ingredients: [...ingredients, newIngredient].map((ingred) => ({
-        name: ingred.name,
-        amount: ingred.amount,
-      })),
-      instructions: steps.map((instruction: Instruction) => ({
-        label: instruction.label,
-        details: instruction.details,
-      })),
+      ingredients: [...ingredients, newIngredient]
+        .map((ingred) => ({
+          name: ingred.name,
+          amount: ingred.amount,
+        }))
+        .filter((ingred) => ingred.name && ingred.amount),
+      instructions: steps
+        .map((instruction: Instruction) => ({
+          label: instruction.label,
+          details: instruction.details,
+        }))
+        .filter((instruction) => instruction.label && instruction.details),
       date: new Date(),
     }
     console.log(recipePhotoRef.current.files[0].name)
@@ -295,7 +299,13 @@ const CreatePage = () => {
               newPodId,
             )
             .then((msg) => {
-              setLoading(false)
+              router
+                .push('/')
+                .then(() => console.log('Created pod successfully'))
+                .catch((err) => {
+                  console.error(err)
+                  setLoading(false)
+                })
               console.log(msg)
             })
             .catch((err) => {
@@ -312,16 +322,24 @@ const CreatePage = () => {
         console.error(error)
         setLoading(false)
       })
-    /*
-    apiService.setRecipePhotoInStorage(recipePhoto, user.id)
-    */
   }
+
+  const invalidRecipe =
+    titleError.length > 0 ||
+    recipePriceError.length > 0 ||
+    recipeDurationError.hours.length > 0 ||
+    recipeDurationError.minutes.length > 0 ||
+    !recipePhotoRef.current.files[0] ||
+    steps.some(
+      (instruction) => instruction.error.details || instruction.error.label,
+    ) ||
+    ingredients.some((ingred) => ingred.error.name || ingred.error.amount)
 
   return (
     <Layout title="Create a Pod">
       <div
         style={
-          windowSize > 800
+          isLarge
             ? {}
             : {
                 display: 'flex',
@@ -331,7 +349,7 @@ const CreatePage = () => {
       >
         <div
           style={
-            windowSize > 800
+            isLarge
               ? {
                   width: '45%',
                   borderRadius: '2rem',
@@ -371,7 +389,10 @@ const CreatePage = () => {
             onPriceChange={handlePriceChange}
           />
           <div style={{ width: '100%' }}>
-            <SubmitButton disabled={loading} onClick={handleSubmitRecipe}>
+            <SubmitButton
+              disabled={loading || invalidRecipe}
+              onClick={handleSubmitRecipe}
+            >
               {loading ? <LoadingIndicator /> : 'CREATE RECIPE'}
             </SubmitButton>
           </div>
@@ -390,7 +411,7 @@ const CreatePage = () => {
           </CreateRecipeTitle>
           <div
             style={{
-              width: windowSize < 800 ? '100%' : '50%',
+              width: isSmall ? '100%' : '50%',
             }}
           >
             <PhotoFrame imageTarget={image} height={500} />

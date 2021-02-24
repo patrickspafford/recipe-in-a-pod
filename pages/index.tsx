@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useEffect, useContext, useState } from 'react'
 import { ApiContext } from '../contexts/apiContext'
-import { Layout, Pod } from '../components'
+import { Layout, Pod, LoadingIndicator } from '../components'
 import useUser from '../hooks/useUser'
 import { PodType } from '../types'
 import styles from '../styles/index.module.css'
@@ -11,40 +11,51 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [pods, setPods] = useState<PodType[]>([])
   const { apiService } = useContext(ApiContext)
-  const noLongerLoading = () => setLoading(false)
-  const gotPods = (podsResult: PodType[]) => {
-    setLoading(false)
-    setPods(podsResult)
-  }
   useEffect(() => {
-    apiService.getPods('vqCMVwUtFHhyfwI1r9NDR6rF7Sh1')
+    apiService
+      .getPods(user.id)
       .then((result) => {
-        gotPods(result)
+        setPods(result)
+        setLoading(false)
       })
       .catch((err) => {
         console.error(err)
-        noLongerLoading()
+        setLoading(false)
       })
-  }, [])
-  return (
-    <Layout title="My Pods">
-      {
-          loggedIn
-            ? (
-              <div className={styles.podGrid}>
-                {pods.map((pod) => (
-                  <Pod key={pod.docId} imageSrc={pod.photoLink || '/shrimp.jpg'} />
-                ))}
-              </div>
-            )
-            : (
-              <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
-                <Link href="/login">Sign in</Link>
-              </div>
-            )
-      }
-    </Layout>
-  )
+  }, [loggedIn, user])
+
+  const render = () => {
+    if (loading) {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '10%',
+            alignItems: 'center',
+          }}
+        >
+          <LoadingIndicator size={160} />
+        </div>
+      )
+    }
+    if (loggedIn) {
+      return (
+        <div className={styles.podGrid}>
+          {pods.map((pod) => (
+            <Pod key={pod.docId} pod={pod} />
+          ))}
+        </div>
+      )
+    }
+    console.log(user)
+    return (
+      <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+        <Link href="/login">Please sign in</Link>
+      </div>
+    )
+  }
+  return <Layout title="My Pods">{render()}</Layout>
 }
 
 export default Home

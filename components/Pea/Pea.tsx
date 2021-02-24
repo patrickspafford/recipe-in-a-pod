@@ -4,11 +4,11 @@ import { PeaType } from '../../types'
 import styles from './Pea.module.css'
 
 interface IPea {
-    title: string
-    type: PeaType
-    value: number | string
-    barColor: string
-    allowHover: boolean
+  title: string
+  type: PeaType
+  value: number | string
+  barColor?: string
+  allowHover?: boolean
 }
 
 const peaBarMax = {
@@ -17,9 +17,7 @@ const peaBarMax = {
   rating: 5,
 }
 
-const Pea = ({
-  title, type, barColor, value, allowHover,
-}: IPea) => {
+const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
   const [showText, setShowText] = useState<boolean>(false)
 
   const handleMouseEnter = () => {
@@ -51,33 +49,43 @@ const Pea = ({
       <span
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={showText ? styles.slideOutTextTransition : styles.slideOutText}
+        className={
+          showText ? styles.slideOutTextTransition : styles.slideOutText
+        }
       >
         <p className={styles.innerText}>{title}</p>
         <div
-          style={showText ? {
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            backgroundColor: barColor,
-            width: `${adjustedBarWidth()}px`,
-            zIndex: -4,
-            transition: '0.8s ease-in-out width',
+          style={
+            showText
+              ? {
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  backgroundColor: barColor,
+                  width: `${adjustedBarWidth()}px`,
+                  zIndex: -4,
+                  transition: '0.8s ease-in-out width',
+                }
+              : {
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  zIndex: -4,
+                  backgroundColor: barColor,
+                  width: 0,
+                }
           }
-            : {
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              zIndex: -4,
-              backgroundColor: barColor,
-              width: 0,
-            }}
         />
       </span>
     </div>
   )
+}
+
+Pea.defaultProps = {
+  barColor: '#77ffbb',
+  allowHover: true,
 }
 
 export default Pea

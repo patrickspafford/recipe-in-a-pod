@@ -1,15 +1,20 @@
-import { useRef, FormEvent, useContext } from 'react'
+import { useRef, FormEvent, useContext, useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { Layout, FileSubmission, SubmitButton } from '../../components'
+import { Layout, SubmitButton, FileButton, PhotoFrame } from '../../components'
 import useUser from '../../hooks/useUser'
 import { ApiContext } from '../../contexts/apiContext'
 import styles from '../../styles/profile.module.css'
 
 const ProfilePage = () => {
   const { user, setUser } = useUser()
+  const [image, setImage] = useState<string>()
   const router = useRouter()
   const { apiService } = useContext(ApiContext)
   const fileSubmissionRef = useRef<HTMLInputElement | null>(null)
+
+  const handleSetImage = (e: ChangeEvent<HTMLInputElement>) => {
+    setImage(URL.createObjectURL(e.target.files[0]))
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -31,7 +36,8 @@ const ProfilePage = () => {
   return (
     <Layout title={user.username}>
       <form className={styles.fileForm} onSubmit={handleSubmit}>
-        <FileSubmission ref={fileSubmissionRef} />
+        <PhotoFrame imageTarget={image} height={400} />
+        <FileButton inputRef={fileSubmissionRef} setImage={handleSetImage} />
         <SubmitButton disabled={!fileSubmissionRef}>Upload</SubmitButton>
       </form>
     </Layout>

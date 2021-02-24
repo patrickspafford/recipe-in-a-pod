@@ -1,50 +1,60 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Step, StepLabel, StepContent } from '@material-ui/core'
 import {
-  makeStyles, Theme, createStyles, withStyles, ThemeProvider, createMuiTheme,
+  makeStyles,
+  Theme,
+  createStyles,
+  withStyles,
+  ThemeProvider,
+  createMuiTheme,
 } from '@material-ui/core/styles'
 import {
-  CreateDirectionStepper, RecipeTextField, RecipeTextArea, IconButton,
+  CreateDirectionStepper,
+  RecipeTextField,
+  RecipeTextArea,
+  IconButton,
 } from '../../components'
 import { AddIcon, DeleteIcon } from '../../icons'
 import colors from '../../utils/colors'
 import useWindowSize from '../../hooks/useWindowSize'
 import { Instruction } from '../../types'
 
-const useStyles = makeStyles((myTheme: Theme) => createStyles({
-  root: {
-    width: '50%',
-    minWidth: '25rem',
-    marginTop: '1rem',
-    position: 'relative',
-    height: '100%',
-    backgroundColor: colors.primary,
-    padding: '1rem',
-    border: `1px solid ${colors.quinary}`,
-    borderRadius: '2rem',
-  },
-  smallRoot: {
-    width: '100%',
-    minWidth: '25rem',
-    marginTop: '3rem',
-    position: 'relative',
-    height: '100%',
-    backgroundColor: colors.primary,
-    padding: '2rem',
-    border: `1px solid ${colors.quinary}`,
-    borderRadius: '2rem',
-  },
-  button: {
-    marginTop: myTheme.spacing(1),
-    marginRight: myTheme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: myTheme.spacing(1),
-  },
-  resetContainer: {
-    padding: myTheme.spacing(3),
-  },
-}))
+const useStyles = makeStyles((myTheme: Theme) =>
+  createStyles({
+    root: {
+      width: '50%',
+      minWidth: '25rem',
+      marginTop: '1rem',
+      position: 'relative',
+      height: '100%',
+      backgroundColor: colors.primary,
+      padding: '1rem',
+      border: `1px solid ${colors.quinary}`,
+      borderRadius: '2rem',
+    },
+    smallRoot: {
+      width: '100%',
+      minWidth: '25rem',
+      marginTop: '3rem',
+      position: 'relative',
+      height: '100%',
+      backgroundColor: colors.primary,
+      padding: '2rem',
+      border: `1px solid ${colors.quinary}`,
+      borderRadius: '2rem',
+    },
+    button: {
+      marginTop: myTheme.spacing(1),
+      marginRight: myTheme.spacing(1),
+    },
+    actionsContainer: {
+      marginBottom: myTheme.spacing(1),
+    },
+    resetContainer: {
+      padding: myTheme.spacing(3),
+    },
+  }),
+)
 
 const theme = createMuiTheme({
   overrides: {
@@ -86,14 +96,13 @@ export default function VerticalLinearStepper({
   handleUpdateTexts,
   handleAddStepAtIndex,
   handleRemoveStepAtIndex,
-
 }: IVerticalLinearStepper) {
   const classes = useStyles()
-  const { windowSize } = useWindowSize()
+  const { isLarge } = useWindowSize()
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={windowSize > 800 ? classes.root : classes.smallRoot}>
+      <div className={isLarge ? classes.root : classes.smallRoot}>
         <CreateDirectionStepper activeStep={activeStep} orientation="vertical">
           {steps.map((step, index) => (
             <StyledStep key={uuids[index]}>
@@ -113,34 +122,27 @@ export default function VerticalLinearStepper({
                   placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quisque egestas diam in arcu cursus euismod quis viverra."
                 >
                   {step.details}
-
                 </RecipeTextArea>
                 <div className={classes.actionsContainer}>
                   <div>
-                    {
-                        steps.length <= 100
-                    && (
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleAddStepAtIndex(index)}
-                      className={classes.button}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                    )
-                    }
-                    {
-                        steps.length > 1
-                        && (
-                        <IconButton
-                          onClick={() => handleRemoveStepAtIndex(index)}
-                          className={classes.button}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        )
-                    }
+                    {steps.length <= 100 && (
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleAddStepAtIndex(index)}
+                        className={classes.button}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    )}
+                    {steps.length > 1 && (
+                      <IconButton
+                        onClick={() => handleRemoveStepAtIndex(index)}
+                        className={classes.button}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
                   </div>
                 </div>
               </StepContent>

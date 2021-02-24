@@ -3,53 +3,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Pea from '../Pea'
 import styles from './Pod.module.css'
-import { PeaType } from '../../types'
-
-const peaTitles: string[] = [
-  'shrimp noodle bowl',
-  '1 hr',
-  '$12000',
-  '4.5',
-]
-
-interface IPeas {
-    title: string
-    type: PeaType,
-    value: number,
-    color: string
-}
-const peas: IPeas[] = [
-  {
-    title: 'shrimp noodle bowl',
-    type: 'name',
-    value: 0,
-    color: 'white',
-  },
-  {
-    title: '1 hr',
-    type: 'duration',
-    value: 1.2,
-    color: 'orange',
-  },
-  {
-    title: '$20',
-    type: 'cost',
-    value: 20,
-    color: '#ffec73',
-  },
-  {
-    title: '4.5',
-    type: 'rating',
-    value: 4.5,
-    color: 'green',
-  },
-]
+import { PodType } from '../../types'
 
 interface IPod {
-  imageSrc: string
+  pod: PodType
 }
 
-const Pod = ({ imageSrc }: IPod) => {
+const Pod = ({ pod }: IPod) => {
   const [rotated, setRotated] = useState(true)
 
   useEffect(() => {
@@ -63,19 +23,22 @@ const Pod = ({ imageSrc }: IPod) => {
           className={rotated ? styles.podContainerRotated : styles.podContainer}
           style={{ zIndex: 3 }}
         >
-          {peas.map((pea) => (
-            <Pea
-              key={pea.title}
-              allowHover={!rotated}
-              title={pea.title}
-              value={pea.value}
-              type={pea.type}
-              barColor={pea.color}
-            />
-          ))}
+          <Pea type="name" value={pod.name} title={pod.name} />
+          <Pea
+            type="duration"
+            value={pod.duration.hours + pod.duration.minutes / 60}
+            title={`${pod.duration.hours} HR ${pod.duration.minutes} MIN`}
+          />
+          <Pea type="cost" value={pod.price} title={`$${pod.price}`} />
+          <Pea type="rating" value={3} title={`${3}`} />
         </div>
         <div className={styles.imageContainer}>
-          <Image className={styles.image} src={imageSrc} height={320} width={320} />
+          <Image
+            className={styles.image}
+            src={pod.photoLink}
+            height={320}
+            width={320}
+          />
         </div>
       </div>
     </Link>

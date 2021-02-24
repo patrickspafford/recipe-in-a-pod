@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+const smallScreenWidth = 1000
+
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState<number>(0)
 
@@ -15,6 +17,8 @@ const useWindowSize = () => {
 
   return {
     windowSize,
+    isSmall: windowSize < smallScreenWidth,
+    isLarge: !(windowSize < smallScreenWidth),
   }
 }
 

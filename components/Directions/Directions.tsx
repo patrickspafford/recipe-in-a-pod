@@ -108,6 +108,7 @@ export default function VerticalLinearStepper() {
       <div className={classes.root}>
         <StyledStepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
+            // eslint-disable-next-line react/no-array-index-key
             <StyledStep key={index}>
               <StepLabel>{label}</StepLabel>
               <StepContent>
