@@ -1,5 +1,9 @@
 import {
-  IconButton, MenuItem, Menu, ListItemIcon, Tooltip,
+  IconButton,
+  MenuItem,
+  Menu,
+  ListItemIcon,
+  Tooltip,
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
@@ -28,10 +32,7 @@ const ProfileMenu = ({
   handleLogInOut,
 }: IProfileMenu) => (
   <div>
-    <Tooltip
-      placement="bottom"
-      title="Profile"
-    >
+    <Tooltip placement="bottom" title="Profile">
       <IconButton
         aria-controls="recipe-menu"
         aria-haspopup="true"
@@ -68,9 +69,7 @@ const ProfileMenu = ({
               Home
             </MenuItem>
           </Link>
-          <Link
-            href={`/profile/${username}`}
-          >
+          <Link href={`/profile/${username}`}>
             <MenuItem>
               <ListItemIcon>
                 <PersonIcon />

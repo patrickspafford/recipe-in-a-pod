@@ -1,8 +1,9 @@
 .fileForm {
-    margin: auto;
-    display: block;
+  margin: auto;
+  display: block;
+  width: 400px;
 }
 
 .submitButton {
-    display: block;
+  display: block;
 }

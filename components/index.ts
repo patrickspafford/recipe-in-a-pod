@@ -1,10 +1,9 @@
 import Layout from './Layout'
 import Pod from './Pod'
 import IngredientTable from './IngredientTable'
-import CreateDirections from './CreateDirections'
 import Directions from './Directions'
 import DirectionsPaper from './DirectionsPaper'
-import CreateDirectionStepper from './CreateDirectionStepper'
+import DirectionStepper from './DirectionStepper'
 import SignUpForm from './SignUpForm'
 import LoginForm from './LoginForm'
 import SnackBar from './SnackBar'
@@ -20,26 +19,25 @@ import ProfileMenu from './ProfileMenu'
 import AppBar from './AppBar'
 import Typography from './Typography'
 import IconButton from './IconButton'
-import FileSubmission from './FileSubmission'
 import Drawer from './Drawer'
 import DrawerItem from './DrawerItem'
 import RecipeTextField from './RecipeTextField'
 import RecipeTextArea from './RecipeTextArea'
-import CreateIngredients from './CreateIngredients'
+import Ingredients from './Ingredients'
 import IngredientTextField from './IngredientTextField'
-import CreateRecipeTitle from './CreateRecipeTitle'
-import CreateInfo from './CreateInfo'
+import RecipeTitle from './RecipeTitle'
+import Info from './Info'
 import PhotoFrame from './PhotoFrame'
 
 export {
   AppBar,
   FileButton,
   PhotoFrame,
-  CreateInfo,
-  CreateDirections,
-  CreateIngredients,
-  CreateRecipeTitle,
-  CreateDirectionStepper,
+  Info,
+  Directions,
+  Ingredients,
+  RecipeTitle,
+  DirectionStepper,
   RecipeTextArea,
   Layout,
   Drawer,
@@ -47,11 +45,9 @@ export {
   Typography,
   DrawerItem,
   IconButton,
-  FileSubmission,
   Pod,
   IngredientTable,
   UsernameField,
-  Directions,
   ProfileMenu,
   SignUpForm,
   LoginForm,

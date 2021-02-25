@@ -1,8 +1,32 @@
-.tableContainer {
-    width: 45%;
-    border-radius: 2rem;
-    position: fixed;
-    margin-left: 50%;
-    margin-right: 5%;
-    z-index: 3
+.outerDivLarge {
+}
+
+.outerDivSmall {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.innerDivLarge {
+  width: 45%;
+  border-radius: 2rem;
+  position: fixed;
+  overflow: auto;
+  top: 74px;
+  bottom: 0px;
+  padding-left: 1rem;
+  margin-left: 50%;
+  margin-right: 0%;
+  z-index: 3;
+}
+
+.innerDivSmall {
+  border-radius: 2rem;
+  overflow-y: scroll;
+  margin-bottom: 3rem;
+  z-index: 3;
+}
+
+.directionsContainer {
+  position: relative;
+  overflow: auto;
 }

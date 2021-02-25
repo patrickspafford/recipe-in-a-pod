@@ -1,11 +1,14 @@
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  IngredientTextField,
-} from '../../components'
+import { IngredientTextField } from '../../components'
 import { Ingredient } from '../../types'
 import colors from '../../utils/colors'
 
@@ -44,15 +47,17 @@ const StyledTableRow = withStyles({
 
 interface IIngredientTable {
   ingredients: Ingredient[]
-  newIngredient: Ingredient,
-  handleSetNewIngredient: any,
-  handleSetIngredient: any,
-  handleAddIngredient: any,
-  handleDeleteIngredient: any,
+  editable?: boolean
+  newIngredient?: Ingredient
+  handleSetNewIngredient?: any
+  handleSetIngredient?: any
+  handleAddIngredient?: any
+  handleDeleteIngredient?: any
 }
 
 const IngredientTable = ({
   ingredients,
+  editable,
   newIngredient,
   handleSetNewIngredient,
   handleSetIngredient,
@@ -78,7 +83,11 @@ const IngredientTable = ({
           <StyledTableRow hover key={uuids[index]}>
             <StyledTableCell align="center" component="th" scope="row">
               <IngredientTextField
-                onChange={(e) => handleSetIngredient(e, index, 'name')}
+                onChange={(e) => {
+                  if (editable) {
+                    handleSetIngredient(e, index, 'name')
+                  }
+                }}
                 placeholder="Ingredient"
                 error={ingredient.error.name}
               >
@@ -87,10 +96,14 @@ const IngredientTable = ({
             </StyledTableCell>
             <StyledTableCell align="center">
               <IngredientTextField
-                onChange={(e) => handleSetIngredient(e, index, 'amount')}
+                onChange={(e) => {
+                  if (editable) {
+                    handleSetIngredient(e, index, 'amount')
+                  }
+                }}
                 placeholder="Amount"
                 error={ingredient.error.amount}
-                deleteButton
+                deleteButton={editable}
                 onDeleteClicked={() => handleDeleteIngredient(index)}
               >
                 {ingredient.amount}
@@ -98,31 +111,52 @@ const IngredientTable = ({
             </StyledTableCell>
           </StyledTableRow>
         ))}
-        <StyledTableRow hover key="add-new-ingredient">
-          <StyledTableCell align="center" component="th" scope="row">
-            <IngredientTextField
-              onChange={(e) => handleSetNewIngredient(e, 'name')}
-              placeholder="New Ingredient"
-              error={newIngredient.error.name}
-            >
-              {newIngredient.name}
-            </IngredientTextField>
-          </StyledTableCell>
-          <StyledTableCell align="center">
-            <IngredientTextField
-              onChange={(e) => handleSetNewIngredient(e, 'amount')}
-              placeholder="New Ingredient Amount"
-              error={newIngredient.error.amount}
-              addButton
-              onButtonClicked={handleAddIngredient}
-            >
-              {newIngredient.amount}
-            </IngredientTextField>
-          </StyledTableCell>
-        </StyledTableRow>
+        {editable && (
+          <StyledTableRow hover key="add-new-ingredient">
+            <StyledTableCell align="center" component="th" scope="row">
+              <IngredientTextField
+                onChange={(e) => {
+                  if (editable) {
+                    handleSetNewIngredient(e, 'name')
+                  }
+                }}
+                placeholder="New Ingredient"
+                error={newIngredient.error.name}
+              >
+                {newIngredient.name}
+              </IngredientTextField>
+            </StyledTableCell>
+            <StyledTableCell align="center">
+              <IngredientTextField
+                onChange={(e) => handleSetNewIngredient(e, 'amount')}
+                placeholder="New Ingredient Amount"
+                error={newIngredient.error.amount}
+                addButton
+                onButtonClicked={handleAddIngredient}
+              >
+                {newIngredient.amount}
+              </IngredientTextField>
+            </StyledTableCell>
+          </StyledTableRow>
+        )}
       </TableBody>
     </Table>
   </TableContainer>
 )
+
+IngredientTable.defaultProps = {
+  newIngredient: {
+    name: '',
+    amount: '',
+  },
+  editable: true,
+  handleSetNewIngredient: () =>
+    console.log('Set new ingredient not specified.'),
+  handleSetIngredient: () =>
+    console.log('Handle set ingredient not specified.'),
+  handleAddIngredient: () => console.log('Handle add ingredient not specified'),
+  handleDeleteIngredient: () =>
+    console.log('Handle delete ingredient not specified.'),
+}
 
 export default IngredientTable

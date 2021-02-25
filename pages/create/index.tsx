@@ -2,10 +2,10 @@ import { useState, useRef, ChangeEvent, useContext } from 'react'
 import { useRouter } from 'next/router'
 import {
   Layout,
-  CreateDirections,
-  CreateIngredients,
-  CreateRecipeTitle,
-  CreateInfo,
+  Directions,
+  Ingredients,
+  RecipeTitle,
+  Info,
   SubmitButton,
   PhotoFrame,
   FileButton,
@@ -18,6 +18,7 @@ import {
   Duration,
   PodType,
 } from '../../types'
+import styles from '../../styles/create.module.css'
 import { ApiContext } from '../../contexts/apiContext'
 import useUser from '../../hooks/useUser'
 import useWindowSize from '../../hooks/useWindowSize'
@@ -337,40 +338,9 @@ const CreatePage = () => {
 
   return (
     <Layout title="Create a Pod">
-      <div
-        style={
-          isLarge
-            ? {}
-            : {
-                display: 'flex',
-                flexDirection: 'column-reverse',
-              }
-        }
-      >
-        <div
-          style={
-            isLarge
-              ? {
-                  width: '45%',
-                  borderRadius: '2rem',
-                  position: 'fixed',
-                  overflow: 'auto',
-                  top: 75,
-                  bottom: 0,
-                  paddingLeft: '1rem',
-                  marginLeft: '50%',
-                  marginRight: '0%',
-                  zIndex: 3,
-                }
-              : {
-                  borderRadius: '2rem',
-                  overflowY: 'scroll',
-                  marginBottom: '3rem',
-                  zIndex: 3,
-                }
-          }
-        >
-          <CreateIngredients
+      <div className={isLarge ? styles.outerDivLarge : styles.outerDivSmall}>
+        <div className={isLarge ? styles.innerDivLarge : styles.innerDivSmall}>
+          <Ingredients
             ingredients={ingredients}
             newIngredient={newIngredient}
             handleAddIngredient={handleAddIngredient}
@@ -378,7 +348,7 @@ const CreatePage = () => {
             handleSetNewIngredient={handleSetNewIngredient}
             handleDeleteIngredient={handleDeleteIngredient}
           />
-          <CreateInfo
+          <Info
             price={recipePrice}
             prepTime={recipeDuration}
             priceError={recipePriceError}
@@ -397,18 +367,10 @@ const CreatePage = () => {
             </SubmitButton>
           </div>
         </div>
-        <div
-          style={{
-            position: 'relative',
-            overflow: 'auto',
-          }}
-        >
-          <CreateRecipeTitle
-            onChange={handleRecipeTitleChange}
-            error={titleError}
-          >
+        <div className={styles.directionsContainer}>
+          <RecipeTitle onChange={handleRecipeTitleChange} error={titleError}>
             {recipeTitle}
-          </CreateRecipeTitle>
+          </RecipeTitle>
           <div
             style={{
               width: isSmall ? '100%' : '50%',
@@ -417,7 +379,7 @@ const CreatePage = () => {
             <PhotoFrame imageTarget={image} height={500} />
             <FileButton inputRef={recipePhotoRef} setImage={handleSetImage} />
           </div>
-          <CreateDirections
+          <Directions
             activeStep={activeStep}
             steps={steps}
             setActiveStep={setActiveStep}
