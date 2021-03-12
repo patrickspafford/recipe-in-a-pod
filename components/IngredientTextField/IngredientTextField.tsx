@@ -5,16 +5,17 @@ import { IconButton } from '../../components'
 import colors from '../../utils/colors'
 
 interface IIngredientTextField {
-    inputRef?: Ref<HTMLInputElement>
-    children: string
-    placeholder: string
-    addButton?: boolean
-    deleteButton?: boolean
-    onDeleteClicked?: any
-    onButtonClicked?: any
-    error?: string
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  inputRef?: Ref<HTMLInputElement>
+  children: string
+  placeholder: string
+  addButton?: boolean
+  deleteButton?: boolean
+  onDeleteClicked?: any
+  onButtonClicked?: any
+  error?: string
+  disabled?: boolean
+  // eslint-disable-next-line no-unused-vars
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 const IngredientTextField = ({
   inputRef,
@@ -23,13 +24,18 @@ const IngredientTextField = ({
   children,
   placeholder,
   addButton,
+  disabled,
   onButtonClicked,
   deleteButton,
   onDeleteClicked,
 }: IIngredientTextField) => (
-  <div style={{
-    display: 'flex', alignItems: 'center', backgroundColor: colors.white, borderRadius: '1rem',
-  }}
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: colors.white,
+      borderRadius: '1rem',
+    }}
   >
     <TextField
       variant="standard"
@@ -39,7 +45,8 @@ const IngredientTextField = ({
       }}
       value={children}
       fullWidth
-      error={error && error.length > 0}
+      disabled={disabled}
+      error={error.length > 0}
       helperText={!!error && error}
       placeholder={placeholder}
       InputProps={{
@@ -51,19 +58,21 @@ const IngredientTextField = ({
           color: colors.black,
           lineHeight: '2rem',
         },
+        'aria-readonly': disabled,
+        readOnly: disabled,
       }}
       inputRef={inputRef}
       onChange={onChange}
     />
     {deleteButton && (
-    <IconButton onClick={onDeleteClicked} disableFocusRipple>
-      <DeleteIcon style={{ color: colors.primary }} />
-    </IconButton>
+      <IconButton onClick={onDeleteClicked} disableFocusRipple>
+        <DeleteIcon style={{ color: colors.primary }} />
+      </IconButton>
     )}
     {addButton && (
-    <IconButton onClick={onButtonClicked} disableFocusRipple>
-      <AddIcon style={{ color: colors.primary }} />
-    </IconButton>
+      <IconButton onClick={onButtonClicked} disableFocusRipple>
+        <AddIcon style={{ color: colors.primary }} />
+      </IconButton>
     )}
   </div>
 )
@@ -73,6 +82,7 @@ IngredientTextField.defaultProps = {
   addButton: false,
   deleteButton: false,
   error: '',
+  disabled: false,
   onDeleteClicked: () => console.warn('On Delete Clicked Not Init.'),
   onButtonClicked: () => console.warn('On Button Clicked Not Init.'),
 }

@@ -80,23 +80,25 @@ const StyledStep = withStyles({
 const uuids = new Array(101)
 uuids.map(() => uuidv4())
 
-interface IVerticalLinearStepper {
+interface IDirections {
   activeStep: number
   steps: Instruction[]
   setActiveStep: any
-  handleUpdateTexts: any
-  handleAddStepAtIndex: any
-  handleRemoveStepAtIndex: any
+  editable?: boolean
+  handleUpdateTexts?: any
+  handleAddStepAtIndex?: any
+  handleRemoveStepAtIndex?: any
 }
 
-export default function VerticalLinearStepper({
+export default function Directions({
   activeStep,
   steps,
+  editable,
   setActiveStep,
   handleUpdateTexts,
   handleAddStepAtIndex,
   handleRemoveStepAtIndex,
-}: IVerticalLinearStepper) {
+}: IDirections) {
   const classes = useStyles()
   const { isLarge } = useWindowSize()
 
@@ -108,8 +110,13 @@ export default function VerticalLinearStepper({
             <StyledStep key={uuids[index]}>
               <StepLabel onClick={() => setActiveStep(index)}>
                 <RecipeTextField
-                  onChange={(e) => handleUpdateTexts('label', e, index)}
-                  error={step.error.label}
+                  onChange={(e) => {
+                    if (editable) {
+                      handleUpdateTexts('label', e, index)
+                    }
+                  }}
+                  editable={editable}
+                  error={step.error ? step.error.label : ''}
                   placeholder="Instruction Title"
                 >
                   {step.label}
@@ -117,15 +124,20 @@ export default function VerticalLinearStepper({
               </StepLabel>
               <StepContent>
                 <RecipeTextArea
-                  onChange={(e) => handleUpdateTexts('details', e, index)}
-                  error={step.error.details}
+                  editable={editable}
+                  onChange={(e) => {
+                    if (editable) {
+                      handleUpdateTexts('details', e, index)
+                    }
+                  }}
+                  error={step.error ? step.error.details : ''}
                   placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quisque egestas diam in arcu cursus euismod quis viverra."
                 >
                   {step.details}
                 </RecipeTextArea>
                 <div className={classes.actionsContainer}>
                   <div>
-                    {steps.length <= 100 && (
+                    {steps.length <= 100 && editable && (
                       <IconButton
                         variant="contained"
                         color="primary"
@@ -135,7 +147,7 @@ export default function VerticalLinearStepper({
                         <AddIcon />
                       </IconButton>
                     )}
-                    {steps.length > 1 && (
+                    {steps.length > 1 && editable && (
                       <IconButton
                         onClick={() => handleRemoveStepAtIndex(index)}
                         className={classes.button}
@@ -152,4 +164,13 @@ export default function VerticalLinearStepper({
       </div>
     </ThemeProvider>
   )
+}
+
+Directions.defaultProps = {
+  editable: true,
+  handleUpdateTexts: () => console.log('No update text function provided.'),
+  handleAddStepAtIndex: () =>
+    console.log('No add step at index func provided.'),
+  handleRemoveStepAtIndex: () =>
+    console.log('No remove step at index func provided'),
 }

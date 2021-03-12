@@ -4,12 +4,15 @@ import Link from 'next/link'
 import Pea from '../Pea'
 import styles from './Pod.module.css'
 import { PodType } from '../../types'
+import { ContextMenu } from '../../components'
 
 interface IPod {
   pod: PodType
+  onEdit: any
+  onDelete: any
 }
 
-const Pod = ({ pod }: IPod) => {
+const Pod = ({ pod, onEdit, onDelete }: IPod) => {
   const [rotated, setRotated] = useState(true)
 
   useEffect(() => {
@@ -17,8 +20,12 @@ const Pod = ({ pod }: IPod) => {
   }, [])
 
   return (
-    <Link href="/recipes/1">
-      <div className={styles.outerContainer}>
+    <Link href={`/recipes/${pod.docId}/${pod.name}`}>
+      <ContextMenu
+        className={styles.outerContainer}
+        onDelete={onDelete}
+        onEdit={onEdit}
+      >
         <div
           className={rotated ? styles.podContainerRotated : styles.podContainer}
           style={{ zIndex: 3 }}
@@ -40,7 +47,7 @@ const Pod = ({ pod }: IPod) => {
             width={320}
           />
         </div>
-      </div>
+      </ContextMenu>
     </Link>
   )
 }

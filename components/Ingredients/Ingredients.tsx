@@ -88,8 +88,9 @@ const IngredientTable = ({
                     handleSetIngredient(e, index, 'name')
                   }
                 }}
+                disabled={!editable}
                 placeholder="Ingredient"
-                error={ingredient.error.name}
+                error={ingredient.error ? ingredient.error.name : ''}
               >
                 {ingredient.name}
               </IngredientTextField>
@@ -101,8 +102,9 @@ const IngredientTable = ({
                     handleSetIngredient(e, index, 'amount')
                   }
                 }}
+                disabled={!editable}
                 placeholder="Amount"
-                error={ingredient.error.amount}
+                error={ingredient.error ? ingredient.error.amount : ''}
                 deleteButton={editable}
                 onDeleteClicked={() => handleDeleteIngredient(index)}
               >

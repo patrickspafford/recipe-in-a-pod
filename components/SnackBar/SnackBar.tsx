@@ -1,10 +1,7 @@
-import Snackbar from '@material-ui/core/Snackbar'
+import { Snackbar, SnackbarContent } from '@material-ui/core'
 import { SyntheticEvent } from 'react'
-import MuiAlert, { AlertProps, Color } from '@material-ui/lab/Alert'
+import { Color } from '@material-ui/lab/Alert'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-
-// eslint-disable-next-line react/jsx-props-no-spreading
-const Alert = (props: AlertProps) => <MuiAlert elevation={6} variant="filled" {...props} />
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,14 +13,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 interface ICustomizedSnackbar {
-  open: boolean,
+  open: boolean
   setOpen: any
   message: string
   severity: Color
 }
 
 const CustomizedSnackbar = ({
-  open, setOpen, message, severity,
+  open,
+  setOpen,
+  message,
+  severity,
 }: ICustomizedSnackbar) => {
   const classes = useStyles()
   const handleClose = (e?: SyntheticEvent, reason?: string) => {
@@ -33,14 +33,11 @@ const CustomizedSnackbar = ({
 
   return (
     <div className={classes.root}>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity={severity || 'error'}>
-          {message}
-        </Alert>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <SnackbarContent
+          style={{ backgroundColor: severity === 'success' ? 'green' : 'red' }}
+          message={message}
+        />
       </Snackbar>
     </div>
   )

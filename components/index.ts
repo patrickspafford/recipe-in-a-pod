@@ -28,11 +28,15 @@ import IngredientTextField from './IngredientTextField'
 import RecipeTitle from './RecipeTitle'
 import Info from './Info'
 import PhotoFrame from './PhotoFrame'
+import AddButton from './AddButton'
+import ContextMenu from './ContextMenu'
 
 export {
   AppBar,
+  AddButton,
   FileButton,
   PhotoFrame,
+  ContextMenu,
   Info,
   Directions,
   Ingredients,

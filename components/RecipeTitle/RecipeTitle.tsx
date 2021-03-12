@@ -3,6 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import { ChangeEvent } from 'react'
 import useWindowSize from '../../hooks/useWindowSize'
 import colors from '../../utils/colors'
+import styles from './RecipeTitle.module.css'
 
 const theme = createMuiTheme({
   overrides: {
@@ -19,33 +20,20 @@ const theme = createMuiTheme({
   },
 })
 
-interface ICreateRecipeTitle {
+interface IRecipeTitle {
   children: string
-  error: string
+  error?: string
+  editable?: boolean
   // eslint-disable-next-line no-unused-vars
-  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onChange?: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void
 }
-const CreateRecipeTitle = ({
-  onChange,
-  children,
-  error,
-}: ICreateRecipeTitle) => {
+const RecipeTitle = ({ onChange, children, editable, error }: IRecipeTitle) => {
   const { isLarge } = useWindowSize()
   return (
     <ThemeProvider theme={theme}>
-      <div
-        style={{
-          display: 'flex',
-          zIndex: 4,
-          width: isLarge ? '50%' : '100%',
-          alignItems: 'center',
-          backgroundColor: colors.primary,
-          borderRadius: '1rem',
-          padding: '1rem',
-          marginBottom: '1rem',
-          border: `1px solid ${colors.quinary}`,
-        }}
-      >
+      <div className={isLarge ? styles.containerLarge : styles.containerSmall}>
         <TextField
           variant="standard"
           label="Recipe Name"
@@ -56,21 +44,14 @@ const CreateRecipeTitle = ({
           }}
           error={error.length > 0}
           helperText={error}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.5rem',
-          }}
+          className={styles.textField}
           value={children}
           multiline
           fullWidth
           // eslint-disable-next-line react/jsx-no-duplicate-props
           inputProps={{
-            style: {
-              color: colors.white,
-              lineHeight: '3rem',
-              paddingLeft: '2rem',
-              fontSize: '2rem',
-            },
+            className: styles.input,
+            readOnly: !editable,
           }}
           onChange={onChange}
         />
@@ -79,4 +60,10 @@ const CreateRecipeTitle = ({
   )
 }
 
-export default CreateRecipeTitle
+RecipeTitle.defaultProps = {
+  onChange: () => console.log('No change function provided.'),
+  editable: true,
+  error: '',
+}
+
+export default RecipeTitle

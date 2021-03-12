@@ -1,27 +1,30 @@
 import { TextField } from '@material-ui/core'
-import { Ref, ChangeEvent } from 'react'
+import { Ref } from 'react'
 import styles from './RecipeTextField.module.css'
-import colors from '../../utils/colors'
+import { TextFieldChange } from '../../types'
 
 interface IRecipeTextField {
-    inputRef?: Ref<HTMLInputElement>
-    children: string
-    error: string
-    placeholder: string
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  inputRef?: Ref<HTMLInputElement>
+  children: string
+  editable?: boolean
+  error?: string
+  placeholder?: string
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (event: TextFieldChange) => void
 }
 const RecipeTextField = ({
-  inputRef, onChange, children, placeholder, error,
+  inputRef,
+  onChange,
+  children,
+  editable,
+  placeholder,
+  error,
 }: IRecipeTextField) => (
   <TextField
-    style={{ maxWidth: '20rem', marginLeft: '1rem' }}
+    className={styles.textField}
     inputProps={{
-      style: {
-        fontSize: '1.7rem',
-        color: colors.white,
-        lineHeight: '2.5rem',
-      },
+      className: styles.input,
+      readOnly: !editable,
     }}
     error={error && error.length > 0}
     helperText={error}
@@ -31,8 +34,20 @@ const RecipeTextField = ({
     fullWidth
     value={children}
     inputRef={inputRef}
-    onChange={onChange}
+    onChange={(e) => {
+      if (editable) {
+        onChange(e)
+      }
+    }}
   />
 )
+
+RecipeTextField.defaultProps = {
+  editable: true,
+  inputRef: null,
+  onChange: () => console.log('No change func provided.'),
+  error: '',
+  placeholder: '',
+}
 
 export default RecipeTextField

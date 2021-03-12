@@ -147,31 +147,26 @@ export default class ApiService {
   }
 
   async signIn({ email, currentPassword }) {
-    try {
-      const response = await this.auth.signInWithEmailAndPassword(
-        email,
-        currentPassword,
-      )
-      const { user } = response
-      const username = await this.getUsername(user)
-      const profilePhotoLink = await this.getProfilePhoto(user.uid)
-      const xa = await user.getIdToken()
-      const { uid } = user
-      const userData: UserCookie = {
-        id: uid,
-        email: user.email,
-        token: xa,
-        username,
-        profilePhotoLink,
-      }
-      cookie.set('auth', userData, {
-        expires: 1,
-      })
-      return 'Signed in successfully'
-    } catch (e) {
-      console.error(e)
-      return e
+    const response = await this.auth.signInWithEmailAndPassword(
+      email,
+      currentPassword,
+    )
+    const { user } = response
+    const username = await this.getUsername(user)
+    const profilePhotoLink = await this.getProfilePhoto(user.uid)
+    const xa = await user.getIdToken()
+    const { uid } = user
+    const userData: UserCookie = {
+      id: uid,
+      email: user.email,
+      token: xa,
+      username,
+      profilePhotoLink,
     }
+    cookie.set('auth', userData, {
+      expires: 1,
+    })
+    return 'Signed in successfully'
   }
 
   async getPods(uid: string) {
@@ -223,6 +218,51 @@ export default class ApiService {
     return pods
   }
 
+  async getPod(uid: string, docId: string) {
+    const pod: PodType | string = await this.firestore
+      .collection('recipes')
+      .doc(docId)
+      .get()
+      .then((doc: firebase.firestore.DocumentSnapshot) => doc.data() as PodType)
+      .catch((err) => {
+        console.error(err)
+        return 'No pod found'
+      })
+    if (typeof pod === 'string') {
+      console.log('No pod found')
+      return 'No pod found'
+    }
+    const storageRef = this.storage.ref()
+    pod.photoLink = await storageRef
+      .child(`recipe-photos/${uid}/${docId}/`)
+      .listAll()
+      .then((res) =>
+        res.items[0]
+          .getDownloadURL()
+          .then((url: string) => {
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'blob'
+            // eslint-disable-next-line no-unused-vars
+            xhr.onload = (_e) => {
+              // eslint-disable-next-line no-unused-vars
+              const blob = xhr.response
+            }
+            xhr.open('GET', url)
+            xhr.send()
+            return url
+          })
+          .catch((err) => {
+            console.error(err)
+            return ''
+          }),
+      )
+      .catch((err) => {
+        console.error(err)
+        return ''
+      })
+    return pod
+  }
+
   async createPod(pod: PodType) {
     const newPodDoc = this.firestore.collection('recipes').doc()
     return newPodDoc
@@ -232,5 +272,18 @@ export default class ApiService {
         return newPodDoc.id
       })
       .catch((e) => console.error(e))
+  }
+
+  async deletePod(uid: string, docId: string) {
+    try {
+      await this.firestore.collection('recipes').doc(docId).delete()
+      const storageRef = this.storage.ref()
+      await storageRef.child(`recipe-photos/${uid}/${docId}/`).delete()
+      console.log('Deleted pod successfully')
+      return 'Deleted pod successfully'
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 }

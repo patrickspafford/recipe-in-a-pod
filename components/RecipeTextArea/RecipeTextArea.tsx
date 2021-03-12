@@ -1,46 +1,55 @@
 import { TextField } from '@material-ui/core'
-import { Ref, ChangeEvent } from 'react'
-import colors from '../../utils/colors'
+import { Ref } from 'react'
+import { TextFieldChange } from '../../types'
+import styles from './RecipeTextArea.module.css'
 
 interface IRecipeTextArea {
-    inputRef?: Ref<HTMLInputElement>
-    children: string
-    placeholder: string
-    error: string
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  inputRef?: Ref<HTMLInputElement>
+  children: string
+  editable?: boolean
+  placeholder?: string
+  error?: string
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (event: TextFieldChange) => void
 }
 const RecipeTextArea = ({
-  inputRef, onChange, children, placeholder, error,
+  inputRef,
+  onChange,
+  children,
+  placeholder,
+  error,
+  editable,
 }: IRecipeTextArea) => (
   <TextField
     variant="standard"
-    style={{
-      marginLeft: '1rem',
-      padding: '1rem',
-    }}
+    className={styles.textField}
     error={error && error.length > 0}
     helperText={error}
     value={children}
     multiline
     fullWidth
     placeholder={placeholder}
-    InputProps={{
-      disableUnderline: true,
-    }}
+    InputProps={{ disableUnderline: true }}
+    // eslint-disable-next-line react/jsx-no-duplicate-props
     inputProps={{
-      style: {
-        color: colors.white,
-        lineHeight: '2rem',
-      },
+      className: styles.input,
+      readOnly: !editable,
     }}
     inputRef={inputRef}
-    onChange={onChange}
+    onChange={(e) => {
+      if (editable) {
+        onChange(e)
+      }
+    }}
   />
 )
 
 RecipeTextArea.defaultProps = {
   inputRef: null,
+  editable: true,
+  placeholder: '',
+  error: '',
+  onChange: () => console.log('No change func provided'),
 }
 
 export default RecipeTextArea

@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 2rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  align-items: center;
+  border: 1px solid #c0e5c8;
+  width: 100%;
+  background-color: #16302b;
+}
+
+.innerContainer {
+  display: flex;
+  z-index: 4;
+  width: 30%;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 2rem;
+  padding: 1rem;
+  border: 1px solid #c0e5c8;
+}
+
+.textField {
+  margin-left: 1rem;
+  padding: 0.2rem;
+}
+
+.input {
+  color: #16302b !important;
+  line-height: 3rem !important;
+  padding-left: 2rem !important;
+  font-size: 2rem !important;
+}

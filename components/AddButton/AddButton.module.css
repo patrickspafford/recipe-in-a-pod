@@ -1,0 +1,19 @@
+.container {
+  height: 20rem;
+  width: 22rem;
+  display: flex;
+  margin: auto !important;
+  margin-bottom: 2rem !important;
+  margin-bottom: 2rem;
+  border-radius: 2rem !important;
+  background: linear-gradient(#85b79d, rgb(44, 96, 86));
+  font-size: 70px !important;
+  border: 3px solid #16302b !important;
+  transition: transform 0.35s ease-in-out !important;
+  -webkit-transition: -webkit-transform 0.35s ease-in-out !important;
+}
+
+.container:hover {
+  transform: scale(1.025);
+  -webkit-transform: scale(1.025);
+}

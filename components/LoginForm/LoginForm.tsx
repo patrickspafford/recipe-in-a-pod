@@ -2,7 +2,10 @@ import { useState, ChangeEvent, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import {
-  SnackBar, EmailField, PasswordField, SubmitButton,
+  SnackBar,
+  EmailField,
+  PasswordField,
+  SubmitButton,
 } from '../../components'
 import { emailPattern } from '../../utils/regex'
 import { PseudoEvent, FirebaseError } from '../../types'
@@ -10,8 +13,8 @@ import { ApiContext } from '../../contexts/apiContext'
 import LoadingIndicator from '../LoadingIndicator'
 
 interface LoginData {
-    email: string
-    currentPassword: string
+  email: string
+  currentPassword: string
 }
 
 const LoginForm = () => {
@@ -35,15 +38,24 @@ const LoginForm = () => {
   const { handleSubmit, register } = useForm()
   const router = useRouter()
 
-  const handlePasswordChange = (e:
-    ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
-  ignoreHasEditedPassword?: boolean) => {
+  const handlePasswordChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
+    ignoreHasEditedPassword?: boolean,
+  ) => {
     const currentPasswordValue = e.target.value
     setPassword(currentPasswordValue)
     if (!hasEditedPassword) setHasEditedPassword(true)
-    if (currentPasswordValue.length === 0 && hasEditedPassword && !ignoreHasEditedPassword) {
+    if (
+      currentPasswordValue.length === 0 &&
+      hasEditedPassword &&
+      !ignoreHasEditedPassword
+    ) {
       setPasswordError('Please enter a password.')
-    } else if (currentPasswordValue.length < 6 && hasEditedPassword && !ignoreHasEditedPassword) {
+    } else if (
+      currentPasswordValue.length < 6 &&
+      hasEditedPassword &&
+      !ignoreHasEditedPassword
+    ) {
       setPasswordError('Password must be at least 6 characters.')
     } else if (currentPasswordValue.length > 128) {
       setPasswordError('Password must not exceed 128 characters.')
@@ -52,7 +64,9 @@ const LoginForm = () => {
     } else setPasswordError('')
   }
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleEmailChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const currentEmailValue = e.target.value
     setEmail(currentEmailValue)
     if (!hasEditedEmail) setHasEditedEmail(true)
@@ -69,10 +83,12 @@ const LoginForm = () => {
     setHasEditedEmail(true)
     setHasEditedPassword(true)
     setLoading(true)
-    return apiService.signIn(data)
+    return apiService
+      .signIn(data)
       .then((msg) => {
         setLoginError('')
-        router.push('/')
+        router
+          .push('/')
           .then(() => console.log(msg))
           .catch((e) => {
             setLoading(false)
@@ -81,12 +97,18 @@ const LoginForm = () => {
       })
       .catch((err: FirebaseError) => {
         setLoading(false)
+        console.log(err)
         if (err.code && err.code.includes('wrong-password')) {
           setLoginError('Incorrect password.')
+        } else if (err.code.includes('too-many-requests')) {
+          setLoginError(
+            'Too many failed attempts. Account temporarily disabled.',
+          )
         } else {
-          setLoginError('Something went wrong. Please check that the email you entered is correct.')
+          setLoginError(
+            'Something went wrong. Please check that the email you entered is correct.',
+          )
         }
-        setSnackbarOpen(true)
         const pseudoEvent = {
           target: {
             value: '',
@@ -94,11 +116,16 @@ const LoginForm = () => {
         }
         const ignoreHasEditedPassword = true
         handlePasswordChange(pseudoEvent, ignoreHasEditedPassword)
+        setSnackbarOpen(true)
       })
   }
 
-  const disableSubmit = emailError.length > 0 || passwordError.length > 0
-  || !hasEditedEmail || !hasEditedPassword || password.length < 6
+  const disableSubmit =
+    emailError.length > 0 ||
+    passwordError.length > 0 ||
+    !hasEditedEmail ||
+    !hasEditedPassword ||
+    password.length < 6
 
   return (
     <>

@@ -1,21 +1,26 @@
 import { ChangeEvent } from 'react'
 import {
-  FormControl, InputLabel, Input, InputAdornment, IconButton, FormHelperText,
+  FormControl,
+  InputLabel,
+  Input,
+  InputAdornment,
+  IconButton,
+  FormHelperText,
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import styles from './PasswordField.module.css'
 
 interface IPasswordField {
-    value: string
-    id: string
-    showPassword: boolean
-    name?: string
-    label?: string
-    error: string
-    setShowPassword: any
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-    inputRef?: any
+  value: string
+  id: string
+  showPassword: boolean
+  name?: string
+  label?: string
+  error: string
+  setShowPassword: any
+  // eslint-disable-next-line no-unused-vars
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  inputRef?: any
 }
 
 const PasswordField = ({
@@ -59,19 +64,23 @@ const PasswordField = ({
         inputRef={inputRef}
         inputProps={{
           'aria-autocomplete': 'none',
+          autoComplete: 'off',
         }}
-        endAdornment={(
+        endAdornment={
           <InputAdornment position="end">
             <IconButton
               aria-label="toggle password visibility"
               onClick={setShowPassword}
               disableFocusRipple
-              style={{ marginRight: '1rem', marginBottom: error ? '1rem' : '1.1rem' }}
+              style={{
+                marginRight: '1rem',
+                marginBottom: error ? '1rem' : '1.1rem',
+              }}
             >
               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
-            )}
+        }
       />
       <FormHelperText
         error={error.length > 0}

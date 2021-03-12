@@ -1,7 +1,7 @@
 import { TextField, ThemeProvider } from '@material-ui/core'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { ChangeEvent } from 'react'
-import { Duration } from '../../types'
+import { Duration, TextFieldChange } from '../../types'
+import styles from './Info.module.css'
 import colors from '../../utils/colors'
 
 const theme = createMuiTheme({
@@ -21,22 +21,17 @@ const theme = createMuiTheme({
 
 interface IInfo {
   price: number
+  editable?: boolean
   prepTime: Duration
-  priceError: string
-  hoursError: string
-  minutesError: string
+  priceError?: string
+  hoursError?: string
+  minutesError?: string
   // eslint-disable-next-line no-unused-vars
-  onPriceChange: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void
+  onPriceChange?: (event: TextFieldChange) => void
   // eslint-disable-next-line no-unused-vars
-  onHoursChange: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void
+  onHoursChange?: (event: TextFieldChange) => void
   // eslint-disable-next-line no-unused-vars
-  onMinutesChange: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void
+  onMinutesChange?: (event: TextFieldChange) => void
 }
 const Info = ({
   onPriceChange,
@@ -47,35 +42,11 @@ const Info = ({
   priceError,
   hoursError,
   minutesError,
+  editable,
 }: IInfo) => (
   <ThemeProvider theme={theme}>
-    <div
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: '2rem',
-        padding: '1rem',
-        marginTop: '1rem',
-        alignItems: 'center',
-        border: `1px solid ${colors.quinary}`,
-        width: '100%',
-        backgroundColor: colors.primary,
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          zIndex: 4,
-          width: '30%',
-          alignItems: 'center',
-          backgroundColor: colors.white,
-          borderRadius: '2rem',
-          padding: '1rem',
-          border: `1px solid ${colors.quinary}`,
-        }}
-      >
+    <div className={styles.container}>
+      <div className={styles.innerContainer}>
         <TextField
           variant="standard"
           label="Total Cost"
@@ -90,38 +61,24 @@ const Info = ({
           }}
           error={priceError.length > 0}
           helperText={priceError}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.2rem',
-          }}
+          className={styles.textField}
           value={price}
           fullWidth
           // eslint-disable-next-line react/jsx-no-duplicate-props
           inputProps={{
-            style: {
-              color: colors.primary,
-              lineHeight: '3rem',
-              paddingLeft: '2rem',
-              fontSize: '2rem',
-            },
+            className: styles.input,
             min: 0,
             max: 1000000,
+            readOnly: !editable,
           }}
-          onChange={onPriceChange}
+          onChange={(e) => {
+            if (editable) {
+              onPriceChange(e)
+            }
+          }}
         />
       </div>
-      <div
-        style={{
-          display: 'flex',
-          zIndex: 4,
-          width: '30%',
-          alignItems: 'center',
-          backgroundColor: colors.white,
-          borderRadius: '2rem',
-          padding: '1rem',
-          border: `1px solid ${colors.quinary}`,
-        }}
-      >
+      <div className={styles.innerContainer}>
         <TextField
           variant="standard"
           label="Hours"
@@ -136,38 +93,24 @@ const Info = ({
           }}
           error={hoursError.length > 0}
           helperText={hoursError}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.2rem',
-          }}
+          className={styles.textField}
           value={prepTime.hours}
           fullWidth
           // eslint-disable-next-line react/jsx-no-duplicate-props
           inputProps={{
-            style: {
-              color: colors.primary,
-              lineHeight: '3rem',
-              paddingLeft: '2rem',
-              fontSize: '2rem',
-            },
+            className: styles.input,
             min: 0,
             max: 10000,
+            readOnly: !editable,
           }}
-          onChange={onHoursChange}
+          onChange={(e) => {
+            if (editable) {
+              onHoursChange(e)
+            }
+          }}
         />
       </div>
-      <div
-        style={{
-          display: 'flex',
-          zIndex: 4,
-          width: '30%',
-          alignItems: 'center',
-          backgroundColor: colors.white,
-          borderRadius: '2rem',
-          padding: '1rem',
-          border: `1px solid ${colors.quinary}`,
-        }}
-      >
+      <div className={styles.innerContainer}>
         <TextField
           type="number"
           variant="standard"
@@ -182,28 +125,35 @@ const Info = ({
           }}
           error={minutesError.length > 0}
           helperText={minutesError}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.2rem',
-          }}
+          className={styles.textField}
           value={prepTime.minutes}
           fullWidth
           // eslint-disable-next-line react/jsx-no-duplicate-props
           inputProps={{
-            style: {
-              color: colors.primary,
-              lineHeight: '3rem',
-              paddingLeft: '2rem',
-              fontSize: '2rem',
-            },
+            className: styles.input,
             min: 0,
             max: 59,
+            readOnly: !editable,
           }}
-          onChange={onMinutesChange}
+          onChange={(e) => {
+            if (editable) {
+              onMinutesChange(e)
+            }
+          }}
         />
       </div>
     </div>
   </ThemeProvider>
 )
+
+Info.defaultProps = {
+  editable: true,
+  priceError: '',
+  hoursError: '',
+  minutesError: '',
+  onPriceChange: () => console.log('No price change function provided'),
+  onHoursChange: () => console.log('No hours change function provided'),
+  onMinutesChange: () => console.log('No minutes change function provided'),
+}
 
 export default Info

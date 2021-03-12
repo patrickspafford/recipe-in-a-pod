@@ -1,13 +1,18 @@
-import { useState, ChangeEvent } from 'react'
+import { Color } from '@material-ui/lab/Alert'
+import { useState, ChangeEvent, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import {
-  SnackBar, Layout, FormLayout, EmailField, SubmitButton,
+  SnackBar,
+  Layout,
+  FormLayout,
+  EmailField,
+  SubmitButton,
 } from '../components'
-import { useAuth } from '../hooks/useAuth'
+import { ApiContext } from '../contexts/apiContext'
 import { emailPattern } from '../utils/regex'
 
 interface ForgotData {
-    email: string
+  email: string
 }
 
 const ForgotPage = () => {
@@ -15,26 +20,30 @@ const ForgotPage = () => {
   const [hasEditedEmail, setHasEditedEmail] = useState<boolean>(false)
   const [emailError, setEmailError] = useState<string>('')
   const [forgotPasswordMessage, setForgotPasswordMessage] = useState<string>('')
-  const [snackbarSeverity, setSnackbarSeverity] = useState<string>('error')
+  const [snackbarSeverity, setSnackbarSeverity] = useState<Color>('error')
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
 
   const { handleSubmit, register } = useForm()
-  const auth = useAuth()
+  const { apiService } = useContext(ApiContext)
 
   const onSubmit = async (data: ForgotData) => {
-    if (await auth.sendForgotPasswordEmail(data)) {
+    if (await apiService.sendForgotPasswordEmail(data)) {
       setSnackbarSeverity('success')
       setSnackbarOpen(true)
       setEmail('')
       setForgotPasswordMessage('Email sent successfully! Your recipes await.')
     } else {
       setSnackbarSeverity('error')
-      setForgotPasswordMessage('Something went wrong. Please check that your email is correct.')
+      setForgotPasswordMessage(
+        'Something went wrong. Please check that your email is correct.',
+      )
       setSnackbarOpen(true)
     }
   }
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleEmailChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const currentEmailValue = e.target.value
     setEmail(currentEmailValue)
     if (!hasEditedEmail) setHasEditedEmail(true)
@@ -52,7 +61,12 @@ const ForgotPage = () => {
   return (
     <Layout title="Forgot Password" hideLogInOut>
       <FormLayout>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{
+            paddingTop: '12rem',
+          }}
+        >
           <EmailField
             id="email"
             inputRef={register({
@@ -62,11 +76,7 @@ const ForgotPage = () => {
             error={emailError}
             onChange={(e) => handleEmailChange(e)}
           />
-          <SubmitButton
-            disabled={disableSubmit}
-          >
-            Send Email
-          </SubmitButton>
+          <SubmitButton disabled={disableSubmit}>Send Email</SubmitButton>
         </form>
         <SnackBar
           open={snackbarOpen}
