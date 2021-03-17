@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import Pea from '../Pea'
 import styles from './Pod.module.css'
 import { PodType } from '../../types'
@@ -12,20 +13,24 @@ interface IPod {
   onDelete: any
 }
 
-const Pod = ({ pod, onEdit, onDelete }: IPod) => {
+const Pod = ({ pod, onDelete, onEdit }: IPod) => {
   const [rotated, setRotated] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
-    setTimeout(() => setRotated(false), 1000)
+    const rotateTimeout = setTimeout(() => setRotated(false), 1000)
+    return () => {
+      clearTimeout(rotateTimeout)
+    }
   }, [])
 
   return (
-    <Link href={`/recipes/${pod.docId}/${pod.name}`}>
-      <ContextMenu
-        className={styles.outerContainer}
-        onDelete={onDelete}
-        onEdit={onEdit}
-      >
+    <ContextMenu
+      className={styles.outerContainer}
+      onDelete={onDelete}
+      onEdit={onEdit}
+    >
+      <Link href={`/recipes/${pod.docId}/${pod.name}`}>
         <div
           className={rotated ? styles.podContainerRotated : styles.podContainer}
           style={{ zIndex: 3 }}
@@ -39,6 +44,8 @@ const Pod = ({ pod, onEdit, onDelete }: IPod) => {
           <Pea type="cost" value={pod.price} title={`$${pod.price}`} />
           <Pea type="rating" value={3} title={`${3}`} />
         </div>
+      </Link>
+      <Link>
         <div className={styles.imageContainer}>
           <Image
             className={styles.image}
@@ -47,8 +54,8 @@ const Pod = ({ pod, onEdit, onDelete }: IPod) => {
             width={320}
           />
         </div>
-      </ContextMenu>
-    </Link>
+      </Link>
+    </ContextMenu>
   )
 }
 

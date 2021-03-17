@@ -10,6 +10,7 @@ const Home = () => {
   const { loggedIn, user } = useUser()
   const [loading, setLoading] = useState<boolean>(true)
   const [pods, setPods] = useState<PodType[]>([])
+  // const [snackbarStatus, setSnackbarStatus] = useState<>(false)
   const { apiService } = useContext(ApiContext)
   useEffect(() => {
     apiService
@@ -23,9 +24,19 @@ const Home = () => {
         setLoading(false)
       })
   }, [loggedIn, user])
-
-  const handleDelete = () => {}
-  const handleEdit = () => {}
+  /*
+  const handleDelete = async (docId: string) => {
+    setLoading(true)
+    try {
+      await apiService.deletePod(user.id, docId)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const handleEdit = (e) => {}
+  */
 
   const render = () => {
     if (loading) {
@@ -49,8 +60,8 @@ const Home = () => {
             <Pod
               key={pod.docId}
               pod={pod}
-              onEdit={() => handleEdit(pod.docId)}
-              onDelete={() => handleDelete(pod.docId)}
+              // onEdit={() => handleEdit(pod.docId)}
+              // onDelete={() => handleDelete(pod.docId)}
             />
           ))}
           <AddButton />
