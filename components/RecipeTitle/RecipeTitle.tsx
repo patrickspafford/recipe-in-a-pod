@@ -24,12 +24,19 @@ interface IRecipeTitle {
   children: string
   error?: string
   editable?: boolean
+  autoFocus?: boolean
   // eslint-disable-next-line no-unused-vars
   onChange?: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void
 }
-const RecipeTitle = ({ onChange, children, editable, error }: IRecipeTitle) => {
+const RecipeTitle = ({
+  onChange,
+  children,
+  editable,
+  error,
+  autoFocus,
+}: IRecipeTitle) => {
   const { isLarge } = useWindowSize()
   return (
     <ThemeProvider theme={theme}>
@@ -37,6 +44,7 @@ const RecipeTitle = ({ onChange, children, editable, error }: IRecipeTitle) => {
         <TextField
           variant="standard"
           label="Recipe Name"
+          autoFocus={autoFocus}
           InputLabelProps={{
             style: {
               color: colors.white,
@@ -64,6 +72,7 @@ RecipeTitle.defaultProps = {
   onChange: () => console.log('No change function provided.'),
   editable: true,
   error: '',
+  autoFocus: false,
 }
 
 export default RecipeTitle

@@ -30,6 +30,7 @@ import Info from './Info'
 import PhotoFrame from './PhotoFrame'
 import AddButton from './AddButton'
 import ContextMenu from './ContextMenu'
+import RTextField from './RTextField'
 
 export {
   AppBar,
@@ -37,6 +38,7 @@ export {
   FileButton,
   PhotoFrame,
   ContextMenu,
+  RTextField,
   Info,
   Directions,
   Ingredients,

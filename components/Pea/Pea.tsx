@@ -7,7 +7,6 @@ interface IPea {
   title: string
   type: PeaType
   value: number | string
-  barColor?: string
   allowHover?: boolean
 }
 
@@ -17,7 +16,7 @@ const peaBarMax = {
   rating: 5,
 }
 
-const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
+const Pea = ({ type, allowHover, title, value }: IPea) => {
   const [showText, setShowText] = useState<boolean>(false)
 
   const handleMouseEnter = () => {
@@ -37,6 +36,26 @@ const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
       return Math.round((adjustedValue / max) * 312)
     }
     return 0
+  }
+
+  const barColor = () => {
+    if (typeof value === 'number') {
+      const max = peaBarMax[type]
+      const isRating = type === 'rating'
+      const adjustedValue = value > max ? max : value
+      const adjustedValuePercentage = (adjustedValue / max) * 100
+      if (adjustedValuePercentage <= 35) {
+        return isRating ? 'red' : 'green'
+      }
+      if (adjustedValuePercentage <= 60) {
+        return isRating ? 'orange' : 'yellow'
+      }
+      if (adjustedValuePercentage <= 85) {
+        return isRating ? 'yellow' : 'orange'
+      }
+      return isRating ? 'green' : 'red'
+    }
+    return '#fff'
   }
 
   return (
@@ -62,7 +81,7 @@ const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
                   top: 0,
                   bottom: 0,
                   left: 0,
-                  backgroundColor: barColor,
+                  backgroundColor: barColor(),
                   width: `${adjustedBarWidth()}px`,
                   zIndex: -4,
                   transition: '0.8s ease-in-out width',
@@ -73,7 +92,7 @@ const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
                   bottom: 0,
                   left: 0,
                   zIndex: -4,
-                  backgroundColor: barColor,
+                  backgroundColor: barColor(),
                   width: 0,
                 }
           }
@@ -84,7 +103,6 @@ const Pea = ({ type, allowHover, barColor, title, value }: IPea) => {
 }
 
 Pea.defaultProps = {
-  barColor: '#77ffbb',
   allowHover: true,
 }
 

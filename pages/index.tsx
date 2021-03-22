@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useEffect, useContext, useState } from 'react'
+import { useRouter } from 'next/router'
 import { ApiContext } from '../contexts/apiContext'
 import { Layout, Pod, LoadingIndicator, AddButton } from '../components'
 import useUser from '../hooks/useUser'
@@ -10,33 +11,40 @@ const Home = () => {
   const { loggedIn, user } = useUser()
   const [loading, setLoading] = useState<boolean>(true)
   const [pods, setPods] = useState<PodType[]>([])
+  const router = useRouter()
   // const [snackbarStatus, setSnackbarStatus] = useState<>(false)
   const { apiService } = useContext(ApiContext)
-  useEffect(() => {
-    apiService
-      .getPods(user.id)
-      .then((result) => {
-        setPods(result)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error(err)
-        setLoading(false)
-      })
-  }, [loggedIn, user])
-  /*
-  const handleDelete = async (docId: string) => {
-    setLoading(true)
+  const getPods = async () => {
     try {
-      await apiService.deletePod(user.id, docId)
-    } catch (e) {
-      console.error(e)
+      const allPods = await apiService.getPods(user.id)
+      setPods(allPods)
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoading(false)
     }
   }
-  const handleEdit = (e) => {}
-  */
+  useEffect(() => {
+    getPods()
+  }, [loggedIn, user])
+
+  const handleDelete = async (docId: string) => {
+    setLoading(true)
+    try {
+      await apiService.deletePod(user.id, docId)
+      getPods()
+    } catch (e) {
+      console.error(e)
+      getPods()
+    }
+  }
+  const handleEdit = async (pod: PodType) => {
+    try {
+      await router.push(`/recipes/${pod.docId}/edit/${pod.name}`)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const render = () => {
     if (loading) {
@@ -60,8 +68,8 @@ const Home = () => {
             <Pod
               key={pod.docId}
               pod={pod}
-              // onEdit={() => handleEdit(pod.docId)}
-              // onDelete={() => handleDelete(pod.docId)}
+              onEdit={() => handleEdit(pod)}
+              onDelete={() => handleDelete(pod.docId)}
             />
           ))}
           <AddButton />

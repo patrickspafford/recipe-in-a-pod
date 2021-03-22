@@ -9,7 +9,7 @@ import isJSONString from '../utils/parsing'
 initFirebase()
 
 const useUser = () => {
-  const [user, setUser] = useState<UserCookie>({
+  const [user, setVanillaUser] = useState<UserCookie>({
     id: '',
     email: '',
     username: '',
@@ -19,20 +19,29 @@ const useUser = () => {
   const router = useRouter()
   const cookieKey = 'auth'
 
-  const logout = async () => firebase.auth()
-    .signOut()
-    .then(() => {
-      cookies.remove(cookieKey)
-      setUser(null)
-      router.push('/login')
+  const setUser = (userData: UserCookie) => {
+    cookies.set('auth', userData, {
+      expires: 1,
     })
-    .catch((e) => {
-      console.error(e)
-    })
+    setVanillaUser(userData)
+  }
+
+  const logout = async () =>
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        cookies.remove(cookieKey)
+        setVanillaUser(null)
+        router.push('/login')
+      })
+      .catch((e) => {
+        console.error(e)
+      })
 
   useEffect(() => {
     const cookie = cookies.get(cookieKey)
-    if (cookie && isJSONString(cookie)) setUser(JSON.parse(cookie))
+    if (cookie && isJSONString(cookie)) setVanillaUser(JSON.parse(cookie))
   }, [])
 
   return {

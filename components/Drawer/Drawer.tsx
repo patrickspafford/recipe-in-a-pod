@@ -1,9 +1,5 @@
-import {
-  Drawer, List, IconButton, Tooltip,
-} from '@material-ui/core'
-import {
-  useState, KeyboardEvent, MouseEvent,
-} from 'react'
+import { Drawer, List, IconButton, Tooltip } from '@material-ui/core'
+import { useState, KeyboardEvent, MouseEvent } from 'react'
 import { MenuIcon, HomeIcon, AddIcon } from '../../icons'
 import { DrawerItem } from '../../components'
 import colors from '../../utils/colors'
@@ -15,9 +11,9 @@ const TemporaryDrawer = () => {
     event: KeyboardEvent | MouseEvent,
   ) => {
     if (
-      event.type === 'keydown'
-      && ((event as KeyboardEvent).key === 'Tab'
-      || (event as KeyboardEvent).key === 'Shift')
+      event.type === 'keydown' &&
+      ((event as KeyboardEvent).key === 'Tab' ||
+        (event as KeyboardEvent).key === 'Shift')
     ) {
       return
     }
@@ -26,10 +22,7 @@ const TemporaryDrawer = () => {
 
   return (
     <div>
-      <Tooltip
-        placement="bottom"
-        title="Menu"
-      >
+      <Tooltip placement="bottom" title="Menu">
         <IconButton
           onClick={toggleDrawer(true)}
           style={{ color: colors.white }}
@@ -52,17 +45,11 @@ const TemporaryDrawer = () => {
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
-          <List>
-            <DrawerItem
-              href="/"
-              icon={<HomeIcon />}
-            >
+          <List style={{ position: 'relative' }}>
+            <DrawerItem href="/" icon={<HomeIcon />}>
               Home
             </DrawerItem>
-            <DrawerItem
-              icon={<AddIcon />}
-              href="/create"
-            >
+            <DrawerItem icon={<AddIcon />} href="/create">
               Create a Pod
             </DrawerItem>
           </List>

@@ -67,7 +67,7 @@
   color: white;
   z-index: -1;
   border: 2px solid #16302b;
-  transition: all 0.4s ease-in-out;
+  transition: all 0.25s ease-in-out;
   text-transform: uppercase;
 }
 
@@ -95,7 +95,7 @@
   text-align: center;
   visibility: visible;
   text-transform: uppercase;
-  transition: width 0.6s, opacity 0.6s;
+  transition: width 0.5s, opacity 0.5s;
   white-space: nowrap;
   background: #eee;
   z-index: -1;

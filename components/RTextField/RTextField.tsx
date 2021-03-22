@@ -1,16 +1,17 @@
 import { TextField } from '@material-ui/core'
-import { Ref, ChangeEvent, CSSProperties } from 'react'
+import { Ref, CSSProperties } from 'react'
+import { TextFieldChange } from '../../types'
 
 interface IRecipeTextField {
-    inputRef?: Ref<HTMLInputElement>
-    children: string
-    error: string
-    placeholder: string
-    textFieldStyle: CSSProperties
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-    inputStyle: any
-    variant: 'standard' | 'filled' | 'outlined'
+  inputRef?: Ref<HTMLInputElement>
+  children: string
+  error: string
+  placeholder: string
+  textFieldStyle?: CSSProperties
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (event: TextFieldChange) => void
+  inputStyle?: any
+  variant?: 'standard' | 'filled' | 'outlined'
 }
 const RecipeTextField = ({
   inputRef,
@@ -41,6 +42,11 @@ const RecipeTextField = ({
 
 RecipeTextField.defaultProps = {
   inputRef: null,
+  textFieldStyle: {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange: () => {},
+  inputStyle: {},
+  variant: 'standard',
 }
 
 export default RecipeTextField

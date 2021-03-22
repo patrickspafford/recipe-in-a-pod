@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
+import { GetServerSideProps } from 'next'
 import {
   Layout,
   Directions,
@@ -14,7 +15,11 @@ import useWindowSize from '../../../hooks/useWindowSize'
 import useUser from '../../../hooks/useUser'
 import { ApiContext } from '../../../contexts/apiContext'
 
-const Recipe = () => {
+interface IRecipe {
+  podDocId: string
+}
+
+const Recipe = ({ podDocId }: IRecipe) => {
   // States Section
   const [pod, setPod] = useState<PodType>()
   const [loading, setLoading] = useState(true)
@@ -24,19 +29,20 @@ const Recipe = () => {
   const { apiService } = useContext(ApiContext)
   const { user, loggedIn } = useUser()
   useEffect(() => {
-    const docId = window.location.pathname.split('recipes/')[1].split('/')[0]
+    const getThisPod = async () => {
+      try {
+        if (!loading) setLoading(true)
+        const fetchedPod = await apiService.getPod(user.id, podDocId)
+        if (typeof fetchedPod === 'string') throw new Error('Error!')
+        setPod(fetchedPod)
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setLoading(false)
+      }
+    }
     if (user && user.id) {
-      apiService
-        .getPod(user.id, docId)
-        .then((fetchedPod: PodType) => {
-          console.log(fetchedPod)
-          setPod(fetchedPod)
-          setLoading(false)
-        })
-        .catch((err) => {
-          console.error(err)
-          // setLoading(false)
-        })
+      getThisPod()
     }
   }, [loggedIn, user])
 
@@ -78,5 +84,11 @@ const Recipe = () => {
     </Layout>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => ({
+  props: {
+    podDocId: context.params.docId,
+  },
+})
 
 export default Recipe

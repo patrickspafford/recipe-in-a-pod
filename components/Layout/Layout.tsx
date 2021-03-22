@@ -1,28 +1,31 @@
-import {
-  ReactNode, useState, MouseEvent,
-} from 'react'
+import { ReactNode, useState, MouseEvent } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
-  AppBar, Typography, ProfileMenu, IconButton, Drawer,
+  AppBar,
+  Typography,
+  ProfileMenu,
+  IconButton,
+  Drawer,
 } from '../../components'
 
 import useUser from '../../hooks/useUser'
 import styles from './Layout.module.css'
 
 interface ILayout {
-    children: ReactNode
-    title: string
-    hideLogInOut?: boolean
+  children: ReactNode
+  title: string
+  hideLogInOut?: boolean
 }
 
 const Layout = ({ children, title, hideLogInOut }: ILayout) => {
   const { user, loggedIn, logout } = useUser()
   const router = useRouter()
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLButtonElement>(null)
-  const handleMenuClick = (e: MouseEvent<HTMLButtonElement>) => setMenuAnchor(e.currentTarget)
+  const handleMenuClick = (e: MouseEvent<HTMLButtonElement>) =>
+    setMenuAnchor(e.currentTarget)
   const handleMenuClose = () => setMenuAnchor(null)
 
   const handleLogInOut = () => (loggedIn ? logout() : router.push('/login'))
@@ -30,21 +33,23 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
   return (
     <>
       <Head>
-        <title>{title ? `${title} | Recipe In a Pod` : 'Recipe In a Pod'}</title>
+        <title>
+          {title ? `${title} | Recipe In a Pod` : 'Recipe In a Pod'}
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <AppBar position="sticky">
-        {
-                loggedIn
-                  ? (
-                    <Drawer />
-                  )
-                  : <IconButton />
-            }
+        {loggedIn ? <Drawer /> : <IconButton />}
         <Link href="/">
           <div className={styles.imageContainer}>
             <Typography variant="h6">Recipe</Typography>
-            <Image className={styles.image} src="/pods.svg" alt="Site logo" height={55} width={55} />
+            <Image
+              className={styles.image}
+              src="/pods.svg"
+              alt="Site logo"
+              height={55}
+              width={55}
+            />
             <Typography variant="h6">Pods</Typography>
           </div>
         </Link>
@@ -58,11 +63,11 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
             handleClick={handleMenuClick}
             handleLogInOut={handleLogInOut}
           />
-        ) : <Typography variant="h6" />}
+        ) : (
+          <Typography variant="h6" />
+        )}
       </AppBar>
-      <div className={styles.childrenContainer}>
-        {children}
-      </div>
+      <div className={styles.childrenContainer}>{children}</div>
     </>
   )
 }

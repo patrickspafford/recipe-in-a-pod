@@ -85,6 +85,27 @@ export default class ApiService {
     }
   }
 
+  async updateRecipePhotoInStorage(file: File, uid: string, recipeId: string) {
+    try {
+      const storageRef = this.storage.ref()
+      const res: firebase.storage.ListResult = await storageRef
+        .child(`recipe-photos/${uid}/${recipeId}/`)
+        .listAll()
+      for await (const photo of res.items) {
+        await storageRef
+          .child(`recipe-photos/${uid}/${recipeId}/${photo.name}`)
+          .delete()
+      }
+      await storageRef
+        .child(`recipe-photos/${uid}/${recipeId}/${file.name}`)
+        .put(file)
+      return 'Successfully uploaded recipe photo'
+    } catch (err) {
+      console.error(err)
+      return err
+    }
+  }
+
   async getProfilePhoto(uid: string) {
     const storageRef = this.storage.ref()
     return storageRef
@@ -274,11 +295,33 @@ export default class ApiService {
       .catch((e) => console.error(e))
   }
 
+  async updatePod(pod: PodType, docId: string) {
+    try {
+      const updatedPodDoc = this.firestore.collection('recipes').doc(docId)
+      updatedPodDoc.update(pod)
+      return updatedPodDoc.id
+    } catch (e) {
+      console.error(e)
+      return e
+    }
+  }
+
   async deletePod(uid: string, docId: string) {
     try {
       await this.firestore.collection('recipes').doc(docId).delete()
       const storageRef = this.storage.ref()
-      await storageRef.child(`recipe-photos/${uid}/${docId}/`).delete()
+      await storageRef
+        .child(`recipe-photos/${uid}/${docId}/`)
+        .listAll()
+        .then(async (res) => {
+          for await (const fileRef of res.items) {
+            fileRef.delete()
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+          throw err
+        })
       console.log('Deleted pod successfully')
       return 'Deleted pod successfully'
     } catch (e) {
