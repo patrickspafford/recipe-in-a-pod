@@ -1,2 +1,11 @@
-- Create " Make recipe "  button
-- Create Recipe validation + snackbar
+- Browse other people's recipes
+  - Show creator and date
+  - Allow ratings from non-owners
+  - Make prettier
+  - Allow edits from owner only
+  - Non owners view photos
+- Snackbars indicating successful deletion / edit
+- Sign in with username
+- Change username
+- Ratings
+- Share recipes with users not signed in

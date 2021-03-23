@@ -12,7 +12,7 @@ interface IPea {
 
 const peaBarMax = {
   duration: 3,
-  cost: 30,
+  cost: 20,
   rating: 5,
 }
 
@@ -38,22 +38,30 @@ const Pea = ({ type, allowHover, title, value }: IPea) => {
     return 0
   }
 
+  const stars = () => {
+    let starString = ''
+    for (let i = 0; i < Math.round(Number(value)); i += 1) {
+      starString += '⭑'
+    }
+    return starString
+  }
+
   const barColor = () => {
     if (typeof value === 'number') {
       const max = peaBarMax[type]
       const isRating = type === 'rating'
       const adjustedValue = value > max ? max : value
       const adjustedValuePercentage = (adjustedValue / max) * 100
-      if (adjustedValuePercentage <= 35) {
-        return isRating ? 'red' : 'green'
+      if (isRating) {
+        if (adjustedValuePercentage <= 25) return 'red'
+        if (adjustedValuePercentage <= 45) return 'orange'
+        if (adjustedValuePercentage <= 65) return 'yellow'
+        return 'green'
       }
-      if (adjustedValuePercentage <= 60) {
-        return isRating ? 'orange' : 'yellow'
-      }
-      if (adjustedValuePercentage <= 85) {
-        return isRating ? 'yellow' : 'orange'
-      }
-      return isRating ? 'green' : 'red'
+      if (adjustedValuePercentage <= 35) return 'green'
+      if (adjustedValuePercentage <= 60) return 'yellow'
+      if (adjustedValuePercentage <= 85) return 'orange'
+      return 'red'
     }
     return '#fff'
   }
@@ -72,7 +80,9 @@ const Pea = ({ type, allowHover, title, value }: IPea) => {
           showText ? styles.slideOutTextTransition : styles.slideOutText
         }
       >
-        <p className={styles.innerText}>{title}</p>
+        <p className={styles.innerText}>
+          {type !== 'rating' ? title : stars()}
+        </p>
         <div
           style={
             showText

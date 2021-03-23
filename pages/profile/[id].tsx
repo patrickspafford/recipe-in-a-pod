@@ -2,7 +2,8 @@
 import { useRef, FormEvent, useContext, useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
-import { Paper, List, ListItem } from '@material-ui/core'
+import { withAuth } from '../../hoc'
+// import { Paper, List, ListItem } from '@material-ui/core'
 import {
   Layout,
   SubmitButton,
@@ -88,4 +89,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => ({
   },
 })
 
-export default ProfilePage
+export default withAuth(ProfilePage)

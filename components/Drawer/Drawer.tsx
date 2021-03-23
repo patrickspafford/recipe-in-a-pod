@@ -1,6 +1,6 @@
 import { Drawer, List, IconButton, Tooltip } from '@material-ui/core'
 import { useState, KeyboardEvent, MouseEvent } from 'react'
-import { MenuIcon, HomeIcon, AddIcon } from '../../icons'
+import { MenuIcon, HomeIcon, AddIcon, BrowseIcon } from '../../icons'
 import { DrawerItem } from '../../components'
 import colors from '../../utils/colors'
 
@@ -51,6 +51,9 @@ const TemporaryDrawer = () => {
             </DrawerItem>
             <DrawerItem icon={<AddIcon />} href="/create">
               Create a Pod
+            </DrawerItem>
+            <DrawerItem icon={<BrowseIcon />} href="/browse">
+              Browse
             </DrawerItem>
           </List>
         </div>

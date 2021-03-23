@@ -190,6 +190,47 @@ export default class ApiService {
     return 'Signed in successfully'
   }
 
+  async getPublicPods() {
+    try {
+      interface IPodsDict {
+        [k: string]: PodType
+      }
+      const podsDict: IPodsDict = {}
+      const snapshots = await this.firestore.collection('recipes').get()
+      snapshots.docs.forEach((doc) => {
+        const recipe = doc.data()
+        recipe.docId = doc.id
+        podsDict[doc.id] = recipe as PodType
+      })
+      const storageRef = this.storage.ref()
+      const allRecipeFolders = await storageRef
+        .child('recipe-photos/')
+        .list({ maxResults: 10 })
+      for await (const folder of allRecipeFolders.prefixes) {
+        // recipe folders by user id (above)
+        const recipePhotoFolders = await folder.list({ maxResults: 10 })
+        for await (const subfolder of recipePhotoFolders.prefixes) {
+          // recipe photo folders with 1 item (above)
+          if (subfolder.name in podsDict) {
+            // basically drilling down until we hit the photos
+            const recipePhoto = await subfolder.listAll()
+            podsDict[subfolder.name].photoLink = await recipePhoto.items[0]
+              .getDownloadURL()
+              .then((url: string) => url)
+              .catch((err) => {
+                console.error(err)
+                return ''
+              })
+          }
+        }
+      }
+      return Object.values(podsDict).filter((pod: PodType) => pod.photoLink)
+    } catch (err) {
+      console.error(err)
+      return []
+    }
+  }
+
   async getPods(uid: string) {
     const pods: PodType[] = []
     await this.firestore
@@ -214,18 +255,7 @@ export default class ApiService {
         .then((res) =>
           res.items[0]
             .getDownloadURL()
-            .then((url: string) => {
-              const xhr = new XMLHttpRequest()
-              xhr.responseType = 'blob'
-              // eslint-disable-next-line no-unused-vars
-              xhr.onload = (_e) => {
-                // eslint-disable-next-line no-unused-vars
-                const blob = xhr.response
-              }
-              xhr.open('GET', url)
-              xhr.send()
-              return url
-            })
+            .then((url: string) => url)
             .catch((err) => {
               console.error(err)
               return ''
@@ -239,7 +269,7 @@ export default class ApiService {
     return pods
   }
 
-  async getPod(uid: string, docId: string) {
+  async getPod(docId: string) {
     const pod: PodType | string = await this.firestore
       .collection('recipes')
       .doc(docId)
@@ -255,7 +285,7 @@ export default class ApiService {
     }
     const storageRef = this.storage.ref()
     pod.photoLink = await storageRef
-      .child(`recipe-photos/${uid}/${docId}/`)
+      .child(`recipe-photos/${pod.uid}/${docId}/`)
       .listAll()
       .then((res) =>
         res.items[0]

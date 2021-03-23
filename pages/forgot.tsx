@@ -8,6 +8,8 @@ import {
   EmailField,
   SubmitButton,
 } from '../components'
+import { withAuth } from '../hoc'
+
 import { ApiContext } from '../contexts/apiContext'
 import { emailPattern } from '../utils/regex'
 

@@ -1,8 +1,8 @@
-import Link from 'next/link'
 import { useEffect, useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ApiContext } from '../contexts/apiContext'
 import { Layout, Pod, LoadingIndicator, AddButton } from '../components'
+import { withAuth } from '../hoc'
 import useUser from '../hooks/useUser'
 import { PodType } from '../types'
 import styles from '../styles/index.module.css'
@@ -61,29 +61,21 @@ const Home = () => {
         </div>
       )
     }
-    if (loggedIn) {
-      return (
-        <div className={styles.podGrid}>
-          {pods.map((pod) => (
-            <Pod
-              key={pod.docId}
-              pod={pod}
-              onEdit={() => handleEdit(pod)}
-              onDelete={() => handleDelete(pod.docId)}
-            />
-          ))}
-          <AddButton />
-        </div>
-      )
-    }
-    console.log(user)
     return (
-      <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
-        <Link href="/login">Please sign in</Link>
+      <div className={styles.podGrid}>
+        {pods.map((pod) => (
+          <Pod
+            key={pod.docId}
+            pod={pod}
+            onEdit={() => handleEdit(pod)}
+            onDelete={() => handleDelete(pod.docId)}
+          />
+        ))}
+        <AddButton />
       </div>
     )
   }
   return <Layout title="My Pods">{render()}</Layout>
 }
 
-export default Home
+export default withAuth(Home)

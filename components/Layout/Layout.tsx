@@ -45,10 +45,10 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
             <Typography variant="h6">Recipe</Typography>
             <Image
               className={styles.image}
-              src="/pods.svg"
+              src="/pea_people.png"
               alt="Site logo"
-              height={55}
-              width={55}
+              height={60}
+              width={136}
             />
             <Typography variant="h6">Pods</Typography>
           </div>

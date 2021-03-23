@@ -4,5 +4,14 @@ import MenuIcon from './MenuIcon'
 import DeleteIcon from './DeleteIcon'
 import TrashIcon from './TrashIcon'
 import EditIcon from './EditIcon'
+import BrowseIcon from './BrowseIcon'
 
-export { AddIcon, HomeIcon, MenuIcon, DeleteIcon, TrashIcon, EditIcon }
+export {
+  AddIcon,
+  HomeIcon,
+  MenuIcon,
+  DeleteIcon,
+  TrashIcon,
+  EditIcon,
+  BrowseIcon,
+}

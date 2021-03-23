@@ -9,6 +9,7 @@ import {
   PhotoFrame,
   LoadingIndicator,
 } from '../../../components'
+import { withAuth } from '../../../hoc'
 import { PodType } from '../../../types'
 import styles from '../../../styles/create.module.css'
 import useWindowSize from '../../../hooks/useWindowSize'
@@ -32,8 +33,9 @@ const Recipe = ({ podDocId }: IRecipe) => {
     const getThisPod = async () => {
       try {
         if (!loading) setLoading(true)
-        const fetchedPod = await apiService.getPod(user.id, podDocId)
+        const fetchedPod = await apiService.getPod(podDocId)
         if (typeof fetchedPod === 'string') throw new Error('Error!')
+        console.log(fetchedPod.uid)
         setPod(fetchedPod)
       } catch (e) {
         console.error(e)
@@ -91,4 +93,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => ({
   },
 })
 
-export default Recipe
+export default withAuth(Recipe)

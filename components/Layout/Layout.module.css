@@ -1,25 +1,25 @@
 .imageContainer {
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 50%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 50%;
 }
 
 .image {
-    -webkit-transition: -webkit-transform .4s ease-in-out;
-    transition: transform .4s ease-in-out;
-    overflow: visible;
-    padding: 0.4rem !important;
+  -webkit-transition: -webkit-transform 0.4s ease-in-out;
+  transition: transform 0.4s ease-in-out;
+  overflow: visible;
+  padding: 0.4rem !important;
 }
 
 .image:hover {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-    cursor: pointer;
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .childrenContainer {
-    padding: 2rem;
+  padding: 2rem;
 }

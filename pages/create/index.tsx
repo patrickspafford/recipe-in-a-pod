@@ -18,6 +18,7 @@ import {
   Duration,
   PodType,
 } from '../../types'
+import { withAuth } from '../../hoc'
 import styles from '../../styles/create.module.css'
 import { ApiContext } from '../../contexts/apiContext'
 import useUser from '../../hooks/useUser'
@@ -393,4 +394,4 @@ const CreatePage = () => {
   )
 }
 
-export default CreatePage
+export default withAuth(CreatePage)

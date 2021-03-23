@@ -19,6 +19,7 @@ import {
   Duration,
   PodType,
 } from '../../../../types'
+import { withAuth } from '../../../../hoc'
 import styles from '../../../../styles/create.module.css'
 import { ApiContext } from '../../../../contexts/apiContext'
 import useUser from '../../../../hooks/useUser'
@@ -75,7 +76,7 @@ const EditPage = ({ podDocId }: IEditPage) => {
   useEffect(() => {
     if (user && user.id) {
       apiService
-        .getPod(user.id, podDocId)
+        .getPod(podDocId)
         .then((fetchedPod: PodType | string) => {
           if (fetchedPod instanceof String) return
           // eslint-disable-next-line no-param-reassign
@@ -336,7 +337,7 @@ const EditPage = ({ podDocId }: IEditPage) => {
       const updatedPodId = await apiService.updatePod(updatedPod, podDocId)
       if (
         recipePhotoRef.current &&
-        recipePhotoRef.current.files &&
+        recipePhotoRef.current.files.length > 0 &&
         recipePhotoRef.current.files[0].name
       ) {
         const msg = await apiService.updateRecipePhotoInStorage(
@@ -348,6 +349,7 @@ const EditPage = ({ podDocId }: IEditPage) => {
           await router.push('/')
         }
       }
+      await router.push('/')
       setLoading(false)
     } catch (err) {
       console.error(err)
@@ -436,4 +438,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => ({
   }, // will be passed to the page component as props
 })
 
-export default EditPage
+export default withAuth(EditPage)
