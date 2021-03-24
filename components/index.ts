@@ -31,6 +31,7 @@ import PhotoFrame from './PhotoFrame'
 import AddButton from './AddButton'
 import ContextMenu from './ContextMenu'
 import RTextField from './RTextField'
+import RatingMenu from './RatingMenu'
 
 export {
   AppBar,
@@ -66,4 +67,5 @@ export {
   LoadingIndicator,
   RecipeTextField,
   IngredientTextField,
+  RatingMenu,
 }

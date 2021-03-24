@@ -1,6 +1,7 @@
 import { useState, MouseEvent, ReactNode } from 'react'
 import { Menu, MenuItem, ListItemIcon } from '@material-ui/core'
 import { TrashIcon, EditIcon, RateIcon, ShareIcon } from '../../icons'
+import { RatingMenu } from '..'
 
 const initialState = {
   mouseX: null,
@@ -32,6 +33,13 @@ const ContextMenu = ({
     mouseX: null | number
     mouseY: null | number
   }>(initialState)
+  const [
+    ratingMenuAnchor,
+    setRatingMenuAnchor,
+  ] = useState<null | HTMLButtonElement>(null)
+  const handleRatingMenuClick = (e: MouseEvent<HTMLButtonElement>) =>
+    setRatingMenuAnchor(e.currentTarget)
+  const handleRatingMenuClose = () => setRatingMenuAnchor(null)
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault()
@@ -82,12 +90,12 @@ const ContextMenu = ({
         {isPublicType ? (
           <>
             {showRate ? (
-              <MenuItem onClick={handleRate}>
-                <ListItemIcon>
-                  <RateIcon />
-                </ListItemIcon>
-                Rate
-              </MenuItem>
+              <RatingMenu
+                anchor={ratingMenuAnchor}
+                handleClose={handleRatingMenuClose}
+                handleClick={handleRatingMenuClick}
+                onRate={handleRate}
+              />
             ) : null}
             <MenuItem onClick={handleShare}>
               <ListItemIcon>
