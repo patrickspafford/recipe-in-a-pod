@@ -5,6 +5,8 @@ import DeleteIcon from './DeleteIcon'
 import TrashIcon from './TrashIcon'
 import EditIcon from './EditIcon'
 import BrowseIcon from './BrowseIcon'
+import RateIcon from './RateIcon'
+import ShareIcon from './ShareIcon'
 
 export {
   AddIcon,
@@ -13,5 +15,7 @@ export {
   DeleteIcon,
   TrashIcon,
   EditIcon,
+  RateIcon,
   BrowseIcon,
+  ShareIcon,
 }

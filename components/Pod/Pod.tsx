@@ -8,11 +8,23 @@ import { ContextMenu } from '../../components'
 
 interface IPod {
   pod: PodType
-  onEdit: any
-  onDelete: any
+  canModify?: boolean
+  onEdit?: any
+  onDelete?: any
+  onRate?: any
+  onShare?: any
+  showRate?: boolean
 }
 
-const Pod = ({ pod, onDelete, onEdit }: IPod) => {
+const Pod = ({
+  pod,
+  onDelete,
+  onEdit,
+  canModify,
+  onRate,
+  onShare,
+  showRate,
+}: IPod) => {
   const [rotated, setRotated] = useState(true)
 
   useEffect(() => {
@@ -27,6 +39,10 @@ const Pod = ({ pod, onDelete, onEdit }: IPod) => {
       className={styles.outerContainer}
       onDelete={onDelete}
       onEdit={onEdit}
+      onRate={onRate}
+      showRate={showRate}
+      onShare={onShare}
+      isPublicType={!canModify}
     >
       <Link href={`/recipes/${pod.docId}/${pod.name}`}>
         <div
@@ -66,6 +82,15 @@ const Pod = ({ pod, onDelete, onEdit }: IPod) => {
       </Link>
     </ContextMenu>
   )
+}
+
+Pod.defaultProps = {
+  canModify: true,
+  onRate: () => console.log('Cannot rate this pod.'),
+  onShare: () => console.log('Cannot share this pod.'),
+  onEdit: () => console.log('Cannot edit this pod.'),
+  onDelete: () => console.log('Cannot delete this pod.'),
+  showRate: true,
 }
 
 export default Pod
