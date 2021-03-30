@@ -13,7 +13,7 @@ interface IContextMenu {
   onEdit: any
   onDelete: any
   onRate?: any
-  showRate: boolean
+  showRate?: boolean
   onShare?: any
   className: any
   isPublicType: boolean
@@ -50,6 +50,7 @@ const ContextMenu = ({
   }
 
   const handleClose = () => {
+    handleRatingMenuClose()
     setState(initialState)
   }
 
@@ -68,8 +69,8 @@ const ContextMenu = ({
     handleClose()
   }
 
-  const handleRate = () => {
-    onRate()
+  const handleRate = (rating: number) => {
+    onRate(rating)
     handleClose()
   }
 

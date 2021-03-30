@@ -1,6 +1,5 @@
 import Layout from './Layout'
 import Pod from './Pod'
-import IngredientTable from './IngredientTable'
 import Directions from './Directions'
 import DirectionsPaper from './DirectionsPaper'
 import DirectionStepper from './DirectionStepper'
@@ -53,7 +52,6 @@ export {
   DrawerItem,
   IconButton,
   Pod,
-  IngredientTable,
   UsernameField,
   ProfileMenu,
   SignUpForm,

@@ -88,6 +88,7 @@ const IngredientTable = ({
                     handleSetIngredient(e, index, 'name')
                   }
                 }}
+                isAlternate={index % 2 === 1}
                 disabled={!editable}
                 placeholder="Ingredient"
                 error={ingredient.error ? ingredient.error.name : ''}
@@ -102,6 +103,7 @@ const IngredientTable = ({
                     handleSetIngredient(e, index, 'amount')
                   }
                 }}
+                isAlternate={index % 2 === 1}
                 disabled={!editable}
                 placeholder="Amount"
                 error={ingredient.error ? ingredient.error.amount : ''}
@@ -117,6 +119,7 @@ const IngredientTable = ({
           <StyledTableRow hover key="add-new-ingredient">
             <StyledTableCell align="center" component="th" scope="row">
               <IngredientTextField
+                isAlternate={ingredients.length % 2 === 1}
                 onChange={(e) => {
                   if (editable) {
                     handleSetNewIngredient(e, 'name')
@@ -130,6 +133,7 @@ const IngredientTable = ({
             </StyledTableCell>
             <StyledTableCell align="center">
               <IngredientTextField
+                isAlternate={ingredients.length % 2 === 1}
                 onChange={(e) => handleSetNewIngredient(e, 'amount')}
                 placeholder="New Ingredient Amount"
                 error={newIngredient.error.amount}

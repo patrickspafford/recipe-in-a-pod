@@ -26,18 +26,25 @@ interface IInfo {
   priceError?: string
   hoursError?: string
   minutesError?: string
+  serves: number
+  servesError?: string
   // eslint-disable-next-line no-unused-vars
   onPriceChange?: (event: TextFieldChange) => void
   // eslint-disable-next-line no-unused-vars
   onHoursChange?: (event: TextFieldChange) => void
   // eslint-disable-next-line no-unused-vars
   onMinutesChange?: (event: TextFieldChange) => void
+  // eslint-disable-next-line no-unused-vars
+  onServesChange?: (event: TextFieldChange) => void
 }
 const Info = ({
   onPriceChange,
   onHoursChange,
   onMinutesChange,
+  onServesChange,
   price,
+  serves,
+  servesError,
   prepTime,
   priceError,
   hoursError,
@@ -142,6 +149,38 @@ const Info = ({
           }}
         />
       </div>
+      <div className={styles.innerContainer}>
+        <TextField
+          type="number"
+          variant="standard"
+          label="Serves"
+          InputProps={{
+            disableUnderline: true,
+          }}
+          InputLabelProps={{
+            style: {
+              color: colors.primary,
+            },
+          }}
+          error={servesError.length > 0}
+          helperText={servesError}
+          className={styles.textField}
+          value={serves}
+          fullWidth
+          // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            className: styles.input,
+            min: 1,
+            max: 100,
+            readOnly: !editable,
+          }}
+          onChange={(e) => {
+            if (editable) {
+              onServesChange(e)
+            }
+          }}
+        />
+      </div>
     </div>
   </ThemeProvider>
 )
@@ -151,9 +190,11 @@ Info.defaultProps = {
   priceError: '',
   hoursError: '',
   minutesError: '',
+  servesError: '',
   onPriceChange: () => console.log('No price change function provided'),
   onHoursChange: () => console.log('No hours change function provided'),
   onMinutesChange: () => console.log('No minutes change function provided'),
+  onServesChange: () => console.log('No serves change function provided.'),
 }
 
 export default Info

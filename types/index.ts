@@ -8,6 +8,17 @@ type FirebaseError = {
   code: string
 }
 
+interface MealCategory {
+  Breakfast: boolean
+  Lunch: boolean
+  Dinner: boolean
+  Beverage: boolean
+  Brunch: boolean
+  Dessert: boolean
+}
+
+type Serves = number
+
 type Instruction = {
   label: string
   details: string
@@ -30,14 +41,21 @@ type Duration = {
   minutes: number
 }
 
+interface NutritionFacts {
+  [k: string]: string | number
+}
+
 type PodType = {
   docId?: string
   date: Date
+  isPublic?: boolean
   duration: Duration
   ingredients: Ingredient[]
   instructions: Instruction[]
   name: string
   photoLink?: string
+  serves: Serves
+  nutritionFacts?: NutritionFacts
   price: number
   uid: string
 }
@@ -75,6 +93,7 @@ type SnackbarStatus = {
 export type {
   Action,
   PeaType,
+  MealCategory,
   FirebaseUser,
   PseudoEvent,
   FirebaseError,

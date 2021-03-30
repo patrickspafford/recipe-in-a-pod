@@ -24,6 +24,10 @@ const BrowsePage = () => {
     }
   }
 
+  const handleRate = (rating: number) => {
+    alert(rating)
+  }
+
   useEffect(() => {
     getPublicPods()
   }, [])
@@ -47,7 +51,7 @@ const BrowsePage = () => {
             <Pod
               pod={pod}
               canModify={false}
-              onRate={() => {}}
+              onRate={(rating: number) => handleRate(rating)}
               onShare={() => {}}
               showRate={user && user.id !== pod.uid}
             />

@@ -1,4 +1,9 @@
-import { MenuItem, Menu, ListItemIcon, Typography } from '@material-ui/core'
+import {
+  MenuItem,
+  Menu,
+  ListItemIcon,
+  ClickAwayListener,
+} from '@material-ui/core'
 import { RateIcon } from '../../icons'
 
 interface IRatingMenu {
@@ -7,6 +12,7 @@ interface IRatingMenu {
   handleClick: any
   onRate: any
 }
+
 const RatingMenu = ({
   anchor,
   handleClose,
@@ -21,7 +27,6 @@ const RatingMenu = ({
     <Menu
       id="recipe-rating-menu"
       anchorEl={anchor}
-      keepMounted
       open={Boolean(anchor)}
       onClose={handleClose}
     >

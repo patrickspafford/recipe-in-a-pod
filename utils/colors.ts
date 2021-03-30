@@ -5,5 +5,6 @@ export default {
   quaternary: '#85B79D',
   quinary: '#C0E5C8',
   white: '#fff',
+  grey: '#ccc',
   black: '#000',
 }

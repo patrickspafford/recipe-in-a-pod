@@ -13,6 +13,7 @@ interface IIngredientTextField {
   onDeleteClicked?: any
   onButtonClicked?: any
   error?: string
+  isAlternate: boolean
   disabled?: boolean
   // eslint-disable-next-line no-unused-vars
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
@@ -20,6 +21,7 @@ interface IIngredientTextField {
 const IngredientTextField = ({
   inputRef,
   onChange,
+  isAlternate,
   error,
   children,
   placeholder,
@@ -33,7 +35,7 @@ const IngredientTextField = ({
     style={{
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: colors.white,
+      backgroundColor: isAlternate ? colors.quinary : colors.white,
       borderRadius: '1rem',
     }}
   >
