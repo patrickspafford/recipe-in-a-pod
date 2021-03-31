@@ -17,6 +17,8 @@ import {
   Instruction,
   Duration,
   PodType,
+  MealCategory,
+  CheckboxChange,
 } from '../../types'
 import { withAuth } from '../../hoc'
 import styles from '../../styles/create.module.css'
@@ -35,6 +37,7 @@ const CreatePage = () => {
   // States Section
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState<any>()
+  const [serves, setServes] = useState<number>(0)
   const [recipeTitle, setRecipeTitle] = useState<string>()
   const [recipePrice, setRecipePrice] = useState<number>(0)
   const [recipeDuration, setRecipeDuration] = useState<Duration>({
@@ -43,6 +46,14 @@ const CreatePage = () => {
   })
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [activeStep, setActiveStep] = useState<number>(0)
+  const [mealCategories, setMealCategories] = useState<MealCategory>({
+    Breakfast: false,
+    Lunch: false,
+    Brunch: false,
+    Dinner: false,
+    Beverage: false,
+    Dessert: false,
+  })
   const [steps, setSteps] = useState<Instruction[]>([
     {
       label: '',
@@ -262,6 +273,10 @@ const CreatePage = () => {
     }
   }
 
+  const handleMealCategoryChange = (e: CheckboxChange, key: string) => {
+    setMealCategories({ ...mealCategories, [key]: e.target.checked })
+  }
+
   const handleSetImage = (e: ChangeEvent<HTMLInputElement>) => {
     setImage(URL.createObjectURL(e.target.files[0]))
   }
@@ -351,6 +366,8 @@ const CreatePage = () => {
           />
           <Info
             price={recipePrice}
+            serves={serves}
+            mealCategories={mealCategories}
             prepTime={recipeDuration}
             priceError={recipePriceError}
             hoursError={recipeDurationError.hours}
@@ -358,6 +375,10 @@ const CreatePage = () => {
             onHoursChange={handleHoursChange}
             onMinutesChange={handleMinutesChange}
             onPriceChange={handlePriceChange}
+            onCheckboxChange={handleMealCategoryChange}
+            onServesChange={(e: TextFieldChange) =>
+              setServes(Number(e.target.value))
+            }
           />
           <div style={{ width: '100%' }}>
             <SubmitButton

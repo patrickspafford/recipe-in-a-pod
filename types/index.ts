@@ -67,6 +67,7 @@ type PseudoEvent = {
 }
 
 type TextFieldChange = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+type CheckboxChange = ChangeEvent<HTMLInputElement>
 
 type FirebaseUser = {
   uid: string
@@ -94,6 +95,7 @@ export type {
   Action,
   PeaType,
   MealCategory,
+  CheckboxChange,
   FirebaseUser,
   PseudoEvent,
   FirebaseError,

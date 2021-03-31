@@ -7,15 +7,23 @@ import EditIcon from './EditIcon'
 import BrowseIcon from './BrowseIcon'
 import RateIcon from './RateIcon'
 import ShareIcon from './ShareIcon'
+import TimerIcon from './TimerIcon'
+import MoneyIcon from './MoneyIcon'
+import PeopleIcon from './PeopleIcon'
+import MealIcon from './MealIcon'
 
 export {
   AddIcon,
   HomeIcon,
+  MealIcon,
   MenuIcon,
+  MoneyIcon,
+  PeopleIcon,
   DeleteIcon,
   TrashIcon,
   EditIcon,
   RateIcon,
   BrowseIcon,
   ShareIcon,
+  TimerIcon,
 }

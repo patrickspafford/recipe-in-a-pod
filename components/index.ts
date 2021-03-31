@@ -31,6 +31,7 @@ import AddButton from './AddButton'
 import ContextMenu from './ContextMenu'
 import RTextField from './RTextField'
 import RatingMenu from './RatingMenu'
+import MealCheckboxes from './MealCheckboxes'
 
 export {
   AppBar,
@@ -66,4 +67,5 @@ export {
   RecipeTextField,
   IngredientTextField,
   RatingMenu,
+  MealCheckboxes,
 }

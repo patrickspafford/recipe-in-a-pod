@@ -1,20 +1,23 @@
 import { TextField, ThemeProvider } from '@material-ui/core'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { Duration, TextFieldChange } from '../../types'
+import {
+  CheckboxChange,
+  Duration,
+  MealCategory,
+  TextFieldChange,
+} from '../../types'
+import { TimerIcon, PeopleIcon, MoneyIcon, MealIcon } from '../../icons'
 import styles from './Info.module.css'
 import colors from '../../utils/colors'
+import { MealCheckboxes } from '..'
 
 const theme = createMuiTheme({
-  overrides: {
-    MuiSvgIcon: {
-      root: {
-        fill: colors.primary,
-      },
-    },
-  },
   palette: {
     primary: {
       main: colors.white,
+    },
+    secondary: {
+      main: colors.quinary,
     },
   },
 })
@@ -27,6 +30,8 @@ interface IInfo {
   hoursError?: string
   minutesError?: string
   serves: number
+  mealCategories: MealCategory
+  onCheckboxChange: any
   servesError?: string
   // eslint-disable-next-line no-unused-vars
   onPriceChange?: (event: TextFieldChange) => void
@@ -38,6 +43,8 @@ interface IInfo {
   onServesChange?: (event: TextFieldChange) => void
 }
 const Info = ({
+  mealCategories,
+  onCheckboxChange,
   onPriceChange,
   onHoursChange,
   onMinutesChange,
@@ -53,38 +60,6 @@ const Info = ({
 }: IInfo) => (
   <ThemeProvider theme={theme}>
     <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <TextField
-          variant="standard"
-          label="Total Cost"
-          type="number"
-          InputProps={{
-            disableUnderline: true,
-          }}
-          InputLabelProps={{
-            style: {
-              color: colors.primary,
-            },
-          }}
-          error={priceError.length > 0}
-          helperText={priceError}
-          className={styles.textField}
-          value={price}
-          fullWidth
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          inputProps={{
-            className: styles.input,
-            min: 0,
-            max: 1000000,
-            readOnly: !editable,
-          }}
-          onChange={(e) => {
-            if (editable) {
-              onPriceChange(e)
-            }
-          }}
-        />
-      </div>
       <div className={styles.innerContainer}>
         <TextField
           variant="standard"
@@ -116,6 +91,12 @@ const Info = ({
             }
           }}
         />
+      </div>
+      <div
+        className={styles.innerContainer}
+        style={{ justifyContent: 'center', backgroundColor: colors.primary }}
+      >
+        <TimerIcon size="large" style={{ fill: colors.white }} />
       </div>
       <div className={styles.innerContainer}>
         <TextField
@@ -149,6 +130,50 @@ const Info = ({
           }}
         />
       </div>
+    </div>
+    <div className={styles.container}>
+      <div className={styles.innerContainer}>
+        <TextField
+          variant="standard"
+          label="Total Cost"
+          type="number"
+          InputProps={{
+            disableUnderline: true,
+          }}
+          InputLabelProps={{
+            style: {
+              color: colors.primary,
+            },
+          }}
+          error={priceError.length > 0}
+          helperText={priceError}
+          className={styles.textField}
+          value={price}
+          fullWidth
+          // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            className: styles.input,
+            min: 0,
+            max: 1000000,
+            readOnly: !editable,
+          }}
+          onChange={(e) => {
+            if (editable) {
+              onPriceChange(e)
+            }
+          }}
+        />
+      </div>
+      <div
+        className={styles.innerContainer}
+        style={{
+          justifyContent: 'space-between',
+          backgroundColor: colors.primary,
+        }}
+      >
+        <MoneyIcon size="large" style={{ fill: colors.white }} />
+        <PeopleIcon size="large" style={{ fill: colors.white }} />
+      </div>
       <div className={styles.innerContainer}>
         <TextField
           type="number"
@@ -171,7 +196,7 @@ const Info = ({
           inputProps={{
             className: styles.input,
             min: 1,
-            max: 100,
+            max: 1000,
             readOnly: !editable,
           }}
           onChange={(e) => {
@@ -181,6 +206,44 @@ const Info = ({
           }}
         />
       </div>
+    </div>
+    <div className={styles.container} style={{ padding: '1rem 5rem' }}>
+      <MealCheckboxes
+        firstLabel="Breakfast"
+        secondLabel="Brunch"
+        thirdLabel="Lunch"
+        firstChecked={mealCategories.Breakfast}
+        secondChecked={mealCategories.Brunch}
+        thirdChecked={mealCategories.Lunch}
+        handleFirstChange={(e: CheckboxChange) => {
+          onCheckboxChange(e, 'Breakfast')
+        }}
+        handleSecondChange={(e: CheckboxChange) => {
+          onCheckboxChange(e, 'Brunch')
+        }}
+        handleThirdChange={(e: CheckboxChange) => onCheckboxChange(e, 'Lunch')}
+      />
+      <div
+        className={styles.innerContainer}
+        style={{ backgroundColor: colors.primary, justifyContent: 'center' }}
+      >
+        <MealIcon size="large" />
+      </div>
+      <MealCheckboxes
+        firstLabel="Dinner"
+        secondLabel="Dessert"
+        thirdLabel="Beverage"
+        firstChecked={mealCategories.Dinner}
+        secondChecked={mealCategories.Dessert}
+        thirdChecked={mealCategories.Beverage}
+        handleFirstChange={(e: CheckboxChange) => onCheckboxChange(e, 'Dinner')}
+        handleSecondChange={(e: CheckboxChange) => {
+          onCheckboxChange(e, 'Dessert')
+        }}
+        handleThirdChange={(e: CheckboxChange) => {
+          onCheckboxChange(e, 'Beverage')
+        }}
+      />
     </div>
   </ThemeProvider>
 )
