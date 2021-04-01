@@ -24,8 +24,16 @@ const BrowsePage = () => {
     }
   }
 
-  const handleRate = (rating: number) => {
-    alert(rating)
+  const handleRate = async (rating: number, docId: string) => {
+    try {
+      setLoading(true)
+      await apiService.ratePod(user.id, docId, rating)
+      // refetch ratings
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
+      console.error(e)
+    }
   }
 
   useEffect(() => {
@@ -51,7 +59,7 @@ const BrowsePage = () => {
             <Pod
               pod={pod}
               canModify={false}
-              onRate={(rating: number) => handleRate(rating)}
+              onRate={(rating: number) => handleRate(rating, pod.docId)}
               onShare={() => {}}
               showRate={user && user.id !== pod.uid}
             />

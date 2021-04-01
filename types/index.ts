@@ -59,6 +59,7 @@ type PodType = {
   nutritionFacts?: NutritionFacts
   price: number
   uid: string
+  rating?: number
 }
 
 type PseudoEvent = {

@@ -313,6 +313,21 @@ export default class ApiService {
         console.error(err)
         return ''
       })
+    const ratings = await this.firestore
+      .collection('ratings')
+      .where('recipeId', '==', pod.docId)
+      .get()
+    if (ratings.empty) {
+      pod.rating = 3
+    } else {
+      let ratingSum = 0
+      for (const doc of ratings.docs) {
+        ratingSum += doc.data().rating
+      }
+      let ratingAverage = ratingSum / ratings.docs.length
+      ratingAverage = Math.round(ratingAverage)
+      pod.rating = ratingAverage
+    }
     return pod
   }
 
@@ -356,6 +371,34 @@ export default class ApiService {
         })
       console.log('Deleted pod successfully')
       return 'Deleted pod successfully'
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  async ratePod(uid: string, docId: string, newRating: number) {
+    try {
+      if (!uid || !docId || !newRating) {
+        throw new Error('Not enough info supplied!')
+      }
+      const existingRatings = await this.firestore
+        .collection('ratings')
+        .where('submittedBy', '==', uid)
+        .where('recipeId', '==', docId)
+        .get()
+      if (!existingRatings.empty) {
+        for await (const doc of existingRatings.docs) {
+          await doc[0].ref.update({ rating: newRating })
+        }
+      } else {
+        await this.firestore.collection('ratings').add({
+          submittedBy: uid,
+          recipeId: docId,
+          rating: newRating,
+        })
+      }
+      return 'Rated recipe successfully!'
     } catch (e) {
       console.error(e)
       throw e
