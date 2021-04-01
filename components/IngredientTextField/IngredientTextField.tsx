@@ -1,5 +1,5 @@
 import { TextField } from '@material-ui/core'
-import { Ref, ChangeEvent } from 'react'
+import { Ref, ChangeEvent, CSSProperties } from 'react'
 import { AddIcon, DeleteIcon } from '../../icons'
 import { IconButton } from '../../components'
 import colors from '../../utils/colors'
@@ -17,6 +17,7 @@ interface IIngredientTextField {
   disabled?: boolean
   // eslint-disable-next-line no-unused-vars
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  containerStyles?: CSSProperties
 }
 const IngredientTextField = ({
   inputRef,
@@ -30,6 +31,7 @@ const IngredientTextField = ({
   onButtonClicked,
   deleteButton,
   onDeleteClicked,
+  containerStyles,
 }: IIngredientTextField) => (
   <div
     style={{
@@ -37,6 +39,7 @@ const IngredientTextField = ({
       alignItems: 'center',
       backgroundColor: isAlternate ? colors.quinary : colors.white,
       borderRadius: '1rem',
+      ...containerStyles,
     }}
   >
     <TextField
@@ -84,6 +87,7 @@ IngredientTextField.defaultProps = {
   addButton: false,
   deleteButton: false,
   error: '',
+  containerStyles: {},
   disabled: false,
   onDeleteClicked: () => console.warn('On Delete Clicked Not Init.'),
   onButtonClicked: () => console.warn('On Button Clicked Not Init.'),

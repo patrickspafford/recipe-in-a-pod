@@ -88,6 +88,7 @@ const IngredientTable = ({
                     handleSetIngredient(e, index, 'name')
                   }
                 }}
+                containerStyles={{ paddingRight: '2.25rem' }}
                 isAlternate={index % 2 === 1}
                 disabled={!editable}
                 placeholder="Ingredient"
@@ -125,6 +126,7 @@ const IngredientTable = ({
                     handleSetNewIngredient(e, 'name')
                   }
                 }}
+                containerStyles={{ paddingRight: '2.55rem' }}
                 placeholder="New Ingredient"
                 error={newIngredient.error.name}
               >

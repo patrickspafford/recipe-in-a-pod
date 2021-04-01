@@ -94,7 +94,10 @@ const Info = ({
       </div>
       <div
         className={styles.innerContainer}
-        style={{ justifyContent: 'center', backgroundColor: colors.primary }}
+        style={{
+          justifyContent: 'center',
+          backgroundColor: colors.primary,
+        }}
       >
         <TimerIcon size="large" style={{ fill: colors.white }} />
       </div>
@@ -212,15 +215,16 @@ const Info = ({
         firstLabel="Breakfast"
         secondLabel="Brunch"
         thirdLabel="Lunch"
+        editable={editable}
         firstChecked={mealCategories.Breakfast}
         secondChecked={mealCategories.Brunch}
         thirdChecked={mealCategories.Lunch}
         handleFirstChange={(e: CheckboxChange) => {
           onCheckboxChange(e, 'Breakfast')
         }}
-        handleSecondChange={(e: CheckboxChange) => {
+        handleSecondChange={(e: CheckboxChange) =>
           onCheckboxChange(e, 'Brunch')
-        }}
+        }
         handleThirdChange={(e: CheckboxChange) => onCheckboxChange(e, 'Lunch')}
       />
       <div
@@ -233,16 +237,17 @@ const Info = ({
         firstLabel="Dinner"
         secondLabel="Dessert"
         thirdLabel="Beverage"
+        editable={editable}
         firstChecked={mealCategories.Dinner}
         secondChecked={mealCategories.Dessert}
         thirdChecked={mealCategories.Beverage}
         handleFirstChange={(e: CheckboxChange) => onCheckboxChange(e, 'Dinner')}
-        handleSecondChange={(e: CheckboxChange) => {
+        handleSecondChange={(e: CheckboxChange) =>
           onCheckboxChange(e, 'Dessert')
-        }}
-        handleThirdChange={(e: CheckboxChange) => {
+        }
+        handleThirdChange={(e: CheckboxChange) =>
           onCheckboxChange(e, 'Beverage')
-        }}
+        }
       />
     </div>
   </ThemeProvider>

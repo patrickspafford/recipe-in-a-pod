@@ -72,6 +72,7 @@ const CreatePage = () => {
       name: 'You must specify an ingredient.',
     },
   })
+  const [servesError, setServesError] = useState<string>('')
   const [recipePriceError, setRecipePriceError] = useState<string>('')
   const [recipeDurationError, setRecipeDurationError] = useState({
     hours: '',
@@ -255,6 +256,21 @@ const CreatePage = () => {
     }
   }
 
+  const handleServesChange = (e: TextFieldChange) => {
+    const servesValue = Number(e.target.value)
+    if (Number.isNaN(servesValue)) {
+      setServes(0)
+      setServesError('Please enter a valid number of people.')
+    } else if (servesValue > 1001) {
+      setServesError('Recipes cannot serve more than 1000 people.')
+    } else if (servesValue < 0) {
+      setServesError('Recipes cannot serve less than 1 person.')
+    } else {
+      setServes(servesValue)
+      setServesError('')
+    }
+  }
+
   const handlePriceChange = (e: TextFieldChange) => {
     const price = Number(e.target.value)
     let priceError = ''
@@ -341,6 +357,8 @@ const CreatePage = () => {
       })
   }
 
+  console.log(mealCategories)
+
   const invalidRecipe =
     titleError.length > 0 ||
     recipePriceError.length > 0 ||
@@ -367,6 +385,7 @@ const CreatePage = () => {
           <Info
             price={recipePrice}
             serves={serves}
+            servesError={servesError}
             mealCategories={mealCategories}
             prepTime={recipeDuration}
             priceError={recipePriceError}
@@ -376,9 +395,7 @@ const CreatePage = () => {
             onMinutesChange={handleMinutesChange}
             onPriceChange={handlePriceChange}
             onCheckboxChange={handleMealCategoryChange}
-            onServesChange={(e: TextFieldChange) =>
-              setServes(Number(e.target.value))
-            }
+            onServesChange={handleServesChange}
           />
           <div style={{ width: '100%' }}>
             <SubmitButton
