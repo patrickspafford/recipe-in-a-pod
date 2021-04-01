@@ -11,6 +11,8 @@ import TimerIcon from './TimerIcon'
 import MoneyIcon from './MoneyIcon'
 import PeopleIcon from './PeopleIcon'
 import MealIcon from './MealIcon'
+import PublicIcon from './PublicIcon'
+import PrivateIcon from './PrivateIcon'
 
 export {
   AddIcon,
@@ -26,4 +28,6 @@ export {
   BrowseIcon,
   ShareIcon,
   TimerIcon,
+  PublicIcon,
+  PrivateIcon,
 }

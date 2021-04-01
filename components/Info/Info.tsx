@@ -222,9 +222,9 @@ const Info = ({
         handleFirstChange={(e: CheckboxChange) => {
           onCheckboxChange(e, 'Breakfast')
         }}
-        handleSecondChange={(e: CheckboxChange) =>
+        handleSecondChange={(e: CheckboxChange) => {
           onCheckboxChange(e, 'Brunch')
-        }
+        }}
         handleThirdChange={(e: CheckboxChange) => onCheckboxChange(e, 'Lunch')}
       />
       <div
@@ -242,12 +242,12 @@ const Info = ({
         secondChecked={mealCategories.Dessert}
         thirdChecked={mealCategories.Beverage}
         handleFirstChange={(e: CheckboxChange) => onCheckboxChange(e, 'Dinner')}
-        handleSecondChange={(e: CheckboxChange) =>
+        handleSecondChange={(e: CheckboxChange) => {
           onCheckboxChange(e, 'Dessert')
-        }
-        handleThirdChange={(e: CheckboxChange) =>
+        }}
+        handleThirdChange={(e: CheckboxChange) => {
           onCheckboxChange(e, 'Beverage')
-        }
+        }}
       />
     </div>
   </ThemeProvider>

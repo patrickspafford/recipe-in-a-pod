@@ -10,6 +10,7 @@ import {
   PhotoFrame,
   FileButton,
   LoadingIndicator,
+  Switch,
 } from '../../components'
 import {
   Ingredient,
@@ -19,12 +20,14 @@ import {
   PodType,
   MealCategory,
   CheckboxChange,
+  SwitchChange,
 } from '../../types'
 import { withAuth } from '../../hoc'
 import styles from '../../styles/create.module.css'
 import { ApiContext } from '../../contexts/apiContext'
 import useUser from '../../hooks/useUser'
 import useWindowSize from '../../hooks/useWindowSize'
+import { PrivateIcon, PublicIcon } from '../../icons'
 
 const CreatePage = () => {
   // Hooks
@@ -35,9 +38,10 @@ const CreatePage = () => {
   // Refs
   const recipePhotoRef = useRef<HTMLInputElement | null>(null)
   // States Section
+  const [isPublic, setIsPublic] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState<any>()
-  const [serves, setServes] = useState<number>(0)
+  const [serves, setServes] = useState<number>(1)
   const [recipeTitle, setRecipeTitle] = useState<string>()
   const [recipePrice, setRecipePrice] = useState<number>(0)
   const [recipeDuration, setRecipeDuration] = useState<Duration>({
@@ -305,6 +309,9 @@ const CreatePage = () => {
       name: recipeTitle,
       duration: recipeDuration,
       price: recipePrice,
+      serves,
+      isPublic,
+      mealCategories,
       uid: user.id,
       ingredients: [...ingredients, newIngredient]
         .map((ingred) => ({
@@ -357,8 +364,6 @@ const CreatePage = () => {
       })
   }
 
-  console.log(mealCategories)
-
   const invalidRecipe =
     titleError.length > 0 ||
     recipePriceError.length > 0 ||
@@ -398,6 +403,15 @@ const CreatePage = () => {
             onServesChange={handleServesChange}
           />
           <div style={{ width: '100%' }}>
+            <Switch
+              checked={isPublic}
+              leftLabel="Private"
+              rightLabel="Public"
+              leftIcon={<PrivateIcon />}
+              rightIcon={<PublicIcon />}
+              onChange={(e: SwitchChange) => setIsPublic(e.target.checked)}
+              name="Public"
+            />
             <SubmitButton
               disabled={loading || invalidRecipe}
               onClick={handleSubmitRecipe}

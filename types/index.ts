@@ -50,6 +50,7 @@ type PodType = {
   date: Date
   isPublic?: boolean
   duration: Duration
+  mealCategories: MealCategory
   ingredients: Ingredient[]
   instructions: Instruction[]
   name: string
@@ -68,6 +69,7 @@ type PseudoEvent = {
 
 type TextFieldChange = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 type CheckboxChange = ChangeEvent<HTMLInputElement>
+type SwitchChange = ChangeEvent<HTMLInputElement>
 
 type FirebaseUser = {
   uid: string
@@ -100,6 +102,7 @@ export type {
   PseudoEvent,
   FirebaseError,
   TextFieldChange,
+  SwitchChange,
   UserCookie,
   PodType,
   Ingredient,
