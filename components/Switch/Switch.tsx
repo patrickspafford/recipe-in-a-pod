@@ -7,6 +7,7 @@ import colors from '../../utils/colors'
 interface ISwitch {
   checked: boolean
   onChange: any
+  editable: boolean
   leftIcon: ReactNode
   leftLabel: string
   rightLabel: string
@@ -28,6 +29,7 @@ const theme = createMuiTheme({
 const Switch = ({
   checked,
   onChange,
+  editable,
   name,
   leftIcon,
   rightIcon,
@@ -62,6 +64,7 @@ const Switch = ({
         </div>
         <MuiSwitch
           checked={checked}
+          disabled={!editable}
           onChange={onChange}
           name={name}
           inputProps={{ 'aria-label': `toggle ${name}` }}

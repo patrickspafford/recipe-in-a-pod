@@ -199,8 +199,10 @@ export default class ApiService {
       const snapshots = await this.firestore.collection('recipes').get()
       snapshots.docs.forEach((doc) => {
         const recipe = doc.data()
-        recipe.docId = doc.id
-        podsDict[doc.id] = recipe as PodType
+        if (recipe.isPublic) {
+          recipe.docId = doc.id
+          podsDict[doc.id] = recipe as PodType
+        }
       })
       const storageRef = this.storage.ref()
       const allRecipeFolders = await storageRef

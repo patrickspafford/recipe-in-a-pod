@@ -327,7 +327,6 @@ const CreatePage = () => {
         .filter((instruction) => instruction.label && instruction.details),
       date: new Date(),
     }
-    console.log(recipePhotoRef.current.files[0].name)
     apiService
       .createPod(newPod)
       .then((newPodId) => {
@@ -367,6 +366,7 @@ const CreatePage = () => {
   const invalidRecipe =
     titleError.length > 0 ||
     recipePriceError.length > 0 ||
+    servesError.length > 0 ||
     recipeDurationError.hours.length > 0 ||
     recipeDurationError.minutes.length > 0 ||
     !recipePhotoRef.current.files[0] ||
@@ -381,6 +381,7 @@ const CreatePage = () => {
         <div className={isLarge ? styles.innerDivLarge : styles.innerDivSmall}>
           <Ingredients
             ingredients={ingredients}
+            editable
             newIngredient={newIngredient}
             handleAddIngredient={handleAddIngredient}
             handleSetIngredient={handleSetIngredient}
@@ -390,6 +391,7 @@ const CreatePage = () => {
           <Info
             price={recipePrice}
             serves={serves}
+            editable
             servesError={servesError}
             mealCategories={mealCategories}
             prepTime={recipeDuration}
@@ -407,6 +409,7 @@ const CreatePage = () => {
               checked={isPublic}
               leftLabel="Private"
               rightLabel="Public"
+              editable
               leftIcon={<PrivateIcon />}
               rightIcon={<PublicIcon />}
               onChange={(e: SwitchChange) => setIsPublic(e.target.checked)}
@@ -421,7 +424,11 @@ const CreatePage = () => {
           </div>
         </div>
         <div className={styles.directionsContainer}>
-          <RecipeTitle onChange={handleRecipeTitleChange} error={titleError}>
+          <RecipeTitle
+            onChange={handleRecipeTitleChange}
+            error={titleError}
+            editable
+          >
             {recipeTitle}
           </RecipeTitle>
           <div
@@ -435,6 +442,7 @@ const CreatePage = () => {
           <Directions
             activeStep={activeStep}
             steps={steps}
+            editable
             setActiveStep={setActiveStep}
             handleAddStepAtIndex={handleAddStepAtIndex}
             handleRemoveStepAtIndex={handleRemoveStepAtIndex}

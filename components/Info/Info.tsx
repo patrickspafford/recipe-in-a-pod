@@ -31,7 +31,7 @@ interface IInfo {
   minutesError?: string
   serves: number
   mealCategories: MealCategory
-  onCheckboxChange: any
+  onCheckboxChange?: (event: CheckboxChange, key: string) => void
   servesError?: string
   // eslint-disable-next-line no-unused-vars
   onPriceChange?: (event: TextFieldChange) => void
@@ -263,6 +263,7 @@ Info.defaultProps = {
   onHoursChange: () => console.log('No hours change function provided'),
   onMinutesChange: () => console.log('No minutes change function provided'),
   onServesChange: () => console.log('No serves change function provided.'),
+  onCheckboxChange: () => console.log('No checkbox function provided.'),
 }
 
 export default Info

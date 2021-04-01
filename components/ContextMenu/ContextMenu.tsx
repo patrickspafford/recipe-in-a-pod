@@ -88,39 +88,38 @@ const ContextMenu = ({
             : undefined
         }
       >
-        {isPublicType ? (
-          <>
-            {showRate ? (
-              <RatingMenu
-                anchor={ratingMenuAnchor}
-                handleClose={handleRatingMenuClose}
-                handleClick={handleRatingMenuClick}
-                onRate={handleRate}
-              />
-            ) : null}
-            <MenuItem onClick={handleShare}>
-              <ListItemIcon>
-                <ShareIcon />
-              </ListItemIcon>
-              Share
-            </MenuItem>
-          </>
-        ) : (
-          <>
-            <MenuItem onClick={handleEdit}>
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              Edit
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <TrashIcon />
-              </ListItemIcon>
-              Delete
-            </MenuItem>
-          </>
-        )}
+        {isPublicType
+          ? [
+              showRate ? (
+                <RatingMenu
+                  key={0}
+                  anchor={ratingMenuAnchor}
+                  handleClose={handleRatingMenuClose}
+                  handleClick={handleRatingMenuClick}
+                  onRate={handleRate}
+                />
+              ) : null,
+              <MenuItem key={1} onClick={handleShare}>
+                <ListItemIcon>
+                  <ShareIcon />
+                </ListItemIcon>
+                Share
+              </MenuItem>,
+            ]
+          : [
+              <MenuItem key={2} onClick={handleEdit}>
+                <ListItemIcon>
+                  <EditIcon />
+                </ListItemIcon>
+                Edit
+              </MenuItem>,
+              <MenuItem key={3} onClick={handleDelete}>
+                <ListItemIcon>
+                  <TrashIcon />
+                </ListItemIcon>
+                Delete
+              </MenuItem>,
+            ]}
       </Menu>
     </div>
   )

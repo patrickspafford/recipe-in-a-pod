@@ -10,15 +10,20 @@ import {
   SubmitButton,
   PhotoFrame,
   FileButton,
+  Switch,
   LoadingIndicator,
 } from '../../../../components'
 import {
   Ingredient,
   TextFieldChange,
   Instruction,
+  CheckboxChange,
   Duration,
   PodType,
+  MealCategory,
+  SwitchChange,
 } from '../../../../types'
+import { PublicIcon, PrivateIcon } from '../../../../icons'
 import { withAuth } from '../../../../hoc'
 import styles from '../../../../styles/create.module.css'
 import { ApiContext } from '../../../../contexts/apiContext'
@@ -38,7 +43,17 @@ const EditPage = ({ podDocId }: IEditPage) => {
   // Refs
   const recipePhotoRef = useRef<HTMLInputElement | null>(null)
   // States Section
-  const [loading, setLoading] = useState(false)
+  const [mealCategories, setMealCategories] = useState<MealCategory>({
+    Breakfast: false,
+    Brunch: false,
+    Lunch: false,
+    Dinner: false,
+    Dessert: false,
+    Beverage: false,
+  })
+  const [serves, setServes] = useState<number>(0)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isPublic, setIsPublic] = useState<boolean>(false)
   const [image, setImage] = useState<any>()
   const [recipeTitle, setRecipeTitle] = useState<string>()
   const [recipePrice, setRecipePrice] = useState<number>(0)
@@ -66,6 +81,7 @@ const EditPage = ({ podDocId }: IEditPage) => {
       name: '',
     },
   })
+  const [servesError, setServesError] = useState<string>('')
   const [recipePriceError, setRecipePriceError] = useState<string>('')
   const [recipeDurationError, setRecipeDurationError] = useState({
     hours: '',
@@ -83,6 +99,9 @@ const EditPage = ({ podDocId }: IEditPage) => {
           fetchedPod = fetchedPod as PodType
           setRecipeTitle(fetchedPod.name)
           setRecipePrice(fetchedPod.price)
+          setIsPublic(fetchedPod.isPublic)
+          setServes(fetchedPod.serves)
+          setMealCategories(fetchedPod.mealCategories)
           setRecipeDuration(fetchedPod.duration)
           setIngredients(
             fetchedPod.ingredients.map((ingredient: Ingredient) => ({
@@ -308,6 +327,25 @@ const EditPage = ({ podDocId }: IEditPage) => {
     setImage(URL.createObjectURL(e.target.files[0]))
   }
 
+  const handleServesChange = (e: TextFieldChange) => {
+    const servesValue = Number(e.target.value)
+    if (Number.isNaN(servesValue)) {
+      setServes(0)
+      setServesError('Please enter a valid number of people.')
+    } else if (servesValue > 1001) {
+      setServesError('Recipes cannot serve more than 1000 people.')
+    } else if (servesValue < 0) {
+      setServesError('Recipes cannot serve less than 1 person.')
+    } else {
+      setServes(servesValue)
+      setServesError('')
+    }
+  }
+
+  const handleMealCategoryChange = (e: CheckboxChange, key: string) => {
+    setMealCategories({ ...mealCategories, [key]: e.target.checked })
+  }
+
   const handleSubmitRecipe = async (e: any) => {
     try {
       e.preventDefault()
@@ -317,6 +355,9 @@ const EditPage = ({ podDocId }: IEditPage) => {
         duration: recipeDuration,
         price: recipePrice,
         uid: user.id,
+        serves,
+        mealCategories,
+        isPublic,
         ingredients: [...ingredients, newIngredient]
           .map((ingred: Ingredient) => ({
             name: ingred.name,
@@ -360,6 +401,7 @@ const EditPage = ({ podDocId }: IEditPage) => {
   const invalidRecipe =
     titleError.length > 0 ||
     recipePriceError.length > 0 ||
+    servesError.length > 0 ||
     recipeDurationError.hours.length > 0 ||
     recipeDurationError.minutes.length > 0 ||
     // !recipePhotoRef.current.files[0] ||
@@ -386,14 +428,29 @@ const EditPage = ({ podDocId }: IEditPage) => {
           <Info
             price={recipePrice}
             prepTime={recipeDuration}
+            serves={serves}
+            mealCategories={mealCategories}
             priceError={recipePriceError}
             hoursError={recipeDurationError.hours}
             minutesError={recipeDurationError.minutes}
+            servesError={servesError}
             onHoursChange={handleHoursChange}
             onMinutesChange={handleMinutesChange}
             onPriceChange={handlePriceChange}
+            onCheckboxChange={handleMealCategoryChange}
+            onServesChange={handleServesChange}
           />
           <div style={{ width: '100%' }}>
+            <Switch
+              checked={isPublic}
+              leftLabel="Private"
+              rightLabel="Public"
+              editable
+              leftIcon={<PrivateIcon />}
+              rightIcon={<PublicIcon />}
+              onChange={(e: SwitchChange) => setIsPublic(e.target.checked)}
+              name="Public"
+            />
             <SubmitButton
               disabled={loading || invalidRecipe}
               onClick={handleSubmitRecipe}

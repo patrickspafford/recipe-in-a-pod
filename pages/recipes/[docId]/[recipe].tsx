@@ -51,14 +51,7 @@ const Recipe = ({ podDocId }: IRecipe) => {
   return (
     <Layout title={pod ? pod.name : 'Loading...'}>
       {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '10%',
-            alignItems: 'center',
-          }}
-        >
+        <div className={styles.loadingContainer}>
           <LoadingIndicator size={160} />
         </div>
       ) : (
@@ -67,7 +60,13 @@ const Recipe = ({ podDocId }: IRecipe) => {
             className={isLarge ? styles.innerDivLarge : styles.innerDivSmall}
           >
             <Ingredients editable={false} ingredients={pod.ingredients} />
-            <Info price={pod.price} prepTime={pod.duration} editable={false} />
+            <Info
+              price={pod.price}
+              prepTime={pod.duration}
+              editable={false}
+              serves={pod.serves}
+              mealCategories={pod.mealCategories}
+            />
           </div>
           <div className={styles.directionsContainer}>
             <RecipeTitle editable={false}>{pod.name}</RecipeTitle>
