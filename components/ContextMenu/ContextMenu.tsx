@@ -1,6 +1,11 @@
 import { useState, MouseEvent, ReactNode } from 'react'
-import { Menu, MenuItem, ListItemIcon } from '@material-ui/core'
-import { TrashIcon, EditIcon, RateIcon, ShareIcon } from '../../icons'
+import {
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ClickAwayListener,
+} from '@material-ui/core'
+import { TrashIcon, EditIcon, ShareIcon } from '../../icons'
 import { RatingMenu } from '..'
 
 const initialState = {
@@ -75,7 +80,10 @@ const ContextMenu = ({
   }
 
   return (
-    <div className={className} onContextMenu={handleClick}>
+    <div
+      className={className}
+      onContextMenu={(e) => !ratingMenuAnchor && handleClick(e)}
+    >
       {children}
       <Menu
         keepMounted

@@ -223,6 +223,21 @@ export default class ApiService {
                 console.error(err)
                 return ''
               })
+            const ratings = await this.firestore
+              .collection('ratings')
+              .where('recipeId', '==', podsDict[subfolder.name].docId)
+              .get()
+            if (ratings.empty) {
+              podsDict[subfolder.name].rating = 3
+            } else {
+              let ratingSum = 0
+              for (const doc of ratings.docs) {
+                ratingSum += doc.data().rating
+              }
+              let ratingAverage = ratingSum / ratings.docs.length
+              ratingAverage = Math.round(ratingAverage)
+              podsDict[subfolder.name].rating = ratingAverage
+            }
           }
         }
       }
@@ -249,8 +264,7 @@ export default class ApiService {
       })
       .catch((err) => console.error(err))
     const storageRef = this.storage.ref()
-    for (const pod of pods) {
-      // eslint-disable-next-line no-await-in-loop
+    for await (const pod of pods) {
       pod.photoLink = await storageRef
         .child(`recipe-photos/${uid}/${pod.docId}/`)
         .listAll()
@@ -267,6 +281,21 @@ export default class ApiService {
           console.error(err)
           return ''
         })
+      const ratings = await this.firestore
+        .collection('ratings')
+        .where('recipeId', '==', pod.docId)
+        .get()
+      if (ratings.empty) {
+        pod.rating = 3
+      } else {
+        let ratingSum = 0
+        for (const doc of ratings.docs) {
+          ratingSum += doc.data().rating
+        }
+        let ratingAverage = ratingSum / ratings.docs.length
+        ratingAverage = Math.round(ratingAverage)
+        pod.rating = ratingAverage
+      }
     }
     return pods
   }
@@ -356,13 +385,22 @@ export default class ApiService {
   async deletePod(uid: string, docId: string) {
     try {
       await this.firestore.collection('recipes').doc(docId).delete()
+      const ratingsSnapshots = await this.firestore
+        .collection('ratings')
+        .where('recipeId', '==', docId)
+        .get()
+      if (!ratingsSnapshots.empty) {
+        for await (const ratingDoc of ratingsSnapshots.docs) {
+          await ratingDoc.ref.delete()
+        }
+      }
       const storageRef = this.storage.ref()
       await storageRef
         .child(`recipe-photos/${uid}/${docId}/`)
         .listAll()
         .then(async (res) => {
           for await (const fileRef of res.items) {
-            fileRef.delete()
+            await fileRef.delete()
           }
         })
         .catch((err) => {
@@ -389,7 +427,7 @@ export default class ApiService {
         .get()
       if (!existingRatings.empty) {
         for await (const doc of existingRatings.docs) {
-          await doc[0].ref.update({ rating: newRating })
+          await doc.ref.update({ rating: newRating })
         }
       } else {
         await this.firestore.collection('ratings').add({

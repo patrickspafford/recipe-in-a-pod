@@ -67,7 +67,12 @@ const Pod = ({
             title={`$${pod.price}`}
             allowHover={!rotated}
           />
-          <Pea type="rating" value={3} title={`${3}`} allowHover={!rotated} />
+          <Pea
+            type="rating"
+            value={pod.rating || 2}
+            title={`${pod.rating || 2}`}
+            allowHover={!rotated}
+          />
         </div>
       </Link>
       <Link href={`/recipes/${pod.docId}/${pod.name}`}>

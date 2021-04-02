@@ -13,9 +13,11 @@ import PeopleIcon from './PeopleIcon'
 import MealIcon from './MealIcon'
 import PublicIcon from './PublicIcon'
 import PrivateIcon from './PrivateIcon'
+import CancelIcon from './CancelIcon'
 
 export {
   AddIcon,
+  CancelIcon,
   HomeIcon,
   MealIcon,
   MenuIcon,
