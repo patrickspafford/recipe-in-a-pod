@@ -33,9 +33,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
   return (
     <>
       <Head>
-        <title>
-          {title ? `${title} | Recipe In a Pod` : 'Recipe In a Pod'}
-        </title>
+        <title>{title ? `${title} | Recipe Pods` : 'Recipe Pods'}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <AppBar position="sticky">
