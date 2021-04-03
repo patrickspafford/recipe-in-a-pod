@@ -344,7 +344,7 @@ export default class ApiService {
       })
     const ratings = await this.firestore
       .collection('ratings')
-      .where('recipeId', '==', pod.docId)
+      .where('recipeId', '==', docId)
       .get()
     if (ratings.empty) {
       pod.rating = 3

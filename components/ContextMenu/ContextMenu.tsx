@@ -1,10 +1,5 @@
 import { useState, MouseEvent, ReactNode } from 'react'
-import {
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ClickAwayListener,
-} from '@material-ui/core'
+import { Menu, MenuItem, ListItemIcon } from '@material-ui/core'
 import { TrashIcon, EditIcon, ShareIcon } from '../../icons'
 import { RatingMenu } from '..'
 
