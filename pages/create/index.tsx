@@ -301,66 +301,49 @@ const CreatePage = () => {
     setImage(URL.createObjectURL(e.target.files[0]))
   }
 
-  const handleSubmitRecipe = (e: any) => {
-    e.preventDefault()
-    setLoading(true)
-    // const recipePhoto = recipePhotoRef.current.files[0]
-    const newPod: PodType = {
-      name: recipeTitle,
-      duration: recipeDuration,
-      price: recipePrice,
-      serves,
-      isPublic,
-      mealCategories,
-      uid: user.id,
-      ingredients: [...ingredients, newIngredient]
-        .map((ingred) => ({
-          name: ingred.name,
-          amount: ingred.amount,
-        }))
-        .filter((ingred) => ingred.name && ingred.amount),
-      instructions: steps
-        .map((instruction: Instruction) => ({
-          label: instruction.label,
-          details: instruction.details,
-        }))
-        .filter((instruction) => instruction.label && instruction.details),
-      date: new Date(),
+  const handleSubmitRecipe = async (e: any) => {
+    try {
+      e.preventDefault()
+      setLoading(true)
+      const newPod: PodType = {
+        name: recipeTitle,
+        duration: recipeDuration,
+        price: recipePrice,
+        serves,
+        isPublic,
+        mealCategories,
+        uid: user.id,
+        ingredients: [...ingredients, newIngredient]
+          .map((ingred) => ({
+            name: ingred.name,
+            amount: ingred.amount,
+          }))
+          .filter((ingred) => ingred.name && ingred.amount),
+        instructions: steps
+          .map((instruction: Instruction) => ({
+            label: instruction.label,
+            details: instruction.details,
+          }))
+          .filter((instruction) => instruction.label && instruction.details),
+        date: new Date(),
+      }
+      const newPodId = await apiService.createPod(newPod)
+      if (!newPodId) {
+        throw new Error('No pod id provided.')
+      }
+      console.log('Created pod successfully!')
+      const msg = await apiService.setRecipePhotoInStorage(
+        recipePhotoRef.current.files[0],
+        user.id,
+        newPodId,
+      )
+      console.log(msg)
+      await router.push('/')
+      setLoading(false)
+    } catch (err) {
+      console.error(err)
+      setLoading(false)
     }
-    apiService
-      .createPod(newPod)
-      .then((newPodId) => {
-        if (newPodId) {
-          apiService
-            .setRecipePhotoInStorage(
-              recipePhotoRef.current.files[0],
-              user.id,
-              newPodId,
-            )
-            .then((msg) => {
-              router
-                .push('/')
-                .then(() => console.log('Created pod successfully'))
-                .catch((err) => {
-                  console.error(err)
-                  setLoading(false)
-                })
-              console.log(msg)
-            })
-            .catch((err) => {
-              setLoading(false)
-              console.error(err)
-            })
-        } else {
-          console.log('No pod id provided.')
-          setLoading(false)
-        }
-      })
-      .catch((error) => {
-        console.log('Could not create pod')
-        console.error(error)
-        setLoading(false)
-      })
   }
 
   const invalidRecipe =

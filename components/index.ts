@@ -33,6 +33,7 @@ import RTextField from './RTextField'
 import RatingMenu from './RatingMenu'
 import MealCheckboxes from './MealCheckboxes'
 import Switch from './Switch'
+import PencilTextField from './PencilTextField'
 
 export {
   AppBar,
@@ -70,4 +71,5 @@ export {
   RatingMenu,
   MealCheckboxes,
   Switch,
+  PencilTextField,
 }
