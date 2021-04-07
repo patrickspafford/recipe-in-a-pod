@@ -1,5 +1,12 @@
 // eslint-disable-next-line object-curly-newline
-import { useRef, FormEvent, useContext, useState, ChangeEvent } from 'react'
+import {
+  useRef,
+  FormEvent,
+  useContext,
+  useState,
+  ChangeEvent,
+  useEffect,
+} from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { withAuth } from '../../hoc'
@@ -10,7 +17,10 @@ import {
   PhotoFrame,
   LoadingIndicator,
   PencilTextField,
+  Typography,
 } from '../../components'
+import { TextFieldChange } from '../../types'
+import { usernamePattern } from '../../utils/regex'
 import useUser from '../../hooks/useUser'
 import { ApiContext } from '../../contexts/apiContext'
 import styles from '../../styles/profile.module.css'
@@ -26,6 +36,7 @@ const ProfilePage = ({ username }: IProfilePage) => {
   const [newUsername, setNewUsername] = useState<string>(username)
   const [editingUsername, setEditingUsername] = useState<boolean>(false)
   const [loadingUsername, setLoadingUsername] = useState<boolean>(false)
+  const [usernameError, setUsernameError] = useState<string>('')
   const router = useRouter()
   const { apiService } = useContext(ApiContext)
   const fileSubmissionRef = useRef<HTMLInputElement | null>(null)
@@ -50,11 +61,67 @@ const ProfilePage = ({ username }: IProfilePage) => {
     }
   }
 
-  const handleSubmitNewUsername = async (e) => {
-    try {
-      setLoadingUsername(true)
-    } catch (e) {}
+  const handleInvalidUsername = (errorMsg: string) => {
+    setUsernameError(errorMsg)
+    setNewUsername(username)
+    throw new Error(errorMsg)
   }
+
+  const handleSubmitNewUsername = async () => {
+    try {
+      if (username === newUsername) return
+      setLoadingUsername(true)
+      if (!newUsername.match(usernamePattern)) {
+        handleInvalidUsername('Username not valid.')
+        return
+      }
+      if (newUsername.length === 0) {
+        handleInvalidUsername('Please enter a username.')
+        return
+      }
+      if (newUsername.length > 64) {
+        handleInvalidUsername('Username cannot exceed 64 characters.')
+      }
+      if (await apiService.usernameAlreadyExists(newUsername)) {
+        handleInvalidUsername('That username already exists.')
+        return
+      }
+      const succeededChange = await apiService.changeUsername(
+        user.id,
+        newUsername,
+      )
+      if (succeededChange) {
+        setUser({ ...user, username: newUsername })
+        await router.push(`/profile/${newUsername}`)
+        router.reload()
+      } else {
+        setUsernameError('Something went wrong!')
+      }
+      setLoadingUsername(false)
+    } catch (e) {
+      setLoadingUsername(false)
+    }
+  }
+
+  const handleUsernameChange = (e: TextFieldChange) => {
+    const currentUsernameValue = e.target.value
+    setNewUsername(currentUsernameValue)
+    if (currentUsernameValue.length === 0) {
+      setUsernameError('Please enter a username.')
+    } else if (currentUsernameValue.length > 64) {
+      setUsernameError('Username cannot exceed 64 characters.')
+    } else if (!currentUsernameValue.match(usernamePattern)) {
+      setUsernameError('Username not valid.')
+    } else setUsernameError('')
+  }
+
+  useEffect(() => {
+    if (!editingUsername) {
+      handleSubmitNewUsername()
+    } else {
+      setUsernameError('')
+    }
+  }, [editingUsername])
 
   return (
     <Layout title={username}>
@@ -66,23 +133,23 @@ const ProfilePage = ({ username }: IProfilePage) => {
               inputRef={fileSubmissionRef}
               setImage={handleSetImage}
             />
-            <PencilTextField
-              id="Username"
-              showPencil={!editingUsername}
-              setShowPencil={() => setEditingUsername(!editingUsername)}
-              label="Username"
-              error=""
-              loading={false}
-              onChange={(e) => setNewUsername(e.target.value)}
-              name="Username"
-              value={newUsername}
-            />
+            <form className={styles.fileForm} onSubmit={handleSubmit}>
+              <SubmitButton disabled={!fileSubmissionRef}>
+                {loading ? <LoadingIndicator /> : 'Upload Photo'}
+              </SubmitButton>
+            </form>
           </div>
-          <form className={styles.fileForm} onSubmit={handleSubmit}>
-            <SubmitButton disabled={!fileSubmissionRef}>
-              {loading ? <LoadingIndicator /> : 'Upload'}
-            </SubmitButton>
-          </form>
+          <PencilTextField
+            id="Username"
+            showPencil={!editingUsername}
+            setShowPencil={() => setEditingUsername(!editingUsername)}
+            label="Username"
+            error={usernameError}
+            loading={loadingUsername}
+            onChange={handleUsernameChange}
+            name="Username"
+            value={newUsername}
+          />
         </div>
       </div>
     </Layout>

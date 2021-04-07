@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
+import { truncate } from 'fs'
 import cookie from 'js-cookie'
 import initFirebase from '../firebase/initFirebase'
 import { FirebaseUser, UserCookie, PodType } from '../types'
@@ -31,6 +32,22 @@ export default class ApiService {
         return firebaseUser
       })
       .catch((error) => error)
+  }
+
+  async changeUsername(uid: string, newUsername: string) {
+    try {
+      if (!uid || !newUsername) {
+        throw new Error('Not enough info provided.')
+      }
+      await this.firestore
+        .collection('users')
+        .doc(uid)
+        .update({ name: newUsername })
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
   }
 
   async getUsername(userToGet: any) {

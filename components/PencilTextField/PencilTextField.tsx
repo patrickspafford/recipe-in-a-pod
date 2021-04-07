@@ -39,9 +39,34 @@ const PencilField = ({
 }: IPencilField) => {
   const determineIcon = () => {
     if (loading) {
-      return <LoadingIndicator size={25} />
+      return (
+        <IconButton
+          aria-label="toggle password visibility"
+          onClick={setShowPencil}
+          disableFocusRipple
+          disabled
+          style={{
+            marginRight: '1rem',
+            marginBottom: error ? '1rem' : '1.1rem',
+          }}
+        >
+          <LoadingIndicator size={25} />
+        </IconButton>
+      )
     }
-    return showPencil ? <EditIcon /> : <DoneIcon />
+    return (
+      <IconButton
+        aria-label="toggle password visibility"
+        onClick={setShowPencil}
+        disableFocusRipple
+        style={{
+          marginRight: '1rem',
+          marginBottom: error ? '1rem' : '1.1rem',
+        }}
+      >
+        {showPencil ? <EditIcon /> : <DoneIcon />}
+      </IconButton>
+    )
   }
 
   return (
@@ -66,6 +91,7 @@ const PencilField = ({
           type="text"
           value={value}
           name={name}
+          disabled={showPencil}
           disableUnderline={error.length === 0}
           error={error.length > 0}
           onChange={(e) => !showPencil && onChange(e)}
@@ -78,19 +104,7 @@ const PencilField = ({
             autoComplete: 'off',
           }}
           endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={setShowPencil}
-                disableFocusRipple
-                style={{
-                  marginRight: '1rem',
-                  marginBottom: error ? '1rem' : '1.1rem',
-                }}
-              >
-                {determineIcon()}
-              </IconButton>
-            </InputAdornment>
+            <InputAdornment position="end">{determineIcon()}</InputAdornment>
           }
         />
         <FormHelperText
