@@ -7,6 +7,9 @@ import {
   ChangeEvent,
   useEffect,
 } from 'react'
+import firebase from 'firebase/app'
+import 'firebase/functions'
+import * as cookie from 'cookie'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { withAuth } from '../../hoc'
@@ -17,7 +20,6 @@ import {
   PhotoFrame,
   LoadingIndicator,
   PencilTextField,
-  Typography,
 } from '../../components'
 import { TextFieldChange } from '../../types'
 import { usernamePattern } from '../../utils/regex'
@@ -156,10 +158,44 @@ const ProfilePage = ({ username }: IProfilePage) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => ({
-  props: {
-    username: context.params.id,
-  },
-})
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const usernamePageExists = firebase
+    .functions()
+    .httpsCallable('usernamePageExists')
+  try {
+    const userId = JSON.parse(cookie.parse(context.req.headers.cookie).auth).id
+    const validUsername = await usernamePageExists({
+      username: context.params.id,
+      userId,
+    })
+    if (validUsername) {
+      return {
+        props: {
+          username: context.params.id,
+        },
+      }
+    }
+    return {
+      props: {
+        username: 'Not Found',
+      },
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      props: {
+        username: 'Not Found',
+      },
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    }
+  }
+}
 
 export default withAuth(ProfilePage)
