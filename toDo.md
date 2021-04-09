@@ -3,6 +3,6 @@
 - Allow edits from owner only, even with shared link
 - Snackbars indicating successful deletion / edit
 - Sign in with username
-- Change username
 - Share recipes with users not signed in, but no more
 - Make mobile-friendly
+- Fix form submit onchange behavior

@@ -11,25 +11,20 @@ if (!admin.apps.length) {
 }
 
 exports.usernamePageExists = https.onCall(async (data) => {
-  try {
-    const { username, userId } = data
-    if (!userId || !username) {
-      throw new https.HttpsError(
-        'invalid-argument',
-        'Please provide both a user id and a username.',
-      )
-    }
-    const usernameExistsForUserDocs = await admin
-      .firestore()
-      .collection('users')
-      .where('uid', '==', userId)
-      .where('name', '==', username)
-      .get()
-    return !usernameExistsForUserDocs.empty
-  } catch (e) {
-    console.error(e)
-    throw new https.HttpsError('internal', 'Something went wrong')
+  const { username, userId } = data
+  if (!userId || !username) {
+    throw new https.HttpsError(
+      'invalid-argument',
+      'Please provide both a user id and a username.',
+    )
   }
+  const usernameExistsForUserDocs = await admin
+    .firestore()
+    .collection('users')
+    .where('uid', '==', userId)
+    .where('name', '==', username)
+    .get()
+  return !usernameExistsForUserDocs.empty
 })
 
 /*

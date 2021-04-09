@@ -17,13 +17,11 @@ const withAuth = (WrappedComponent) => (props) => {
         <div>
           <Image src="/pea_people.png" width={680} height={279} />
         </div>
-        <Typography variant="h6" style={{ padding: '2rem' }}>
+        <Typography variant="h3" style={{ padding: '2rem' }}>
           Welcome to Recipe Pods!
         </Typography>
         <Link href="/login">
-          <Button style={{ backgroundColor: colors.quinary }}>
-            Please sign in
-          </Button>
+          <Button style={{ backgroundColor: colors.quinary }}>sign in</Button>
         </Link>
       </div>
     </Layout>

@@ -168,7 +168,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       username: context.params.id,
       userId,
     })
-    if (validUsername) {
+    if (validUsername.data) {
       return {
         props: {
           username: context.params.id,
@@ -181,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       redirect: {
         permanent: false,
-        destination: '/',
+        destination: '/404',
       },
     }
   } catch (e) {
@@ -192,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       redirect: {
         permanent: false,
-        destination: '/',
+        destination: '/404',
       },
     }
   }

@@ -2,107 +2,198 @@ import { useState, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import {
-  EmailField, PasswordField, UsernameField, SubmitButton, SnackBar, LoadingIndicator,
+  EmailField,
+  PasswordField,
+  UsernameField,
+  SubmitButton,
+  SnackBar,
+  LoadingIndicator,
 } from '../../components'
 import { ApiContext } from '../../contexts/apiContext'
 import { TextFieldChange, PseudoEvent } from '../../types'
 import { emailPattern, usernamePattern } from '../../utils/regex'
 
 interface SignUpData {
-    name: string
-    email: string
-    currentPassword: string
+  name: string
+  email: string
+  currentPassword: string
+}
+
+interface FormValues {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+}
+
+interface FormErrors {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+  signUp: string
+}
+
+interface ShowFields {
+  password: boolean
+  confirmPassword: boolean
 }
 
 const SignUpForm = () => {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const { apiService } = useContext(ApiContext)
   const router = useRouter()
-
-  // Form field values
-  const [username, setUsername] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
-  // Validation errors
-  const [usernameError, setUsernameError] = useState<string>('')
-  const [emailError, setEmailError] = useState<string>('')
-  const [passwordError, setPasswordError] = useState<string>('')
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string>('')
-  // Progress
+  const [formValues, setFormValues] = useState<FormValues>({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    signUp: '',
+  })
+  const [showFields, setShowFields] = useState<ShowFields>({
+    password: false,
+    confirmPassword: false,
+  })
   const [loading, setLoading] = useState<boolean>(false)
-  // Error after submit
-  const [signUpError, setSignUpError] = useState<string>('')
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-  // Other state
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
-  const [hasEditedEmail, setHasEditedEmail] = useState<boolean>(false)
-  const [hasEditedPassword, setHasEditedPassword] = useState<boolean>(false)
-  const [hasEditedConfirmPassword, setHasEditedConfirmPassword] = useState<boolean>(false)
-  const [hasEditedUsername, setHasEditedUsername] = useState<boolean>(false)
+  const [hasEdited, setHasEdited] = useState({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  })
 
   const handleUsernameChange = (e: TextFieldChange) => {
     const currentUsernameValue = e.target.value
-    setUsername(currentUsernameValue)
-    if (!hasEditedUsername) setHasEditedUsername(true)
-    if (currentUsernameValue.length === 0 && hasEditedPassword) {
-      setUsernameError('Please enter a username.')
+    setFormValues({ ...formValues, username: currentUsernameValue })
+    if (!hasEdited.username) {
+      setHasEdited({ ...hasEdited, username: true })
+    }
+    if (currentUsernameValue.length === 0 && hasEdited.password) {
+      setFormErrors({ ...formErrors, username: 'Please enter a username' })
     } else if (currentUsernameValue.length > 64) {
-      setUsernameError('Username cannot exceed 64 characters.')
+      setFormErrors({
+        ...formErrors,
+        username: 'Username cannot exceed 64 characters.',
+      })
     } else if (!currentUsernameValue.match(usernamePattern)) {
-      setUsernameError('Username not valid.')
-    } else setUsernameError('')
+      setFormErrors({ ...formErrors, username: 'Username not valid.' })
+    } else setFormErrors({ ...formErrors, username: '' })
   }
 
-  const handlePasswordChange = (e: TextFieldChange| PseudoEvent,
-    ignoreHasEditedPassword?: boolean) => {
+  const handlePasswordChange = (
+    e: TextFieldChange | PseudoEvent,
+    ignoreHasEditedPassword?: boolean,
+  ) => {
     const currentPasswordValue = e.target.value
-    setPassword(currentPasswordValue)
-    if (!hasEditedPassword) setHasEditedPassword(true)
-    if (currentPasswordValue.length === 0 && hasEditedPassword && !ignoreHasEditedPassword) {
-      setPasswordError('Please enter a password.')
-    } else if (currentPasswordValue.length < 6 && hasEditedPassword && !ignoreHasEditedPassword) {
-      setPasswordError('Password must be at least 6 characters.')
+    setFormValues({ ...formValues, password: currentPasswordValue })
+    if (!hasEdited.password) setHasEdited({ ...hasEdited, password: true })
+    if (currentPasswordValue.length === 0 && !ignoreHasEditedPassword) {
+      setFormErrors({ ...formErrors, password: 'Please enter a password.' })
+    } else if (currentPasswordValue.length < 6 && !ignoreHasEditedPassword) {
+      setFormErrors({
+        ...formErrors,
+        password: 'Password must be at least 6 characters.',
+      })
     } else if (currentPasswordValue.length > 128) {
-      setPasswordError('Password must not exceed 128 characters.')
+      setFormErrors({
+        ...formErrors,
+        password: 'Password must not exceed 128 characters.',
+      })
     } else if (currentPasswordValue.length === 1) {
-      setPasswordError('Password must be at least 6 characters.')
-    } else setPasswordError('')
-
-    if (currentPasswordValue !== confirmPassword && hasEditedConfirmPassword) {
-      setConfirmPasswordError('Passwords did not match.')
+      setFormErrors({
+        ...formErrors,
+        password: 'Password must be at least 6 characters.',
+      })
     } else {
-      setConfirmPasswordError('')
+      setFormErrors({
+        ...formErrors,
+        password: '',
+      })
+    }
+
+    if (
+      currentPasswordValue !== formValues.confirmPassword &&
+      hasEdited.confirmPassword
+    ) {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: 'Passwords did not match.',
+      })
+    } else {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: '',
+      })
     }
   }
 
-  const handleConfirmPasswordChange = (e: TextFieldChange | PseudoEvent,
-    ignoreHasEditedConfirmPassword?: boolean) => {
+  const handleConfirmPasswordChange = (
+    e: TextFieldChange | PseudoEvent,
+    ignoreHasEditedConfirmPassword?: boolean,
+  ) => {
     const currentConfirmPasswordValue = e.target.value
-    setConfirmPassword(currentConfirmPasswordValue)
-    if (!hasEditedConfirmPassword) setHasEditedConfirmPassword(true)
-    if (currentConfirmPasswordValue !== password && !ignoreHasEditedConfirmPassword) {
-      setConfirmPasswordError('Passwords did not match.')
-    } else setConfirmPasswordError('')
+    setFormValues({
+      ...formValues,
+      confirmPassword: currentConfirmPasswordValue,
+    })
+    if (!hasEdited.confirmPassword) {
+      setHasEdited({
+        ...hasEdited,
+        confirmPassword: true,
+      })
+    }
+    if (
+      currentConfirmPasswordValue !== formValues.password &&
+      !ignoreHasEditedConfirmPassword
+    ) {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: 'Passwords did not match.',
+      })
+    } else {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: '',
+      })
+    }
   }
 
   const handleEmailChange = (e: TextFieldChange) => {
     const currentEmailValue = e.target.value
-    setEmail(currentEmailValue)
-    if (!hasEditedEmail) setHasEditedEmail(true)
-    if (currentEmailValue.length === 0 && hasEditedEmail) {
-      setEmailError('Please enter an email address.')
+    setFormValues({ ...formValues, email: currentEmailValue })
+    if (!hasEdited.email) {
+      setHasEdited({
+        ...hasEdited,
+        email: true,
+      })
+    }
+    if (currentEmailValue.length === 0) {
+      setFormErrors({ ...formErrors, email: 'Please enter an email address.' })
     } else if (!currentEmailValue.match(emailPattern)) {
-      setEmailError('Please enter a valid email address.')
+      setFormErrors({
+        ...formErrors,
+        email: 'Please enter a valid email address.',
+      })
     } else if (currentEmailValue.length > 128) {
-      setEmailError('Email address must not exceed 128 characters.')
-    } else setEmailError('')
+      setFormErrors({
+        ...formErrors,
+        email: 'Email address must not exceed 128 characters.',
+      })
+    } else setFormErrors({ ...formErrors, email: '' })
   }
 
   const onSubmit = (data: SignUpData) => {
     setLoading(true)
-    apiService.signUp(data)
+    reset()
+    apiService
+      .signUp(data)
       .then(() => router.push('/'))
       .catch((err: Error) => {
         setLoading(false)
@@ -115,83 +206,90 @@ const SignUpForm = () => {
         handleConfirmPasswordChange(pseudoEvent, true)
         console.error(err)
         if (err.message.includes('Username')) {
-          setSignUpError(`That name (${username}) is already taken.`)
-          setUsernameError('Username must be unique.')
+          setFormErrors({
+            ...formErrors,
+            signUp: `That name (${formValues.username}) is already taken.`,
+            username: 'Username must be unique',
+          })
         } else if (err.message.includes('email')) {
-          setSignUpError('An account with this email already exists.')
-        } else setSignUpError('Something went wrong. Please check that your information is correct.')
+          setFormErrors({
+            ...formErrors,
+            signUp: 'An account with this email already exists.',
+          })
+        } else {
+          setFormErrors({
+            ...formErrors,
+            signUp:
+              'Something went wrong. Please check that your information is correct.',
+          })
+        }
         setSnackbarOpen(true)
       })
   }
 
-  const disabledSubmit: boolean = [
-    emailError,
-    passwordError,
-    confirmPasswordError,
-    usernameError,
-  ].some((errorMessage: string) => errorMessage.length > 0)
-  || [
-    email,
-    password,
-    confirmPassword,
-    username].some((field: string) => field.length === 0)
-    || [
-      hasEditedEmail,
-      hasEditedPassword,
-      hasEditedConfirmPassword,
-      hasEditedUsername,
-    ].some((check: boolean) => !check)
+  const disabledSubmit: boolean =
+    Object.values(formErrors).some((error: string) => error.length > 1) ||
+    Object.values(hasEdited).some((didEdit) => !didEdit) ||
+    Object.values(formValues).some((val) => val.length === 0)
 
   return (
     <>
       <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
         <UsernameField
           id="username"
-          value={username}
+          value={formValues.username}
           inputRef={register({ required: true })}
           onChange={(e: TextFieldChange) => handleUsernameChange(e)}
-          error={usernameError}
+          error={formErrors.username}
           name="name"
           label="Username"
         />
         <EmailField
           id="email"
-          value={email}
+          value={formValues.email}
           inputRef={register({ required: true })}
-          error={emailError}
+          error={formErrors.email}
           onChange={(e: TextFieldChange) => handleEmailChange(e)}
         />
         <PasswordField
           id="new-password"
-          value={password}
+          value={formValues.password}
           inputRef={register({ required: true })}
           onChange={(e: TextFieldChange) => handlePasswordChange(e)}
-          error={passwordError}
+          error={formErrors.password}
           name="currentPassword"
           label="New Password"
-          showPassword={showPassword}
-          setShowPassword={() => setShowPassword(!showPassword)}
+          showPassword={showFields.password}
+          setShowPassword={() => {
+            setShowFields({
+              ...showFields,
+              confirmPassword: !showFields.password,
+            })
+          }}
         />
         <PasswordField
           id="confirm-new-password"
-          value={confirmPassword}
+          value={formValues.confirmPassword}
           onChange={(e: TextFieldChange) => handleConfirmPasswordChange(e)}
-          error={confirmPasswordError}
+          error={formErrors.confirmPassword}
           name="confirmCurrentPassword"
           label="Confirm New Password"
-          showPassword={showConfirmPassword}
-          setShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
+          showPassword={showFields.confirmPassword}
+          setShowPassword={() => {
+            setShowFields({
+              ...showFields,
+              confirmPassword: !showFields.confirmPassword,
+            })
+          }}
         />
-        <SubmitButton
-          disabled={disabledSubmit}
-        >
+        <SubmitButton disabled={disabledSubmit}>
           {loading ? <LoadingIndicator /> : 'Sign up'}
         </SubmitButton>
       </form>
       <SnackBar
         open={snackbarOpen}
         setOpen={(bool: boolean) => setSnackbarOpen(bool)}
-        message={signUpError}
+        message={formErrors.signUp}
         severity="error"
       />
     </>
