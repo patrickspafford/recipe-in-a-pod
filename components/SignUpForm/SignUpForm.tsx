@@ -189,7 +189,7 @@ const SignUpForm = () => {
     } else setFormErrors({ ...formErrors, email: '' })
   }
 
-  const onSubmit = async (e: FormEvent<HTMLButtonElement>) => {
+  const onSubmit = async (e) => {
     try {
       const data: SignUpData = {
         name: formValues.username,

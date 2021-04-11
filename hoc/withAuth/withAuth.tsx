@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button, Typography } from '@material-ui/core'
+import { ReactNode } from 'react'
 import { Layout } from '../../components'
 import useUser from '../../hooks/useUser'
 import colors from '../../utils/colors'
 
-const withAuth = (WrappedComponent) => (props) => {
+const withAuth = (WrappedComponent) => (props: any) => {
   const { loggedIn } = useUser()
   if (loggedIn) {
     // eslint-disable-next-line react/jsx-props-no-spreading
