@@ -189,42 +189,43 @@ const SignUpForm = () => {
     } else setFormErrors({ ...formErrors, email: '' })
   }
 
-  const onSubmit = (data: SignUpData) => {
-    setLoading(true)
-    reset()
-    apiService
-      .signUp(data)
-      .then(() => router.push('/'))
-      .catch((err: Error) => {
-        setLoading(false)
-        const pseudoEvent: PseudoEvent = {
-          target: {
-            value: '',
-          },
-        }
-        handlePasswordChange(pseudoEvent, true)
-        handleConfirmPasswordChange(pseudoEvent, true)
-        console.error(err)
-        if (err.message.includes('Username')) {
-          setFormErrors({
-            ...formErrors,
-            signUp: `That name (${formValues.username}) is already taken.`,
-            username: 'Username must be unique',
-          })
-        } else if (err.message.includes('email')) {
-          setFormErrors({
-            ...formErrors,
-            signUp: 'An account with this email already exists.',
-          })
-        } else {
-          setFormErrors({
-            ...formErrors,
-            signUp:
-              'Something went wrong. Please check that your information is correct.',
-          })
-        }
-        setSnackbarOpen(true)
-      })
+  const onSubmit = async (data: SignUpData) => {
+    try {
+      setLoading(true)
+      reset()
+      await apiService.signUp(data)
+      await router.push('/')
+    } catch (e) {
+      setLoading(false)
+      console.error(e)
+      const pseudoEvent: PseudoEvent = {
+        target: {
+          value: '',
+        },
+      }
+      handlePasswordChange(pseudoEvent, true)
+      handleConfirmPasswordChange(pseudoEvent, true)
+      const err = e as Error
+      if (err.message.includes('Username')) {
+        setFormErrors({
+          ...formErrors,
+          signUp: `That name (${formValues.username}) is already taken.`,
+          username: 'Username must be unique',
+        })
+      } else if (err.message.includes('email')) {
+        setFormErrors({
+          ...formErrors,
+          signUp: 'An account with this email already exists.',
+        })
+      } else {
+        setFormErrors({
+          ...formErrors,
+          signUp:
+            'Something went wrong. Please check that your information is correct.',
+        })
+      }
+      setSnackbarOpen(true)
+    }
   }
 
   const disabledSubmit: boolean =
