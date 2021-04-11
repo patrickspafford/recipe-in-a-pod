@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import {
@@ -40,7 +40,6 @@ interface ShowFields {
 }
 
 const SignUpForm = () => {
-  const { register, handleSubmit, reset } = useForm()
   const { apiService } = useContext(ApiContext)
   const router = useRouter()
   const [formValues, setFormValues] = useState<FormValues>({
@@ -71,6 +70,7 @@ const SignUpForm = () => {
 
   const handleUsernameChange = (e: TextFieldChange) => {
     const currentUsernameValue = e.target.value
+    console.log(currentUsernameValue)
     setFormValues({ ...formValues, username: currentUsernameValue })
     if (!hasEdited.username) {
       setHasEdited({ ...hasEdited, username: true })
@@ -189,15 +189,20 @@ const SignUpForm = () => {
     } else setFormErrors({ ...formErrors, email: '' })
   }
 
-  const onSubmit = async (data: SignUpData) => {
+  const onSubmit = async (e: FormEvent<HTMLButtonElement>) => {
     try {
+      const data: SignUpData = {
+        name: formValues.username,
+        email: formValues.email,
+        currentPassword: formValues.password,
+      }
+      e.preventDefault()
       setLoading(true)
-      reset()
       await apiService.signUp(data)
       await router.push('/')
-    } catch (e) {
+    } catch (error) {
       setLoading(false)
-      console.error(e)
+      console.error(error)
       const pseudoEvent: PseudoEvent = {
         target: {
           value: '',
@@ -205,7 +210,7 @@ const SignUpForm = () => {
       }
       handlePasswordChange(pseudoEvent, true)
       handleConfirmPasswordChange(pseudoEvent, true)
-      const err = e as Error
+      const err = error as Error
       if (err.message.includes('Username')) {
         setFormErrors({
           ...formErrors,
@@ -235,11 +240,11 @@ const SignUpForm = () => {
 
   return (
     <>
-      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form autoComplete="off" onSubmit={onSubmit}>
         <UsernameField
           id="username"
+          inputRef={null}
           value={formValues.username}
-          inputRef={register({ required: true })}
           onChange={(e: TextFieldChange) => handleUsernameChange(e)}
           error={formErrors.username}
           name="name"
@@ -247,15 +252,14 @@ const SignUpForm = () => {
         />
         <EmailField
           id="email"
+          inputRef={null}
           value={formValues.email}
-          inputRef={register({ required: true })}
           error={formErrors.email}
           onChange={(e: TextFieldChange) => handleEmailChange(e)}
         />
         <PasswordField
           id="new-password"
           value={formValues.password}
-          inputRef={register({ required: true })}
           onChange={(e: TextFieldChange) => handlePasswordChange(e)}
           error={formErrors.password}
           name="currentPassword"
@@ -264,7 +268,7 @@ const SignUpForm = () => {
           setShowPassword={() => {
             setShowFields({
               ...showFields,
-              confirmPassword: !showFields.password,
+              password: !showFields.password,
             })
           }}
         />
@@ -289,7 +293,13 @@ const SignUpForm = () => {
       </form>
       <SnackBar
         open={snackbarOpen}
-        setOpen={(bool: boolean) => setSnackbarOpen(bool)}
+        setOpen={(bool: boolean) => {
+          setSnackbarOpen(bool)
+          setFormErrors({
+            ...formErrors,
+            signUp: '',
+          })
+        }}
         message={formErrors.signUp}
         severity="error"
       />
