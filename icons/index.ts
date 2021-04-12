@@ -15,10 +15,13 @@ import PublicIcon from './PublicIcon'
 import PrivateIcon from './PrivateIcon'
 import CancelIcon from './CancelIcon'
 import DoneIcon from './DoneIcon'
+import EmailIcon from './EmailIcon'
+import FaceIcon from './FaceIcon'
 
 export {
   AddIcon,
   DoneIcon,
+  FaceIcon,
   CancelIcon,
   HomeIcon,
   MealIcon,
@@ -34,4 +37,5 @@ export {
   TimerIcon,
   PublicIcon,
   PrivateIcon,
+  EmailIcon,
 }

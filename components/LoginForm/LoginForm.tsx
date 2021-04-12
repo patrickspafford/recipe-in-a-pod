@@ -1,29 +1,35 @@
-import { useState, ChangeEvent, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import {
   SnackBar,
   EmailField,
   PasswordField,
+  UsernameField,
   SubmitButton,
+  Switch,
 } from '../../components'
-import { emailPattern } from '../../utils/regex'
-import { PseudoEvent, FirebaseError } from '../../types'
+import { FaceIcon, EmailIcon } from '../../icons'
+import { emailPattern, usernamePattern } from '../../utils/regex'
+import { PseudoEvent, FirebaseError, TextFieldChange } from '../../types'
 import { ApiContext } from '../../contexts/apiContext'
 import LoadingIndicator from '../LoadingIndicator'
 
 interface FormValues {
   email: string
   password: string
+  username: string
 }
 
 interface FormErrors {
   email: string
   password: string
+  username: string
 }
 
 interface HasEdited {
   email: boolean
   password: boolean
+  username: boolean
 }
 
 interface SnackbarState {
@@ -36,16 +42,20 @@ const LoginForm = () => {
   const [formValues, setFormValues] = useState<FormValues>({
     email: '',
     password: '',
+    username: '',
   })
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: '',
     password: '',
+    username: '',
   })
   const [hasEdited, setHasEdited] = useState<HasEdited>({
     email: false,
     password: false,
+    username: false,
   })
   const [loading, setLoading] = useState<boolean>(false)
+  const [isUsernameLogin, setIsUsernameLogin] = useState<boolean>(true)
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
     open: false,
     message: '',
@@ -75,7 +85,7 @@ const LoginForm = () => {
   }
 
   const handlePasswordChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
+    e: TextFieldChange | PseudoEvent,
     ignoreHasEditedPassword?: boolean,
   ) => {
     const currentPasswordValue = e.target.value
@@ -103,9 +113,7 @@ const LoginForm = () => {
     }
   }
 
-  const handleEmailChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleEmailChange = (e: TextFieldChange) => {
     const currentEmailValue = e.target.value
     updateFormValue('email', currentEmailValue)
     const updateError = (value: string) => updateFormError('email', value)
@@ -121,10 +129,27 @@ const LoginForm = () => {
     }
   }
 
+  const handleUsernameChange = (e: TextFieldChange) => {
+    const currentUsernameValue = e.target.value
+    const updateError = (val: string) => updateFormError('username', val)
+    setFormValues({ ...formValues, username: currentUsernameValue })
+    if (!hasEdited.username) {
+      setHasEdited({ ...hasEdited, username: true })
+    }
+    if (currentUsernameValue.length === 0 && hasEdited.password) {
+      updateError('Please enter a username')
+    } else if (currentUsernameValue.length > 64) {
+      updateError('Username cannot exceed 64 characters.')
+    } else if (!currentUsernameValue.match(usernamePattern)) {
+      updateError('Username not valid.')
+    } else updateError('')
+  }
+
   const onSubmit = async (e) => {
     try {
       e.preventDefault()
       setHasEdited({
+        ...hasEdited,
         email: true,
         password: true,
       })
@@ -133,7 +158,6 @@ const LoginForm = () => {
         email: formValues.email,
         currentPassword: formValues.password,
       })
-      // setFormErrors({ ...formErrors, login: '' })
       await router.push('/')
     } catch (submitErr) {
       const err = submitErr as FirebaseError
@@ -163,22 +187,48 @@ const LoginForm = () => {
     }
   }
 
-  const disableSubmit =
-    Object.values(formValues).some((val) => val.length === 0) ||
-    Object.values(formErrors).some((val) => val.length > 0) ||
-    Object.values(hasEdited).some((edited) => !edited)
+  const disableSubmit = isUsernameLogin
+    ? Object.values(formValues).some((val) => val.length === 0) ||
+      Object.values(formErrors).some((val) => val.length > 0) ||
+      Object.values(hasEdited).some((edited) => !edited)
+    : Object.values(formValues).some((val) => val.length === 0) ||
+      Object.values(formErrors).some((val) => val.length > 0) ||
+      Object.values(hasEdited).some((edited) => !edited)
 
   return (
     <>
       <form onSubmit={onSubmit}>
-        <EmailField
-          id="email"
-          name="email"
-          value={formValues.email}
-          error={formErrors.email}
-          onChange={(e) => handleEmailChange(e)}
-          inputRef={null}
+        <Switch
+          checked={isUsernameLogin}
+          onChange={() => setIsUsernameLogin(!isUsernameLogin)}
+          editable
+          name="Username or Email"
+          leftLabel="Username"
+          rightLabel="Email"
+          leftIcon={<FaceIcon />}
+          rightIcon={<EmailIcon />}
         />
+        {!isUsernameLogin ? (
+          <UsernameField
+            id="username"
+            style={{ paddingTop: '1.5rem' }}
+            inputRef={null}
+            value={formValues.username}
+            onChange={(e: TextFieldChange) => handleUsernameChange(e)}
+            error={formErrors.username}
+            name="name"
+            label="Username"
+          />
+        ) : (
+          <EmailField
+            id="email"
+            name="email"
+            value={formValues.email}
+            error={formErrors.email}
+            onChange={(e) => handleEmailChange(e)}
+            inputRef={null}
+          />
+        )}
         <PasswordField
           id="currentPassword"
           showPassword={showPassword}

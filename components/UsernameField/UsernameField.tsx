@@ -1,17 +1,18 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, CSSProperties } from 'react'
 import { TextField } from '@material-ui/core'
 import styles from './UsernameField.module.css'
 
 interface IUsernameField {
-    value: string
-    // eslint-disable-next-line no-unused-vars
-    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-    error: string
-    id: string
-    label?: string
-    name?: string
-    inputRef: any,
-    autoFocus?: boolean
+  value: string
+  // eslint-disable-next-line no-unused-vars
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  error: string
+  id: string
+  label?: string
+  name?: string
+  inputRef: any
+  autoFocus?: boolean
+  style: CSSProperties
 }
 
 const UsernameField = ({
@@ -23,8 +24,9 @@ const UsernameField = ({
   name,
   inputRef,
   autoFocus,
+  style,
 }: IUsernameField) => (
-  <div className={styles.tableStyle}>
+  <div className={styles.tableStyle} style={style}>
     <TextField
       id={id}
       autoFocus={autoFocus}

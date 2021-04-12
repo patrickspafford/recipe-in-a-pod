@@ -76,13 +76,12 @@ const SignUpForm = () => {
 
   const handleUsernameChange = (e: TextFieldChange) => {
     const currentUsernameValue = e.target.value
-    console.log(currentUsernameValue)
     const updateError = (val: string) => updateFormError('username', val)
     setFormValues({ ...formValues, username: currentUsernameValue })
     if (!hasEdited.username) {
       setHasEdited({ ...hasEdited, username: true })
     }
-    if (currentUsernameValue.length === 0 && hasEdited.password) {
+    if (currentUsernameValue.length === 0 && hasEdited.username) {
       updateError('Please enter a username')
     } else if (currentUsernameValue.length > 64) {
       updateError('Username cannot exceed 64 characters.')
@@ -224,6 +223,7 @@ const SignUpForm = () => {
       <form autoComplete="off" onSubmit={onSubmit}>
         <UsernameField
           id="username"
+          style={{ paddingTop: '7rem' }}
           inputRef={null}
           value={formValues.username}
           onChange={(e: TextFieldChange) => handleUsernameChange(e)}
