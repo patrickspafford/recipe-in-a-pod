@@ -1,5 +1,4 @@
-import { useState, useContext, FormEvent } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import {
   EmailField,
@@ -68,23 +67,28 @@ const SignUpForm = () => {
     confirmPassword: false,
   })
 
+  const updateFormError = (key: string, value: string) => {
+    setFormErrors({
+      ...formErrors,
+      [key]: value,
+    })
+  }
+
   const handleUsernameChange = (e: TextFieldChange) => {
     const currentUsernameValue = e.target.value
     console.log(currentUsernameValue)
+    const updateError = (val: string) => updateFormError('username', val)
     setFormValues({ ...formValues, username: currentUsernameValue })
     if (!hasEdited.username) {
       setHasEdited({ ...hasEdited, username: true })
     }
     if (currentUsernameValue.length === 0 && hasEdited.password) {
-      setFormErrors({ ...formErrors, username: 'Please enter a username' })
+      updateError('Please enter a username')
     } else if (currentUsernameValue.length > 64) {
-      setFormErrors({
-        ...formErrors,
-        username: 'Username cannot exceed 64 characters.',
-      })
+      updateError('Username cannot exceed 64 characters.')
     } else if (!currentUsernameValue.match(usernamePattern)) {
-      setFormErrors({ ...formErrors, username: 'Username not valid.' })
-    } else setFormErrors({ ...formErrors, username: '' })
+      updateError('Username not valid.')
+    } else updateError('')
   }
 
   const handlePasswordChange = (
@@ -92,31 +96,18 @@ const SignUpForm = () => {
     ignoreHasEditedPassword?: boolean,
   ) => {
     const currentPasswordValue = e.target.value
+    const updateError = (val: string) => updateFormError('password', val)
     setFormValues({ ...formValues, password: currentPasswordValue })
     if (!hasEdited.password) setHasEdited({ ...hasEdited, password: true })
     if (currentPasswordValue.length === 0 && !ignoreHasEditedPassword) {
-      setFormErrors({ ...formErrors, password: 'Please enter a password.' })
+      updateError('Please enter a password.')
     } else if (currentPasswordValue.length < 6 && !ignoreHasEditedPassword) {
-      setFormErrors({
-        ...formErrors,
-        password: 'Password must be at least 6 characters.',
-      })
+      updateError('Password must be at least 6 characters.')
     } else if (currentPasswordValue.length > 128) {
-      setFormErrors({
-        ...formErrors,
-        password: 'Password must not exceed 128 characters.',
-      })
+      updateError('Password must not exceed 128 characters.')
     } else if (currentPasswordValue.length === 1) {
-      setFormErrors({
-        ...formErrors,
-        password: 'Password must be at least 6 characters.',
-      })
-    } else {
-      setFormErrors({
-        ...formErrors,
-        password: '',
-      })
-    }
+      updateError('Password must be at least 6 characters.')
+    } else updateError('')
 
     if (
       currentPasswordValue !== formValues.confirmPassword &&
@@ -139,6 +130,7 @@ const SignUpForm = () => {
     ignoreHasEditedConfirmPassword?: boolean,
   ) => {
     const currentConfirmPasswordValue = e.target.value
+    const updateError = (val: string) => updateFormError('confirmPassword', val)
     setFormValues({
       ...formValues,
       confirmPassword: currentConfirmPasswordValue,
@@ -153,15 +145,9 @@ const SignUpForm = () => {
       currentConfirmPasswordValue !== formValues.password &&
       !ignoreHasEditedConfirmPassword
     ) {
-      setFormErrors({
-        ...formErrors,
-        confirmPassword: 'Passwords did not match.',
-      })
+      updateError('Passwords did not match.')
     } else {
-      setFormErrors({
-        ...formErrors,
-        confirmPassword: '',
-      })
+      updateError('')
     }
   }
 
@@ -201,8 +187,8 @@ const SignUpForm = () => {
       await apiService.signUp(data)
       await router.push('/')
     } catch (error) {
+      const updateError = (val: string) => updateFormError('signUp', val)
       setLoading(false)
-      console.error(error)
       const pseudoEvent: PseudoEvent = {
         target: {
           value: '',
@@ -218,16 +204,11 @@ const SignUpForm = () => {
           username: 'Username must be unique',
         })
       } else if (err.message.includes('email')) {
-        setFormErrors({
-          ...formErrors,
-          signUp: 'An account with this email already exists.',
-        })
+        updateError('An account with this email already exists.')
       } else {
-        setFormErrors({
-          ...formErrors,
-          signUp:
-            'Something went wrong. Please check that your information is correct.',
-        })
+        updateError(
+          'Something went wrong. Please check that your information is correct.',
+        )
       }
       setSnackbarOpen(true)
     }

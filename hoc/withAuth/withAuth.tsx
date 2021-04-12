@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button, Typography } from '@material-ui/core'
-import { ReactNode } from 'react'
 import { Layout } from '../../components'
 import useUser from '../../hooks/useUser'
 import colors from '../../utils/colors'

@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useContext } from 'react'
-import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import {
   SnackBar,
@@ -12,142 +11,179 @@ import { PseudoEvent, FirebaseError } from '../../types'
 import { ApiContext } from '../../contexts/apiContext'
 import LoadingIndicator from '../LoadingIndicator'
 
-interface LoginData {
+interface FormValues {
   email: string
-  currentPassword: string
+  password: string
+}
+
+interface FormErrors {
+  email: string
+  password: string
+}
+
+interface HasEdited {
+  email: boolean
+  password: boolean
+}
+
+interface SnackbarState {
+  open: boolean
+  message: string
 }
 
 const LoginForm = () => {
   const { apiService } = useContext(ApiContext)
-  // Form field values
-  const [password, setPassword] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  // Loading
+  const [formValues, setFormValues] = useState<FormValues>({
+    email: '',
+    password: '',
+  })
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: '',
+    password: '',
+  })
+  const [hasEdited, setHasEdited] = useState<HasEdited>({
+    email: false,
+    password: false,
+  })
   const [loading, setLoading] = useState<boolean>(false)
-  // Validation errors
-  const [emailError, setEmailError] = useState<string>('')
-  const [passwordError, setPasswordError] = useState<string>('')
-  // Error after submit
-  const [loginError, setLoginError] = useState<string>('')
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-  // Other state
+  const [snackbarState, setSnackbarState] = useState<SnackbarState>({
+    open: false,
+    message: '',
+  })
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [hasEditedEmail, setHasEditedEmail] = useState<boolean>(false)
-  const [hasEditedPassword, setHasEditedPassword] = useState<boolean>(false)
-
-  const { handleSubmit, register } = useForm()
   const router = useRouter()
+
+  const updateFormValue = (key: string, value: string) => {
+    setFormValues({
+      ...formValues,
+      [key]: value,
+    })
+  }
+
+  const updateFormError = (key: string, value: string) => {
+    setFormErrors({
+      ...formErrors,
+      [key]: value,
+    })
+  }
+
+  const updateHasEdited = (key: string, value: boolean) => {
+    setHasEdited({
+      ...hasEdited,
+      [key]: value,
+    })
+  }
 
   const handlePasswordChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | PseudoEvent,
     ignoreHasEditedPassword?: boolean,
   ) => {
     const currentPasswordValue = e.target.value
-    setPassword(currentPasswordValue)
-    if (!hasEditedPassword) setHasEditedPassword(true)
+    const updateError = (value: string) => updateFormError('password', value)
+    updateFormValue('password', currentPasswordValue)
+    if (!hasEdited.password) updateHasEdited('password', true)
     if (
       currentPasswordValue.length === 0 &&
-      hasEditedPassword &&
+      hasEdited.password &&
       !ignoreHasEditedPassword
     ) {
-      setPasswordError('Please enter a password.')
+      updateError('Please enter a password.')
     } else if (
       currentPasswordValue.length < 6 &&
-      hasEditedPassword &&
+      hasEdited.password &&
       !ignoreHasEditedPassword
     ) {
-      setPasswordError('Password must be at least 6 characters.')
+      updateError('Password must be at least 6 characters.')
     } else if (currentPasswordValue.length > 128) {
-      setPasswordError('Password must not exceed 128 characters.')
+      updateError('Password must not exceed 128 characters.')
     } else if (currentPasswordValue.length === 1) {
-      setPasswordError('Password must be at least 6 characters.')
-    } else setPasswordError('')
+      updateError('Password must be at least 6 characters.')
+    } else {
+      updateError('')
+    }
   }
 
   const handleEmailChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const currentEmailValue = e.target.value
-    setEmail(currentEmailValue)
-    if (!hasEditedEmail) setHasEditedEmail(true)
-    if (currentEmailValue.length === 0 && hasEditedEmail) {
-      setEmailError('Please enter an email address.')
+    updateFormValue('email', currentEmailValue)
+    const updateError = (value: string) => updateFormError('email', value)
+    if (!hasEdited.email) updateHasEdited('email', true)
+    if (currentEmailValue.length === 0 && hasEdited.email) {
+      updateError('Please enter an email address.')
     } else if (!currentEmailValue.match(emailPattern)) {
-      setEmailError('Please enter a valid email address.')
+      updateError('Please enter a valid email address.')
     } else if (currentEmailValue.length > 128) {
-      setEmailError('Email address must not exceed 128 characters.')
-    } else setEmailError('')
+      updateError('Email address must not exceed 128 characters.')
+    } else {
+      updateError('')
+    }
   }
 
-  const onSubmit = (data: LoginData) => {
-    setHasEditedEmail(true)
-    setHasEditedPassword(true)
-    setLoading(true)
-    return apiService
-      .signIn(data)
-      .then((msg) => {
-        setLoginError('')
-        router
-          .push('/')
-          .then(() => console.log(msg))
-          .catch((e) => {
-            setLoading(false)
-            console.error(e)
-          })
+  const onSubmit = async (e) => {
+    try {
+      e.preventDefault()
+      setHasEdited({
+        email: true,
+        password: true,
       })
-      .catch((err: FirebaseError) => {
-        setLoading(false)
-        console.log(err)
-        if (err.code && err.code.includes('wrong-password')) {
-          setLoginError('Incorrect password.')
-        } else if (err.code.includes('too-many-requests')) {
-          setLoginError(
-            'Too many failed attempts. Account temporarily disabled.',
-          )
-        } else {
-          setLoginError(
-            'Something went wrong. Please check that the email you entered is correct.',
-          )
-        }
-        const pseudoEvent = {
-          target: {
-            value: '',
-          },
-        }
-        const ignoreHasEditedPassword = true
-        handlePasswordChange(pseudoEvent, ignoreHasEditedPassword)
-        setSnackbarOpen(true)
+      setLoading(true)
+      await apiService.signIn({
+        email: formValues.email,
+        currentPassword: formValues.password,
       })
+      // setFormErrors({ ...formErrors, login: '' })
+      await router.push('/')
+    } catch (submitErr) {
+      const err = submitErr as FirebaseError
+      setLoading(false)
+      const updateError = (val: string) => {
+        setSnackbarState({
+          open: true,
+          message: val,
+        })
+      }
+      if (err.code && err.code.includes('wrong-password')) {
+        updateError('Incorrect password.')
+      } else if (err.code.includes('too-many-requests')) {
+        updateError('Too many failed attempts. Account temporarily disabled.')
+      } else {
+        updateError(
+          'Something went wrong. Please check that the email you entered is correct.',
+        )
+      }
+      const pseudoEvent = {
+        target: {
+          value: '',
+        },
+      }
+      const ignoreHasEditedPassword = true
+      handlePasswordChange(pseudoEvent, ignoreHasEditedPassword)
+    }
   }
 
   const disableSubmit =
-    emailError.length > 0 ||
-    passwordError.length > 0 ||
-    !hasEditedEmail ||
-    !hasEditedPassword ||
-    password.length < 6
+    Object.values(formValues).some((val) => val.length === 0) ||
+    Object.values(formErrors).some((val) => val.length > 0) ||
+    Object.values(hasEdited).some((edited) => !edited)
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <EmailField
           id="email"
           name="email"
-          value={email}
-          error={emailError}
+          value={formValues.email}
+          error={formErrors.email}
           onChange={(e) => handleEmailChange(e)}
-          inputRef={register({
-            required: true,
-          })}
+          inputRef={null}
         />
         <PasswordField
           id="currentPassword"
           showPassword={showPassword}
-          value={password}
-          inputRef={register({
-            required: true,
-          })}
-          error={passwordError}
+          value={formValues.password}
+          error={formErrors.password}
           onChange={(e) => handlePasswordChange(e)}
           setShowPassword={() => setShowPassword(!showPassword)}
         />
@@ -156,9 +192,14 @@ const LoginForm = () => {
         </SubmitButton>
       </form>
       <SnackBar
-        open={snackbarOpen}
-        setOpen={(bool: boolean) => setSnackbarOpen(bool)}
-        message={loginError}
+        open={snackbarState.open}
+        setOpen={(bool: boolean) => {
+          setSnackbarState({
+            ...snackbarState,
+            open: bool,
+          })
+        }}
+        message={snackbarState.message}
         severity="error"
       />
     </>
