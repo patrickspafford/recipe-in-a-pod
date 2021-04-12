@@ -10,6 +10,7 @@ import {
 } from '../../components'
 import { FaceIcon, EmailIcon } from '../../icons'
 import { emailPattern, usernamePattern } from '../../utils/regex'
+import { minLength, maxLength } from '../../utils/form'
 import { PseudoEvent, FirebaseError, TextFieldChange } from '../../types'
 import { ApiContext } from '../../contexts/apiContext'
 import LoadingIndicator from '../LoadingIndicator'
@@ -55,7 +56,7 @@ const LoginForm = () => {
     username: false,
   })
   const [loading, setLoading] = useState<boolean>(false)
-  const [isUsernameLogin, setIsUsernameLogin] = useState<boolean>(true)
+  const [isUsernameLogin, setIsUsernameLogin] = useState<boolean>(false)
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
     open: false,
     message: '',
@@ -99,15 +100,15 @@ const LoginForm = () => {
     ) {
       updateError('Please enter a password.')
     } else if (
-      currentPasswordValue.length < 6 &&
+      currentPasswordValue.length < minLength &&
       hasEdited.password &&
       !ignoreHasEditedPassword
     ) {
-      updateError('Password must be at least 6 characters.')
-    } else if (currentPasswordValue.length > 128) {
-      updateError('Password must not exceed 128 characters.')
+      updateError(`Password must be at least ${minLength} characters.`)
+    } else if (currentPasswordValue.length > maxLength) {
+      updateError(`Password must not exceed ${maxLength} characters.`)
     } else if (currentPasswordValue.length === 1) {
-      updateError('Password must be at least 6 characters.')
+      updateError(`Password must be at least ${minLength} characters.`)
     } else {
       updateError('')
     }
@@ -122,8 +123,8 @@ const LoginForm = () => {
       updateError('Please enter an email address.')
     } else if (!currentEmailValue.match(emailPattern)) {
       updateError('Please enter a valid email address.')
-    } else if (currentEmailValue.length > 128) {
-      updateError('Email address must not exceed 128 characters.')
+    } else if (currentEmailValue.length > maxLength) {
+      updateError(`Email address must not exceed ${maxLength} characters.`)
     } else {
       updateError('')
     }
@@ -136,16 +137,17 @@ const LoginForm = () => {
     if (!hasEdited.username) {
       setHasEdited({ ...hasEdited, username: true })
     }
-    if (currentUsernameValue.length === 0 && hasEdited.password) {
+    if (currentUsernameValue.length === 0 && hasEdited.username) {
       updateError('Please enter a username')
-    } else if (currentUsernameValue.length > 64) {
-      updateError('Username cannot exceed 64 characters.')
+    } else if (currentUsernameValue.length > maxLength) {
+      updateError(`Username cannot exceed ${maxLength} characters.`)
     } else if (!currentUsernameValue.match(usernamePattern)) {
       updateError('Username not valid.')
     } else updateError('')
   }
 
   const onSubmit = async (e) => {
+    const wasUsernameLogin = isUsernameLogin
     try {
       e.preventDefault()
       setHasEdited({
@@ -174,7 +176,9 @@ const LoginForm = () => {
         updateError('Too many failed attempts. Account temporarily disabled.')
       } else {
         updateError(
-          'Something went wrong. Please check that the email you entered is correct.',
+          `Something went wrong. Please check that the ${
+            wasUsernameLogin ? 'username' : 'email'
+          } you entered is correct.`,
         )
       }
       const pseudoEvent = {
@@ -188,12 +192,30 @@ const LoginForm = () => {
   }
 
   const disableSubmit = isUsernameLogin
-    ? Object.values(formValues).some((val) => val.length === 0) ||
-      Object.values(formErrors).some((val) => val.length > 0) ||
-      Object.values(hasEdited).some((edited) => !edited)
-    : Object.values(formValues).some((val) => val.length === 0) ||
-      Object.values(formErrors).some((val) => val.length > 0) ||
-      Object.values(hasEdited).some((edited) => !edited)
+    ? Object.values({
+        password: formValues.password,
+        username: formValues.username,
+      }).some((val) => val.length === 0) ||
+      Object.values({
+        password: formErrors.password,
+        username: formErrors.username,
+      }).some((val) => val.length > 0) ||
+      Object.values({
+        password: hasEdited.password,
+        username: hasEdited.username,
+      }).some((edited) => !edited)
+    : Object.values({
+        password: formValues.password,
+        email: formValues.email,
+      }).some((val) => val.length === 0) ||
+      Object.values({
+        password: formErrors.password,
+        email: formErrors.email,
+      }).some((val) => val.length > 0) ||
+      Object.values({
+        password: hasEdited.password,
+        email: hasEdited.email,
+      }).some((edited) => !edited)
 
   return (
     <>

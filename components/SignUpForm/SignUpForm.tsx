@@ -11,6 +11,7 @@ import {
 import { ApiContext } from '../../contexts/apiContext'
 import { TextFieldChange, PseudoEvent } from '../../types'
 import { emailPattern, usernamePattern } from '../../utils/regex'
+import { maxLength, minLength } from '../../utils/form'
 
 interface SignUpData {
   name: string
@@ -83,8 +84,8 @@ const SignUpForm = () => {
     }
     if (currentUsernameValue.length === 0 && hasEdited.username) {
       updateError('Please enter a username')
-    } else if (currentUsernameValue.length > 64) {
-      updateError('Username cannot exceed 64 characters.')
+    } else if (currentUsernameValue.length > maxLength) {
+      updateError(`Username cannot exceed ${maxLength} characters.`)
     } else if (!currentUsernameValue.match(usernamePattern)) {
       updateError('Username not valid.')
     } else updateError('')
@@ -100,12 +101,15 @@ const SignUpForm = () => {
     if (!hasEdited.password) setHasEdited({ ...hasEdited, password: true })
     if (currentPasswordValue.length === 0 && !ignoreHasEditedPassword) {
       updateError('Please enter a password.')
-    } else if (currentPasswordValue.length < 6 && !ignoreHasEditedPassword) {
-      updateError('Password must be at least 6 characters.')
-    } else if (currentPasswordValue.length > 128) {
-      updateError('Password must not exceed 128 characters.')
+    } else if (
+      currentPasswordValue.length < minLength &&
+      !ignoreHasEditedPassword
+    ) {
+      updateError(`Password must be at least ${minLength} characters.`)
+    } else if (currentPasswordValue.length > maxLength) {
+      updateError(`Password must not exceed ${maxLength} characters.`)
     } else if (currentPasswordValue.length === 1) {
-      updateError('Password must be at least 6 characters.')
+      updateError(`Password must be at least ${minLength} characters.`)
     } else updateError('')
 
     if (
@@ -166,10 +170,10 @@ const SignUpForm = () => {
         ...formErrors,
         email: 'Please enter a valid email address.',
       })
-    } else if (currentEmailValue.length > 128) {
+    } else if (currentEmailValue.length > maxLength) {
       setFormErrors({
         ...formErrors,
-        email: 'Email address must not exceed 128 characters.',
+        email: `Email address must not exceed ${maxLength} characters.`,
       })
     } else setFormErrors({ ...formErrors, email: '' })
   }

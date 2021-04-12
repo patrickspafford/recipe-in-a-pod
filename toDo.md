@@ -5,5 +5,3 @@
 - Sign in with username
 - Share recipes with users not signed in, but no more
 - Make mobile-friendly
-- Fix form submit onchange behavior
-- Add delay to withAuth
