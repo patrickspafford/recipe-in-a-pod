@@ -1,5 +1,6 @@
 import { ChangeEvent, CSSProperties } from 'react'
 import { TextField } from '@material-ui/core'
+import useWindowSize from '../../hooks/useWindowSize'
 import styles from './UsernameField.module.css'
 
 interface IUsernameField {
@@ -25,39 +26,46 @@ const UsernameField = ({
   inputRef,
   autoFocus,
   style,
-}: IUsernameField) => (
-  <div className={styles.tableStyle} style={style}>
-    <TextField
-      id={id}
-      autoFocus={autoFocus}
-      inputProps={{
-        style: {
-          marginLeft: '1rem',
-        },
-      }}
-      name={name}
-      className={styles.textField}
-      type="text"
-      InputLabelProps={{
-        style: {
-          marginLeft: '1rem',
-        },
-      }}
-      FormHelperTextProps={{
-        style: {
-          marginLeft: '2rem',
-        },
-      }}
-      variant="filled"
-      label={label}
-      error={error.length > 0}
-      helperText={error}
-      value={value}
-      inputRef={inputRef}
-      onChange={onChange}
-    />
-  </div>
-)
+}: IUsernameField) => {
+  const { isLarge } = useWindowSize()
+
+  return (
+    <div
+      className={isLarge ? styles.tableStyle : styles.smallTableStyle}
+      style={style}
+    >
+      <TextField
+        id={id}
+        autoFocus={autoFocus}
+        inputProps={{
+          style: {
+            marginLeft: '1rem',
+          },
+        }}
+        name={name}
+        className={styles.textField}
+        type="text"
+        InputLabelProps={{
+          style: {
+            marginLeft: '1rem',
+          },
+        }}
+        FormHelperTextProps={{
+          style: {
+            marginLeft: '2rem',
+          },
+        }}
+        variant="filled"
+        label={label}
+        error={error.length > 0}
+        helperText={error}
+        value={value}
+        inputRef={inputRef}
+        onChange={onChange}
+      />
+    </div>
+  )
+}
 
 UsernameField.defaultProps = {
   label: 'Username',

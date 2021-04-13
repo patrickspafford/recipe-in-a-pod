@@ -7,11 +7,21 @@ import { ApiContext } from '../contexts/apiContext'
 import styles from '../styles/browse.module.css'
 import useUser from '../hooks/useUser'
 
+interface SnackbarState {
+  open: boolean
+  message: string
+  severity: 'error' | 'success'
+}
+
 const BrowsePage = () => {
   const { user } = useUser()
   const [pods, setPods] = useState<PodType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+  const [snackbarState, setSnackbarState] = useState<SnackbarState>({
+    open: false,
+    message: '',
+    severity: 'error',
+  })
   const { apiService } = useContext(ApiContext)
 
   const getPublicPods = async () => {
@@ -31,11 +41,20 @@ const BrowsePage = () => {
       setLoading(true)
       await apiService.ratePod(user.id, docId, rating)
       await getPublicPods()
-      // refetch ratings
-      setLoading(false)
+      setSnackbarState({
+        open: true,
+        message: 'Successfully rated pod.',
+        severity: 'success',
+      })
     } catch (e) {
-      setLoading(false)
       console.error(e)
+      setSnackbarState({
+        open: true,
+        message: 'Could not rate pod at this time.',
+        severity: 'error',
+      })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -45,7 +64,11 @@ const BrowsePage = () => {
       pod.docId
     }/${encodeURIComponent(pod.name)}`
     copy(podLocation)
-    setSnackbarOpen(true)
+    setSnackbarState({
+      open: true,
+      message: 'Copied to clipboard!',
+      severity: 'success',
+    })
   }
 
   useEffect(() => {
@@ -72,10 +95,15 @@ const BrowsePage = () => {
         </div>
       )}
       <SnackBar
-        open={snackbarOpen}
-        setOpen={(bool: boolean) => setSnackbarOpen(bool)}
-        message="Copied to clipboard!"
-        severity="success"
+        open={snackbarState.open}
+        setOpen={(bool: boolean) =>
+          setSnackbarState({
+            ...snackbarState,
+            open: bool,
+          })
+        }
+        message={snackbarState.message}
+        severity={snackbarState.severity}
       />
     </Layout>
   )

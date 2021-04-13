@@ -5,6 +5,13 @@
   justify-content: center;
 }
 
+.smallTableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 0.9fr));
+  padding: 1.5rem 0;
+  justify-content: center;
+}
+
 .textField {
   background-color: white;
   width: 100%;

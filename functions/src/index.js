@@ -28,14 +28,21 @@ exports.usernamePageExists = https.onCall(async (data) => {
 })
 
 exports.userMatchesRecipe = https.onCall(async (data) => {
-  const { userId } = data
-  if (!userId) {
+  const { userId, recipeId } = data
+  if (!userId || !recipeId) {
     throw new https.HttpsError(
       'invalid-argument',
-      'Please provide both a user id and a username.',
+      'Please provide both a user id and a recipe id.',
     )
   }
-  const matchingRecipes = null
+  const matchingRecipe = await admin
+    .firestore()
+    .collection('recipes')
+    .doc(recipeId)
+    .get()
+  if (matchingRecipe.empty) return false
+  const recipeData = matchingRecipe.data()
+  return recipeData.uid === userId
 })
 
 /*

@@ -12,3 +12,8 @@
 .container {
   text-align: center;
 }
+
+.paperSmall {
+  width: 100%;
+  margin: auto;
+}

@@ -1,13 +1,14 @@
 import { ReactNode, CSSProperties } from 'react'
 import { Button } from '@material-ui/core'
+import useWindowSize from '../../hooks/useWindowSize'
 import styles from './SubmitButton.module.css'
 import colors from '../../utils/colors'
 
 interface ISubmitButton {
-    disabled: boolean
-    children: ReactNode
-    style?: CSSProperties
-    onClick?: any
+  disabled: boolean
+  children: ReactNode
+  style?: CSSProperties
+  onClick?: any
 }
 
 const SubmitButton = ({
@@ -15,22 +16,24 @@ const SubmitButton = ({
   children,
   style,
   onClick,
-}: ISubmitButton) => (
-  <div className={styles.tableStyle}>
-    <Button
-      type="submit"
-      onClick={onClick}
-      disabled={disabled}
-      size="large"
-      className={styles.button}
-      disableFocusRipple
-      style={{ ...style, backgroundColor: colors.quinary }}
-    >
-      {children}
-    </Button>
-  </div>
-
-)
+}: ISubmitButton) => {
+  const { isLarge } = useWindowSize()
+  return (
+    <div className={isLarge ? styles.tableStyle : styles.smallTableStyle}>
+      <Button
+        type="submit"
+        onClick={onClick}
+        disabled={disabled}
+        size="large"
+        className={styles.button}
+        disableFocusRipple
+        style={{ ...style, backgroundColor: colors.quinary }}
+      >
+        {children}
+      </Button>
+    </div>
+  )
+}
 
 SubmitButton.defaultProps = {
   style: {},

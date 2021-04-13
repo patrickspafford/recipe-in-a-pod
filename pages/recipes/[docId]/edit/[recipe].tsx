@@ -1,5 +1,7 @@
 import { useState, useRef, ChangeEvent, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import firebase from 'firebase/app'
+import 'firebase/functions'
 import { GetServerSideProps } from 'next'
 import * as cookie from 'cookie'
 import {
@@ -492,8 +494,15 @@ const EditPage = ({ podDocId }: IEditPage) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    const userMatchesRecipe = firebase
+      .functions()
+      .httpsCallable('userMatchesRecipe')
     const userId = JSON.parse(cookie.parse(context.req.headers.cookie).auth).id
-    if (userId) {
+    const doesUserMatchRecipe = await userMatchesRecipe({
+      userId,
+      recipeId: context.params.docId,
+    })
+    if (doesUserMatchRecipe.data) {
       return {
         props: {
           podDocId: context.params.docId,
@@ -506,7 +515,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       redirect: {
         permanent: false,
-        destination: '/not-authorized',
+        destination: `/recipes/${context.params.docId}/${context.params.recipe}`,
       },
     }
   } catch (e) {
@@ -517,7 +526,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       redirect: {
         permanent: false,
-        destination: '/not-authorized',
+        destination: `/recipes/${context.params.docId}/${context.params.recipe}`,
       },
     }
   }

@@ -8,6 +8,14 @@
   align-items: center;
 }
 
+.smallTableStyle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 0.9fr));
+  padding: 1.5rem 1rem;
+  color: white;
+  justify-content: center;
+}
+
 .button {
   padding: 0.15rem 0.5rem;
 }

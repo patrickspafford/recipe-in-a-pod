@@ -10,6 +10,7 @@ import {
 } from '../../components'
 import { ApiContext } from '../../contexts/apiContext'
 import { TextFieldChange, PseudoEvent } from '../../types'
+import useWindowSize from '../../hooks/useWindowSize'
 import { emailPattern, usernamePattern } from '../../utils/regex'
 import { maxLength, minLength } from '../../utils/form'
 
@@ -42,6 +43,7 @@ interface ShowFields {
 const SignUpForm = () => {
   const { apiService } = useContext(ApiContext)
   const router = useRouter()
+  const { isLarge } = useWindowSize()
   const [formValues, setFormValues] = useState<FormValues>({
     username: '',
     email: '',
@@ -227,7 +229,7 @@ const SignUpForm = () => {
       <form autoComplete="off" onSubmit={onSubmit}>
         <UsernameField
           id="username"
-          style={{ paddingTop: '7rem' }}
+          style={{ paddingTop: isLarge ? '7rem' : '1.5rem' }}
           inputRef={null}
           value={formValues.username}
           onChange={(e: TextFieldChange) => handleUsernameChange(e)}
