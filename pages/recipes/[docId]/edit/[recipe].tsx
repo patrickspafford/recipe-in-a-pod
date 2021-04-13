@@ -1,6 +1,7 @@
 import { useState, useRef, ChangeEvent, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
+import * as cookie from 'cookie'
 import {
   Layout,
   Directions,
@@ -489,10 +490,37 @@ const EditPage = ({ podDocId }: IEditPage) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => ({
-  props: {
-    podDocId: context.params.docId,
-  }, // will be passed to the page component as props
-})
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const userId = JSON.parse(cookie.parse(context.req.headers.cookie).auth).id
+    if (userId) {
+      return {
+        props: {
+          podDocId: context.params.docId,
+        }, // will be passed to the page component as props
+      }
+    }
+    return {
+      props: {
+        podDocId: '',
+      },
+      redirect: {
+        permanent: false,
+        destination: '/not-authorized',
+      },
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      props: {
+        podDocId: '',
+      },
+      redirect: {
+        permanent: false,
+        destination: '/not-authorized',
+      },
+    }
+  }
+}
 
 export default withAuth(EditPage)

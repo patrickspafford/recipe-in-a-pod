@@ -56,7 +56,7 @@ const LoginForm = () => {
     username: false,
   })
   const [loading, setLoading] = useState<boolean>(false)
-  const [isUsernameLogin, setIsUsernameLogin] = useState<boolean>(false)
+  const [isUsernameLogin, setIsUsernameLogin] = useState<boolean>(true)
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
     open: false,
     message: '',
@@ -150,29 +150,48 @@ const LoginForm = () => {
     const wasUsernameLogin = isUsernameLogin
     try {
       e.preventDefault()
-      setHasEdited({
-        ...hasEdited,
-        email: true,
-        password: true,
-      })
-      setLoading(true)
-      await apiService.signIn({
-        email: formValues.email,
-        currentPassword: formValues.password,
-      })
+      if (!wasUsernameLogin) {
+        setHasEdited({
+          ...hasEdited,
+          email: true,
+          password: true,
+        })
+        setLoading(true)
+        await apiService.signIn({
+          email: formValues.email,
+          currentPassword: formValues.password,
+        })
+      } else {
+        setHasEdited({
+          ...hasEdited,
+          username: true,
+          password: true,
+        })
+        setLoading(true)
+        await apiService.signInWithUsername({
+          username: formValues.username,
+          currentPassword: formValues.password,
+        })
+      }
       await router.push('/')
     } catch (submitErr) {
-      const err = submitErr as FirebaseError
-      setLoading(false)
       const updateError = (val: string) => {
         setSnackbarState({
           open: true,
           message: val,
         })
       }
+      if (
+        submitErr.message &&
+        submitErr.message.includes('username-not-found')
+      ) {
+        updateError('Username not found.')
+      }
+      const err = submitErr as FirebaseError
+      setLoading(false)
       if (err.code && err.code.includes('wrong-password')) {
         updateError('Incorrect password.')
-      } else if (err.code.includes('too-many-requests')) {
+      } else if (err.code && err.code.includes('too-many-requests')) {
         updateError('Too many failed attempts. Account temporarily disabled.')
       } else {
         updateError(
@@ -225,12 +244,12 @@ const LoginForm = () => {
           onChange={() => setIsUsernameLogin(!isUsernameLogin)}
           editable
           name="Username or Email"
-          leftLabel="Username"
-          rightLabel="Email"
-          leftIcon={<FaceIcon />}
-          rightIcon={<EmailIcon />}
+          rightLabel="Username"
+          leftLabel="Email"
+          rightIcon={<FaceIcon />}
+          leftIcon={<EmailIcon />}
         />
-        {!isUsernameLogin ? (
+        {isUsernameLogin ? (
           <UsernameField
             id="username"
             style={{ paddingTop: '1.5rem' }}

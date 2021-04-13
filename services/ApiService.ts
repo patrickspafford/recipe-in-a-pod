@@ -207,6 +207,26 @@ export default class ApiService {
     return 'Signed in successfully'
   }
 
+  async signInWithUsername({ username, currentPassword }) {
+    const email = await this.getEmailByUsername(username)
+    if (!email) {
+      throw new Error('username-not-found')
+    }
+    const data = { email, currentPassword }
+    await this.signIn(data)
+  }
+
+  async getEmailByUsername(username: string) {
+    const userQueryResult = await this.firestore
+      .collection('users')
+      .where('name', '==', username)
+      .get()
+    if (userQueryResult.docs.length > 1) {
+      console.warn('Found multiple users with the name', username)
+    }
+    return userQueryResult.docs[0].data().email
+  }
+
   async getPublicPods() {
     try {
       interface IPodsDict {

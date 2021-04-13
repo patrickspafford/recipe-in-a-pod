@@ -27,6 +27,17 @@ exports.usernamePageExists = https.onCall(async (data) => {
   return !usernameExistsForUserDocs.empty
 })
 
+exports.userMatchesRecipe = https.onCall(async (data) => {
+  const { userId } = data
+  if (!userId) {
+    throw new https.HttpsError(
+      'invalid-argument',
+      'Please provide both a user id and a username.',
+    )
+  }
+  const matchingRecipes = null
+})
+
 /*
 
 exports.createUserCourt = https.onCall(async (data, context) => {
