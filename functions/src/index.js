@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { https } = require('firebase-functions')
 const admin = require('firebase-admin')
+const { default: next } = require('next')
 const serviceAccount = require('../recipeinapod-cf37c-firebase-adminsdk-yfhqi-2f3331f210.json')
 
 // Admin initialization for testing with emulator
@@ -44,6 +45,22 @@ exports.userMatchesRecipe = https.onCall(async (data) => {
   const recipeData = matchingRecipe.data()
   return recipeData.uid === userId
 })
+
+const isDev = process.env.NODE_ENV !== 'production'
+
+const nextjsServer = next({
+  conf: {
+    dev: isDev,
+    distDir: '../../.next',
+  },
+})
+
+const nextjsHandle = nextjsServer.getRequestHandler()
+
+exports.nextJsFunc = https.onRequest(
+  (req, res) => nextjsServer.prepare().then(() => nextjsHandle(req, res)),
+  // eslint-disable-next-line function-paren-newline
+)
 
 /*
 
