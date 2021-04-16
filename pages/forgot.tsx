@@ -8,7 +8,7 @@ import {
   EmailField,
   SubmitButton,
 } from '../components'
-
+import useWindowSize from '../hooks/useWindowSize'
 import { ApiContext } from '../contexts/apiContext'
 import { emailPattern } from '../utils/regex'
 
@@ -26,6 +26,7 @@ const ForgotPage = () => {
 
   const { handleSubmit, register } = useForm()
   const { apiService } = useContext(ApiContext)
+  const { isLarge } = useWindowSize()
 
   const onSubmit = async (data: ForgotData) => {
     if (await apiService.sendForgotPasswordEmail(data)) {
@@ -65,7 +66,7 @@ const ForgotPage = () => {
         <form
           onSubmit={handleSubmit(onSubmit)}
           style={{
-            paddingTop: '14rem',
+            paddingTop: isLarge ? '14rem' : '2rem',
           }}
         >
           <EmailField

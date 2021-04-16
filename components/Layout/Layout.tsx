@@ -9,7 +9,7 @@ import {
   IconButton,
   Drawer,
 } from '../../components'
-
+import useWindowSize from '../../hooks/useWindowSize'
 import useUser from '../../hooks/useUser'
 import styles from './Layout.module.css'
 
@@ -22,6 +22,7 @@ interface ILayout {
 const Layout = ({ children, title, hideLogInOut }: ILayout) => {
   const { user, loggedIn, logout } = useUser()
   const router = useRouter()
+  const { isTiny } = useWindowSize()
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLButtonElement>(null)
   const handleMenuClick = (e: MouseEvent<HTMLButtonElement>) =>
     setMenuAnchor(e.currentTarget)
@@ -40,7 +41,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         <Link href="/">
           <a>
             <div className={styles.imageContainer}>
-              <Typography variant="h6">Recipe</Typography>
+              {!isTiny && <Typography variant="h6">Recipe</Typography>}
               <img
                 className={styles.image}
                 src="/pea_people.png"
@@ -48,7 +49,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
                 height={60}
                 width={136}
               />
-              <Typography variant="h6">Pods</Typography>
+              {!isTiny && <Typography variant="h6">Pods</Typography>}
             </div>
           </a>
         </Link>

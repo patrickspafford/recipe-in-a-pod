@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { v4 as uuidv4 } from 'uuid'
 import { IngredientTextField } from '../../components'
 import { Ingredient } from '../../types'
+import useWindowSize from '../../hooks/useWindowSize'
 import colors from '../../utils/colors'
 
 const uuids = new Array(101)

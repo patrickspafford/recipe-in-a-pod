@@ -6,6 +6,7 @@ import {
   MealCategory,
   TextFieldChange,
 } from '../../types'
+import useWindowSize from '../../hooks/useWindowSize'
 // eslint-disable-next-line object-curly-newline
 import { TimerIcon, PeopleIcon, MoneyIcon, MealIcon } from '../../icons'
 import styles from './Info.module.css'
@@ -59,201 +60,250 @@ const Info = ({
   hoursError,
   minutesError,
   editable,
-}: IInfo) => (
-  <ThemeProvider theme={theme}>
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <TextField
-          variant="standard"
-          label="Hours"
-          type="number"
-          InputProps={{
-            disableUnderline: true,
+}: IInfo) => {
+  const { isSmall, isTiny } = useWindowSize()
+  return (
+    <ThemeProvider theme={theme}>
+      <div className={styles.container}>
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+        >
+          <TextField
+            variant="standard"
+            label="Hours"
+            type="number"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            InputLabelProps={{
+              style: {
+                color: colors.primary,
+              },
+            }}
+            error={hoursError.length > 0}
+            helperText={hoursError}
+            className={styles.textField}
+            value={prepTime.hours}
+            fullWidth
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            inputProps={{
+              className: isSmall ? styles.inputSmall : styles.input,
+              min: 0,
+              max: 10000,
+              readOnly: !editable,
+            }}
+            onChange={(e) => {
+              if (editable) {
+                onHoursChange(e)
+              }
+            }}
+          />
+        </div>
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+          style={{
+            justifyContent: 'center',
+            backgroundColor: colors.primary,
           }}
-          InputLabelProps={{
-            style: {
-              color: colors.primary,
-            },
-          }}
-          error={hoursError.length > 0}
-          helperText={hoursError}
-          className={styles.textField}
-          value={prepTime.hours}
-          fullWidth
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          inputProps={{
-            className: styles.input,
-            min: 0,
-            max: 10000,
-            readOnly: !editable,
-          }}
-          onChange={(e) => {
-            if (editable) {
-              onHoursChange(e)
-            }
-          }}
-        />
+        >
+          <TimerIcon size="large" style={{ fill: colors.white }} />
+        </div>
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+        >
+          <TextField
+            type="number"
+            variant="standard"
+            label="Minutes"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            InputLabelProps={{
+              style: {
+                color: colors.primary,
+              },
+            }}
+            error={minutesError.length > 0}
+            helperText={minutesError}
+            className={styles.textField}
+            value={prepTime.minutes}
+            fullWidth
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            inputProps={{
+              className: isSmall ? styles.inputSmall : styles.input,
+              min: 0,
+              max: 59,
+              readOnly: !editable,
+            }}
+            onChange={(e) => {
+              if (editable) {
+                onMinutesChange(e)
+              }
+            }}
+          />
+        </div>
       </div>
       <div
-        className={styles.innerContainer}
-        style={{
-          justifyContent: 'center',
-          backgroundColor: colors.primary,
-        }}
+        className={styles.container}
+        style={{ display: isSmall ? 'block' : 'flex' }}
       >
-        <TimerIcon size="large" style={{ fill: colors.white }} />
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+        >
+          <TextField
+            variant="standard"
+            label="Total Cost"
+            type="number"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            InputLabelProps={{
+              style: {
+                color: colors.primary,
+              },
+            }}
+            error={priceError.length > 0}
+            helperText={priceError}
+            className={styles.textField}
+            value={price}
+            fullWidth
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            inputProps={{
+              className: isSmall ? styles.inputSmall : styles.input,
+              min: 0,
+              max: 1000000,
+              readOnly: !editable,
+            }}
+            onChange={(e) => {
+              if (editable) {
+                onPriceChange(e)
+              }
+            }}
+          />
+        </div>
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+          style={{
+            justifyContent: 'space-between',
+            backgroundColor: colors.primary,
+          }}
+        >
+          <MoneyIcon
+            size="large"
+            style={{
+              fill: colors.white,
+              margin: isSmall ? '1rem 0' : 'auto',
+            }}
+          />
+          <PeopleIcon
+            size="large"
+            style={{
+              fill: colors.white,
+              margin: isSmall ? '1rem 0' : 'auto',
+            }}
+          />
+        </div>
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+        >
+          <TextField
+            type="number"
+            variant="standard"
+            label="Serves"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            InputLabelProps={{
+              style: {
+                color: colors.primary,
+              },
+            }}
+            error={servesError.length > 0}
+            helperText={servesError}
+            className={styles.textField}
+            value={serves}
+            fullWidth
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            inputProps={{
+              className: isSmall ? styles.inputSmall : styles.input,
+              min: 1,
+              max: 1000,
+              readOnly: !editable,
+            }}
+            onChange={(e) => {
+              if (editable) {
+                onServesChange(e)
+              }
+            }}
+          />
+        </div>
       </div>
-      <div className={styles.innerContainer}>
-        <TextField
-          type="number"
-          variant="standard"
-          label="Minutes"
-          InputProps={{
-            disableUnderline: true,
+      <div className={styles.container} style={{ padding: '1rem 5rem' }}>
+        <MealCheckboxes
+          firstLabel="Breakfast"
+          secondLabel="Brunch"
+          thirdLabel="Lunch"
+          editable={editable}
+          firstChecked={mealCategories.Breakfast}
+          secondChecked={mealCategories.Brunch}
+          thirdChecked={mealCategories.Lunch}
+          handleFirstChange={(e: CheckboxChange) => {
+            onCheckboxChange(e, 'Breakfast')
           }}
-          InputLabelProps={{
-            style: {
-              color: colors.primary,
-            },
+          handleSecondChange={(e: CheckboxChange) => {
+            onCheckboxChange(e, 'Brunch')
           }}
-          error={minutesError.length > 0}
-          helperText={minutesError}
-          className={styles.textField}
-          value={prepTime.minutes}
-          fullWidth
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          inputProps={{
-            className: styles.input,
-            min: 0,
-            max: 59,
-            readOnly: !editable,
+          handleThirdChange={
+            (e: CheckboxChange) => onCheckboxChange(e, 'Lunch')
+            // eslint-disable-next-line react/jsx-curly-newline
+          }
+        />
+        <div
+          className={
+            isSmall ? styles.innerContainerSmall : styles.innerContainer
+          }
+          style={{
+            backgroundColor: colors.primary,
+            justifyContent: 'center',
           }}
-          onChange={(e) => {
-            if (editable) {
-              onMinutesChange(e)
-            }
+        >
+          <MealIcon size="large" />
+        </div>
+        <MealCheckboxes
+          firstLabel="Dinner"
+          secondLabel="Dessert"
+          thirdLabel="Beverage"
+          editable={editable}
+          firstChecked={mealCategories.Dinner}
+          secondChecked={mealCategories.Dessert}
+          thirdChecked={mealCategories.Beverage}
+          handleFirstChange={
+            (e: CheckboxChange) => onCheckboxChange(e, 'Dinner')
+            // eslint-disable-next-line react/jsx-curly-newline
+          }
+          handleSecondChange={(e: CheckboxChange) => {
+            onCheckboxChange(e, 'Dessert')
+          }}
+          handleThirdChange={(e: CheckboxChange) => {
+            onCheckboxChange(e, 'Beverage')
           }}
         />
       </div>
-    </div>
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <TextField
-          variant="standard"
-          label="Total Cost"
-          type="number"
-          InputProps={{
-            disableUnderline: true,
-          }}
-          InputLabelProps={{
-            style: {
-              color: colors.primary,
-            },
-          }}
-          error={priceError.length > 0}
-          helperText={priceError}
-          className={styles.textField}
-          value={price}
-          fullWidth
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          inputProps={{
-            className: styles.input,
-            min: 0,
-            max: 1000000,
-            readOnly: !editable,
-          }}
-          onChange={(e) => {
-            if (editable) {
-              onPriceChange(e)
-            }
-          }}
-        />
-      </div>
-      <div
-        className={styles.innerContainer}
-        style={{
-          justifyContent: 'space-between',
-          backgroundColor: colors.primary,
-        }}
-      >
-        <MoneyIcon size="large" style={{ fill: colors.white }} />
-        <PeopleIcon size="large" style={{ fill: colors.white }} />
-      </div>
-      <div className={styles.innerContainer}>
-        <TextField
-          type="number"
-          variant="standard"
-          label="Serves"
-          InputProps={{
-            disableUnderline: true,
-          }}
-          InputLabelProps={{
-            style: {
-              color: colors.primary,
-            },
-          }}
-          error={servesError.length > 0}
-          helperText={servesError}
-          className={styles.textField}
-          value={serves}
-          fullWidth
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          inputProps={{
-            className: styles.input,
-            min: 1,
-            max: 1000,
-            readOnly: !editable,
-          }}
-          onChange={(e) => {
-            if (editable) {
-              onServesChange(e)
-            }
-          }}
-        />
-      </div>
-    </div>
-    <div className={styles.container} style={{ padding: '1rem 5rem' }}>
-      <MealCheckboxes
-        firstLabel="Breakfast"
-        secondLabel="Brunch"
-        thirdLabel="Lunch"
-        editable={editable}
-        firstChecked={mealCategories.Breakfast}
-        secondChecked={mealCategories.Brunch}
-        thirdChecked={mealCategories.Lunch}
-        handleFirstChange={(e: CheckboxChange) => {
-          onCheckboxChange(e, 'Breakfast')
-        }}
-        handleSecondChange={(e: CheckboxChange) => {
-          onCheckboxChange(e, 'Brunch')
-        }}
-        handleThirdChange={(e: CheckboxChange) => onCheckboxChange(e, 'Lunch')}
-      />
-      <div
-        className={styles.innerContainer}
-        style={{ backgroundColor: colors.primary, justifyContent: 'center' }}
-      >
-        <MealIcon size="large" />
-      </div>
-      <MealCheckboxes
-        firstLabel="Dinner"
-        secondLabel="Dessert"
-        thirdLabel="Beverage"
-        editable={editable}
-        firstChecked={mealCategories.Dinner}
-        secondChecked={mealCategories.Dessert}
-        thirdChecked={mealCategories.Beverage}
-        handleFirstChange={(e: CheckboxChange) => onCheckboxChange(e, 'Dinner')}
-        handleSecondChange={(e: CheckboxChange) => {
-          onCheckboxChange(e, 'Dessert')
-        }}
-        handleThirdChange={(e: CheckboxChange) => {
-          onCheckboxChange(e, 'Beverage')
-        }}
-      />
-    </div>
-  </ThemeProvider>
-)
+    </ThemeProvider>
+  )
+}
 
 Info.defaultProps = {
   editable: true,

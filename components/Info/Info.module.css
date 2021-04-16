@@ -23,6 +23,19 @@
   border: 1px solid #c0e5c8;
 }
 
+.innerContainerSmall {
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+  width: 100%;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 2rem;
+  padding: 1rem;
+  border: 1px solid #c0e5c8;
+  margin: 2rem 0;
+}
+
 .textField {
   margin-left: 1rem;
   padding: 0.2rem;
@@ -33,4 +46,11 @@
   line-height: 3rem !important;
   padding-left: 2rem !important;
   font-size: 2rem !important;
+}
+
+.inputSmall {
+  color: #16302b !important;
+  line-height: 3rem !important;
+  font-size: 2rem !important;
+  text-align: center;
 }

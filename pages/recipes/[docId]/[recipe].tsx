@@ -26,7 +26,7 @@ const Recipe = ({ podDocId }: IRecipe) => {
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState<number>(0)
   // Hooks
-  const { isLarge, isSmall } = useWindowSize()
+  const { isLarge, isSmall, isTiny } = useWindowSize()
   const { apiService } = useContext(ApiContext)
   const { user, loggedIn } = useUser()
   useEffect(() => {
@@ -68,7 +68,10 @@ const Recipe = ({ podDocId }: IRecipe) => {
           <div className={styles.directionsContainer}>
             <RecipeTitle editable={false}>{pod.name}</RecipeTitle>
             <div style={{ width: isSmall ? '100%' : '50%' }}>
-              <PhotoFrame imageTarget={pod.photoLink} height={500} />
+              <PhotoFrame
+                imageTarget={pod.photoLink}
+                height={isTiny ? 300 : 500}
+              />
             </div>
             <Directions
               activeStep={activeStep}

@@ -44,6 +44,17 @@ const useStyles = makeStyles(
         border: `1px solid ${colors.quinary}`,
         borderRadius: '2rem',
       },
+      tinyRoot: {
+        width: '100%',
+        minWidth: '18rem',
+        marginTop: '3rem',
+        position: 'relative',
+        height: '100%',
+        backgroundColor: colors.primary,
+        padding: '2rem',
+        border: `1px solid ${colors.quinary}`,
+        borderRadius: '2rem',
+      },
       button: {
         marginTop: myTheme.spacing(1),
         marginRight: myTheme.spacing(1),
@@ -102,11 +113,16 @@ export default function Directions({
   handleRemoveStepAtIndex,
 }: IDirections) {
   const classes = useStyles()
-  const { isLarge } = useWindowSize()
+  const { isLarge, isTiny } = useWindowSize()
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={isLarge ? classes.root : classes.smallRoot}>
+      <div
+        className={
+          // eslint-disable-next-line no-nested-ternary
+          isLarge ? classes.root : isTiny ? classes.tinyRoot : classes.smallRoot
+        }
+      >
         <DirectionStepper activeStep={activeStep} orientation="vertical">
           {steps.map((step, index) => (
             <StyledStep key={uuids[index]}>
