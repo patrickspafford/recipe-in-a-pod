@@ -29,6 +29,7 @@ const MealCheckboxes = ({
   <FormGroup>
     <FormControlLabel
       control={
+        // eslint-disable-next-line react/jsx-wrap-multilines
         <Checkbox
           checked={firstChecked}
           onChange={(e) => {
@@ -44,6 +45,7 @@ const MealCheckboxes = ({
     />
     <FormControlLabel
       control={
+        // eslint-disable-next-line react/jsx-wrap-multilines
         <Checkbox
           checked={secondChecked}
           onChange={(e) => {
@@ -59,6 +61,7 @@ const MealCheckboxes = ({
     />
     <FormControlLabel
       control={
+        // eslint-disable-next-line react/jsx-wrap-multilines
         <Checkbox
           checked={thirdChecked}
           onChange={(e) => {

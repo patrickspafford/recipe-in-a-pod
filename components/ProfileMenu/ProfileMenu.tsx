@@ -9,7 +9,6 @@ import HomeIcon from '@material-ui/icons/Home'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import { AccountCircle } from '@material-ui/icons'
-import Image from 'next/image'
 import Link from 'next/link'
 import styles from './ProfileMenu.module.css'
 
@@ -39,7 +38,7 @@ const ProfileMenu = ({
         onClick={handleClick}
       >
         {isLoggedIn && imageSrc ? (
-          <Image
+          <img
             className={styles.profilePhoto}
             id="profile-photo"
             width={50}
@@ -62,20 +61,24 @@ const ProfileMenu = ({
       {isLoggedIn ? (
         <div>
           <Link href="/">
-            <MenuItem>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              Home
-            </MenuItem>
+            <a>
+              <MenuItem>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                Home
+              </MenuItem>
+            </a>
           </Link>
           <Link href={`/profile/${username}`}>
-            <MenuItem>
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              {username}
-            </MenuItem>
+            <a>
+              <MenuItem>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                {username}
+              </MenuItem>
+            </a>
           </Link>
           <MenuItem onClick={handleLogInOut}>
             <ListItemIcon>

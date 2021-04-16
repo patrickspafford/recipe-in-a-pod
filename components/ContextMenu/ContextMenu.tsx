@@ -102,6 +102,7 @@ const ContextMenu = ({
                   onRate={handleRate}
                 />
               ) : null,
+              // eslint-disable-next-line react/jsx-indent
               <MenuItem key={1} onClick={handleShare}>
                 <ListItemIcon>
                   <ShareIcon />
@@ -110,12 +111,14 @@ const ContextMenu = ({
               </MenuItem>,
             ]
           : [
+              // eslint-disable-next-line react/jsx-indent
               <MenuItem key={2} onClick={handleEdit}>
                 <ListItemIcon>
                   <EditIcon />
                 </ListItemIcon>
                 Edit
               </MenuItem>,
+              // eslint-disable-next-line react/jsx-indent
               <MenuItem key={3} onClick={handleDelete}>
                 <ListItemIcon>
                   <TrashIcon />

@@ -16,18 +16,20 @@ interface IDrawer {
 
 const DrawerItem = ({ children, icon, href }: IDrawer) => (
   <Link href={href}>
-    <Button style={{ display: 'block', width: '100%' }}>
-      <ListItem style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-        <ListItemIcon style={{ minWidth: '32px' }}>
-          <IconButton disableFocusRipple>{icon}</IconButton>
-        </ListItemIcon>
-        <ListItemText
-          style={{ color: '#fff', paddingTop: '2px', textAlign: 'center' }}
-        >
-          {children}
-        </ListItemText>
-      </ListItem>
-    </Button>
+    <a>
+      <Button style={{ display: 'block', width: '100%' }}>
+        <ListItem style={{ paddingLeft: '32px', paddingRight: '32px' }}>
+          <ListItemIcon style={{ minWidth: '32px' }}>
+            <IconButton disableFocusRipple>{icon}</IconButton>
+          </ListItemIcon>
+          <ListItemText
+            style={{ color: '#fff', paddingTop: '2px', textAlign: 'center' }}
+          >
+            {children}
+          </ListItemText>
+        </ListItem>
+      </Button>
+    </a>
   </Link>
 )
 

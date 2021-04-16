@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button, Typography } from '@material-ui/core'
 import { Layout } from '../../components'
 import useUser from '../../hooks/useUser'
@@ -15,13 +14,20 @@ const withAuth = (WrappedComponent) => (props: any) => {
     <Layout title="Sign In">
       <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
         <div>
-          <Image src="/pea_people.png" width={680} height={279} />
+          <img
+            src="/pea_people.png"
+            width={680}
+            height={279}
+            alt="Pea people"
+          />
         </div>
         <Typography variant="h3" style={{ padding: '2rem' }}>
           Welcome to Recipe Pods!
         </Typography>
         <Link href="/login">
-          <Button style={{ backgroundColor: colors.quinary }}>sign in</Button>
+          <a>
+            <Button style={{ backgroundColor: colors.quinary }}>sign in</Button>
+          </a>
         </Link>
       </div>
     </Layout>

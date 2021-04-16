@@ -19,41 +19,43 @@ import colors from '../../utils/colors'
 import useWindowSize from '../../hooks/useWindowSize'
 import { Instruction } from '../../types'
 
-const useStyles = makeStyles((myTheme: Theme) =>
-  createStyles({
-    root: {
-      width: '50%',
-      minWidth: '25rem',
-      marginTop: '1rem',
-      position: 'relative',
-      height: '100%',
-      backgroundColor: colors.primary,
-      padding: '1rem',
-      border: `1px solid ${colors.quinary}`,
-      borderRadius: '2rem',
-    },
-    smallRoot: {
-      width: '100%',
-      minWidth: '25rem',
-      marginTop: '3rem',
-      position: 'relative',
-      height: '100%',
-      backgroundColor: colors.primary,
-      padding: '2rem',
-      border: `1px solid ${colors.quinary}`,
-      borderRadius: '2rem',
-    },
-    button: {
-      marginTop: myTheme.spacing(1),
-      marginRight: myTheme.spacing(1),
-    },
-    actionsContainer: {
-      marginBottom: myTheme.spacing(1),
-    },
-    resetContainer: {
-      padding: myTheme.spacing(3),
-    },
-  }),
+const useStyles = makeStyles(
+  (myTheme: Theme) =>
+    createStyles({
+      root: {
+        width: '50%',
+        minWidth: '25rem',
+        marginTop: '1rem',
+        position: 'relative',
+        height: '100%',
+        backgroundColor: colors.primary,
+        padding: '1rem',
+        border: `1px solid ${colors.quinary}`,
+        borderRadius: '2rem',
+      },
+      smallRoot: {
+        width: '100%',
+        minWidth: '25rem',
+        marginTop: '3rem',
+        position: 'relative',
+        height: '100%',
+        backgroundColor: colors.primary,
+        padding: '2rem',
+        border: `1px solid ${colors.quinary}`,
+        borderRadius: '2rem',
+      },
+      button: {
+        marginTop: myTheme.spacing(1),
+        marginRight: myTheme.spacing(1),
+      },
+      actionsContainer: {
+        marginBottom: myTheme.spacing(1),
+      },
+      resetContainer: {
+        padding: myTheme.spacing(3),
+      },
+    }),
+  // eslint-disable-next-line function-paren-newline
 )
 
 const theme = createMuiTheme({

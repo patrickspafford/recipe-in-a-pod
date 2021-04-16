@@ -6,6 +6,7 @@ import {
   MealCategory,
   TextFieldChange,
 } from '../../types'
+// eslint-disable-next-line object-curly-newline
 import { TimerIcon, PeopleIcon, MoneyIcon, MealIcon } from '../../icons'
 import styles from './Info.module.css'
 import colors from '../../utils/colors'
@@ -31,6 +32,7 @@ interface IInfo {
   minutesError?: string
   serves: number
   mealCategories: MealCategory
+  // eslint-disable-next-line no-unused-vars
   onCheckboxChange?: (event: CheckboxChange, key: string) => void
   servesError?: string
   // eslint-disable-next-line no-unused-vars

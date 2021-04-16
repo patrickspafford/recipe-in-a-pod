@@ -1,4 +1,5 @@
 import { Children } from 'react'
+// eslint-disable-next-line object-curly-newline
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
 

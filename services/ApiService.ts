@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import firebase from 'firebase'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
-import { truncate } from 'fs'
 import cookie from 'js-cookie'
 import initFirebase from '../firebase/initFirebase'
 import { FirebaseUser, UserCookie, PodType } from '../types'
@@ -201,7 +201,7 @@ export default class ApiService {
       username,
       profilePhotoLink,
     }
-    cookie.set('auth', userData, {
+    cookie.set('__session', userData, {
       expires: 1,
     })
     return 'Signed in successfully'
@@ -305,14 +305,16 @@ export default class ApiService {
       pod.photoLink = await storageRef
         .child(`recipe-photos/${uid}/${pod.docId}/`)
         .listAll()
-        .then((res) =>
-          res.items[0]
-            .getDownloadURL()
-            .then((url: string) => url)
-            .catch((err) => {
-              console.error(err)
-              return ''
-            }),
+        .then(
+          (res) =>
+            res.items[0]
+              .getDownloadURL()
+              .then((url: string) => url)
+              .catch((err) => {
+                console.error(err)
+                return ''
+              }),
+          // eslint-disable-next-line function-paren-newline
         )
         .catch((err) => {
           console.error(err)
@@ -355,25 +357,27 @@ export default class ApiService {
     pod.photoLink = await storageRef
       .child(`recipe-photos/${pod.uid}/${docId}/`)
       .listAll()
-      .then((res) =>
-        res.items[0]
-          .getDownloadURL()
-          .then((url: string) => {
-            const xhr = new XMLHttpRequest()
-            xhr.responseType = 'blob'
-            // eslint-disable-next-line no-unused-vars
-            xhr.onload = (_e) => {
+      .then(
+        (res) =>
+          res.items[0]
+            .getDownloadURL()
+            .then((url: string) => {
+              const xhr = new XMLHttpRequest()
+              xhr.responseType = 'blob'
               // eslint-disable-next-line no-unused-vars
-              const blob = xhr.response
-            }
-            xhr.open('GET', url)
-            xhr.send()
-            return url
-          })
-          .catch((err) => {
-            console.error(err)
-            return ''
-          }),
+              xhr.onload = (_e) => {
+                // eslint-disable-next-line no-unused-vars
+                const blob = xhr.response
+              }
+              xhr.open('GET', url)
+              xhr.send()
+              return url
+            })
+            .catch((err) => {
+              console.error(err)
+              return ''
+            }),
+        // eslint-disable-next-line function-paren-newline
       )
       .catch((err) => {
         console.error(err)

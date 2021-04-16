@@ -36,5 +36,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-console': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
   },
 }

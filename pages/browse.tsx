@@ -1,6 +1,7 @@
 import { useEffect, useContext, useState } from 'react'
 import copy from 'copy-to-clipboard'
 import { withAuth } from '../hoc'
+// eslint-disable-next-line object-curly-newline
 import { Layout, Pod, LoadingIndicator, SnackBar } from '../components'
 import { PodType } from '../types'
 import { ApiContext } from '../contexts/apiContext'
@@ -96,11 +97,13 @@ const BrowsePage = () => {
       )}
       <SnackBar
         open={snackbarState.open}
-        setOpen={(bool: boolean) =>
-          setSnackbarState({
-            ...snackbarState,
-            open: bool,
-          })
+        setOpen={
+          (bool: boolean) =>
+            setSnackbarState({
+              ...snackbarState,
+              open: bool,
+            })
+          // eslint-disable-next-line react/jsx-curly-newline
         }
         message={snackbarState.message}
         severity={snackbarState.severity}

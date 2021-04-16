@@ -5,7 +5,7 @@ import {
   ClickAwayListener,
   MenuList,
 } from '@material-ui/core'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { RateIcon } from '../../icons'
 
 interface IRatingMenu {

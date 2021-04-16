@@ -1,3 +1,4 @@
+// eslint-disable-next-line object-curly-newline
 import { LoginForm, Layout, FormLayout, FormExtra } from '../components'
 import useWindowSize from '../hooks/useWindowSize'
 

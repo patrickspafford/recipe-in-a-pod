@@ -1,6 +1,5 @@
-import { ReactNode, useState, MouseEvent, useEffect } from 'react'
+import { ReactNode, useState, MouseEvent } from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
@@ -39,17 +38,19 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
       <AppBar position="sticky">
         {loggedIn ? <Drawer /> : <IconButton />}
         <Link href="/">
-          <div className={styles.imageContainer}>
-            <Typography variant="h6">Recipe</Typography>
-            <Image
-              className={styles.image}
-              src="/pea_people.png"
-              alt="Site logo"
-              height={60}
-              width={136}
-            />
-            <Typography variant="h6">Pods</Typography>
-          </div>
+          <a>
+            <div className={styles.imageContainer}>
+              <Typography variant="h6">Recipe</Typography>
+              <img
+                className={styles.image}
+                src="/pea_people.png"
+                alt="Site logo"
+                height={60}
+                width={136}
+              />
+              <Typography variant="h6">Pods</Typography>
+            </div>
+          </a>
         </Link>
         {!hideLogInOut ? (
           <ProfileMenu

@@ -18,14 +18,16 @@ const FormExtra = ({ children, buttonText, href }: IFormExtra) => {
     <div className={isLarge ? styles.tableStyle : styles.smallTableStyle}>
       <span>{children}</span>
       <Link href={href}>
-        <Button
-          className={styles.button}
-          disableFocusRipple
-          style={{ backgroundColor: colors.quinary }}
-          size="small"
-        >
-          {buttonText}
-        </Button>
+        <a style={{ display: 'contents' }}>
+          <Button
+            className={styles.button}
+            disableFocusRipple
+            style={{ backgroundColor: colors.quinary }}
+            size="small"
+          >
+            {buttonText}
+          </Button>
+        </a>
       </Link>
     </div>
   )

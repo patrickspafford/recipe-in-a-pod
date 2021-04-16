@@ -1,5 +1,7 @@
+// eslint-disable-next-line object-curly-newline
 import { Drawer, List, IconButton, Tooltip } from '@material-ui/core'
 import { useState, KeyboardEvent, MouseEvent } from 'react'
+// eslint-disable-next-line object-curly-newline
 import { MenuIcon, HomeIcon, AddIcon, BrowseIcon } from '../../icons'
 import { DrawerItem } from '../../components'
 import colors from '../../utils/colors'

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import colors from '../../utils/colors'
 import { PeaType } from '../../types'
 import styles from './Pea.module.css'
 
@@ -16,6 +15,7 @@ const peaBarMax = {
   rating: 5,
 }
 
+// eslint-disable-next-line object-curly-newline
 const Pea = ({ type, allowHover, title, value }: IPea) => {
   const [showText, setShowText] = useState<boolean>(false)
 

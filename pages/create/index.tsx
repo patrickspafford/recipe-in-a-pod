@@ -1,3 +1,4 @@
+// eslint-disable-next-line object-curly-newline
 import { useState, useRef, ChangeEvent, useContext } from 'react'
 import { useRouter } from 'next/router'
 import {
@@ -332,12 +333,11 @@ const CreatePage = () => {
         throw new Error('No pod id provided.')
       }
       console.log('Created pod successfully!')
-      const msg = await apiService.setRecipePhotoInStorage(
+      await apiService.setRecipePhotoInStorage(
         recipePhotoRef.current.files[0],
         user.id,
         newPodId,
       )
-      console.log(msg)
       await router.push('/')
       setLoading(false)
     } catch (err) {

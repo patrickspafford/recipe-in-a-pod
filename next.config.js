@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* next.config.js */
 const webpack = require('webpack')
-require('dotenv').config()
 
 module.exports = {
   webpack: (config, { isServer }) => {

@@ -35,7 +35,6 @@ const Recipe = ({ podDocId }: IRecipe) => {
         if (!loading) setLoading(true)
         const fetchedPod = await apiService.getPod(podDocId)
         if (typeof fetchedPod === 'string') throw new Error('Error!')
-        console.log(fetchedPod.uid)
         setPod(fetchedPod)
       } catch (e) {
         console.error(e)

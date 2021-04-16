@@ -163,7 +163,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .functions()
     .httpsCallable('usernamePageExists')
   try {
-    const userId = JSON.parse(cookie.parse(context.req.headers.cookie).auth).id
+    const userId = JSON.parse(
+      // eslint-disable-next-line no-underscore-dangle
+      cookie.parse(context.req.headers.cookie).__session,
+    ).id
     const validUsername = await usernamePageExists({
       username: context.params.id,
       userId,

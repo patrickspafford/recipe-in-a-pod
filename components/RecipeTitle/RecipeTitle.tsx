@@ -1,7 +1,7 @@
 import { TextField, ThemeProvider } from '@material-ui/core'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { ChangeEvent } from 'react'
 import useWindowSize from '../../hooks/useWindowSize'
+import { TextFieldChange } from '../../types'
 import colors from '../../utils/colors'
 import styles from './RecipeTitle.module.css'
 
@@ -26,9 +26,7 @@ interface IRecipeTitle {
   editable?: boolean
   autoFocus?: boolean
   // eslint-disable-next-line no-unused-vars
-  onChange?: (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void
+  onChange?: (event: TextFieldChange) => void
 }
 const RecipeTitle = ({
   onChange,

@@ -5,9 +5,11 @@ import styles from './AddButton.module.css'
 
 const AddButton = () => (
   <Link href="/create">
-    <IconButton className={styles.container}>
-      <AddIcon size="inherit" />
-    </IconButton>
+    <a style={{ display: 'contents' }}>
+      <IconButton className={styles.container}>
+        <AddIcon size="inherit" />
+      </IconButton>
+    </a>
   </Link>
 )
 

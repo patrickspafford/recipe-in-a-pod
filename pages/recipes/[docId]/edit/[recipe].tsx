@@ -1,3 +1,4 @@
+// eslint-disable-next-line object-curly-newline
 import { useState, useRef, ChangeEvent, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import firebase from 'firebase/app'
@@ -497,7 +498,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const userMatchesRecipe = firebase
       .functions()
       .httpsCallable('userMatchesRecipe')
-    const userId = JSON.parse(cookie.parse(context.req.headers.cookie).auth).id
+    const userId = JSON.parse(
+      // eslint-disable-next-line no-underscore-dangle
+      cookie.parse(context.req.headers.cookie).__session,
+    ).id
     const doesUserMatchRecipe = await userMatchesRecipe({
       userId,
       recipeId: context.params.docId,

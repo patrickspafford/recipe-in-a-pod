@@ -17,10 +17,10 @@ const useUser = () => {
     profilePhotoLink: '',
   })
   const router = useRouter()
-  const cookieKey = 'auth'
+  const cookieKey = '__session'
 
   const setUser = (userData: UserCookie) => {
-    cookies.set('auth', userData, {
+    cookies.set('__session', userData, {
       expires: 1,
     })
     setVanillaUser(userData)
