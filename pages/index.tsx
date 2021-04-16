@@ -1,13 +1,8 @@
 import { useEffect, useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ApiContext } from '../contexts/apiContext'
-import {
-  Layout,
-  Pod,
-  LoadingIndicator,
-  AddButton,
-  SnackBar,
-} from '../components'
+// eslint-disable-next-line object-curly-newline
+import { Layout, Pod, LoadingContent, AddButton, SnackBar } from '../components'
 import { withAuth } from '../hoc'
 import useUser from '../hooks/useUser'
 import { PodType } from '../types'
@@ -75,18 +70,7 @@ const Home = () => {
 
   const render = () => {
     if (loading) {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '10%',
-            alignItems: 'center',
-          }}
-        >
-          <LoadingIndicator size={160} />
-        </div>
-      )
+      return <LoadingContent />
     }
     return (
       <>

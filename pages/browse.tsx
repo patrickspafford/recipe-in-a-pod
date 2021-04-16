@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from 'react'
 import copy from 'copy-to-clipboard'
 import { withAuth } from '../hoc'
 // eslint-disable-next-line object-curly-newline
-import { Layout, Pod, LoadingIndicator, SnackBar } from '../components'
+import { Layout, Pod, LoadingContent, SnackBar } from '../components'
 import { PodType } from '../types'
 import { ApiContext } from '../contexts/apiContext'
 import styles from '../styles/browse.module.css'
@@ -79,9 +79,7 @@ const BrowsePage = () => {
   return (
     <Layout title="Browse Recipes">
       {loading ? (
-        <div className={styles.loading}>
-          <LoadingIndicator size={160} />
-        </div>
+        <LoadingContent />
       ) : (
         <div className={styles.podGrid}>
           {pods.map((pod: PodType) => (

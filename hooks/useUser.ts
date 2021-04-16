@@ -4,6 +4,7 @@ import cookies from 'js-cookie'
 import firebase from 'firebase'
 import initFirebase from '../firebase/initFirebase'
 import { UserCookie } from '../types'
+import cookieName from '../utils/cookie'
 import isJSONString from '../utils/parsing'
 
 initFirebase()
@@ -17,30 +18,27 @@ const useUser = () => {
     profilePhotoLink: '',
   })
   const router = useRouter()
-  const cookieKey = '__session'
 
   const setUser = (userData: UserCookie) => {
-    cookies.set('__session', userData, {
+    cookies.set(cookieName, userData, {
       expires: 1,
     })
     setVanillaUser(userData)
   }
 
-  const logout = async () =>
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        cookies.remove(cookieKey)
-        setVanillaUser(null)
-        router.push('/login')
-      })
-      .catch((e) => {
-        console.error(e)
-      })
+  const logout = async () => {
+    try {
+      await firebase.auth().signOut()
+      cookies.remove(cookieName)
+      setVanillaUser(null)
+      await router.push('/login')
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
-    const cookie = cookies.get(cookieKey)
+    const cookie = cookies.get(cookieName)
     if (cookie && isJSONString(cookie)) setVanillaUser(JSON.parse(cookie))
   }, [])
 

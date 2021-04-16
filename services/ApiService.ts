@@ -5,6 +5,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
 import cookie from 'js-cookie'
+import cookieName from '../utils/cookie'
 import initFirebase from '../firebase/initFirebase'
 import { FirebaseUser, UserCookie, PodType } from '../types'
 
@@ -201,7 +202,7 @@ export default class ApiService {
       username,
       profilePhotoLink,
     }
-    cookie.set('__session', userData, {
+    cookie.set(cookieName, userData, {
       expires: 1,
     })
     return 'Signed in successfully'

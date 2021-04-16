@@ -196,7 +196,7 @@ const LoginForm = () => {
       } else {
         updateError(
           `Something went wrong. Please check that the ${
-            wasUsernameLogin ? 'username' : 'email'
+            wasUsernameLogin ? 'username/password' : 'email'
           } you entered is correct.`,
         )
       }

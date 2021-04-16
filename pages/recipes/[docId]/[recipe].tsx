@@ -7,7 +7,7 @@ import {
   RecipeTitle,
   Info,
   PhotoFrame,
-  LoadingIndicator,
+  LoadingContent,
 } from '../../../components'
 import { withAuth } from '../../../hoc'
 import { PodType } from '../../../types'
@@ -50,9 +50,7 @@ const Recipe = ({ podDocId }: IRecipe) => {
   return (
     <Layout title={pod ? pod.name : 'Loading...'}>
       {loading ? (
-        <div className={styles.loadingContainer}>
-          <LoadingIndicator size={160} />
-        </div>
+        <LoadingContent />
       ) : (
         <div className={isLarge ? styles.outerDivLarge : styles.outerDivSmall}>
           <div

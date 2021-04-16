@@ -1,12 +1,19 @@
 import Link from 'next/link'
 import { Button, Typography } from '@material-ui/core'
-import { Layout } from '../../components'
+import { useEffect, useState } from 'react'
+import { Layout, LoadingContent } from '../../components'
 import useUser from '../../hooks/useUser'
 import colors from '../../utils/colors'
 
-const withAuth = (WrappedComponent) => (props: any) => {
+const withAuth = (WrappedComponent: any) => (props: any) => {
+  const [hadTimeToLoad, setHadTimeToLoad] = useState<boolean>(false)
   const { loggedIn } = useUser()
-  if (loggedIn) {
+  useEffect(() => {
+    setTimeout(() => {
+      setHadTimeToLoad(true)
+    }, 1000)
+  }, [])
+  if (loggedIn || !hadTimeToLoad) {
     // eslint-disable-next-line react/jsx-props-no-spreading
     return <WrappedComponent {...props} />
   }

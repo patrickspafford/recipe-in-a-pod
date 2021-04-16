@@ -34,6 +34,7 @@ import RatingMenu from './RatingMenu'
 import MealCheckboxes from './MealCheckboxes'
 import Switch from './Switch'
 import PencilTextField from './PencilTextField'
+import LoadingContent from './LoadingContent'
 
 export {
   AppBar,
@@ -55,6 +56,7 @@ export {
   DrawerItem,
   IconButton,
   Pod,
+  LoadingContent,
   UsernameField,
   ProfileMenu,
   SignUpForm,
