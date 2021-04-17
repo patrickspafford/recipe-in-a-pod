@@ -4,6 +4,7 @@ import { withAuth } from '../hoc'
 // eslint-disable-next-line object-curly-newline
 import { Layout, Pod, LoadingContent, SnackBar } from '../components'
 import { PodType } from '../types'
+import useWindowSize from '../hooks/useWindowSize'
 import { ApiContext } from '../contexts/apiContext'
 import styles from '../styles/browse.module.css'
 import useUser from '../hooks/useUser'
@@ -16,6 +17,7 @@ interface SnackbarState {
 
 const BrowsePage = () => {
   const { user } = useUser()
+  const { isSmall } = useWindowSize()
   const [pods, setPods] = useState<PodType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
@@ -81,7 +83,7 @@ const BrowsePage = () => {
       {loading ? (
         <LoadingContent />
       ) : (
-        <div className={styles.podGrid}>
+        <div className={isSmall ? styles.podGridSmall : styles.podGrid}>
           {pods.map((pod: PodType) => (
             <Pod
               pod={pod}

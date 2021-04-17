@@ -4,6 +4,7 @@ import Pea from '../Pea'
 import styles from './Pod.module.css'
 import { PodType } from '../../types'
 import { ContextMenu } from '../../components'
+import useWindowSize from '../../hooks/useWindowSize'
 
 interface IPod {
   pod: PodType
@@ -25,6 +26,7 @@ const Pod = ({
   showRate,
 }: IPod) => {
   const [rotated, setRotated] = useState(true)
+  const { isSmall } = useWindowSize()
 
   useEffect(() => {
     const rotateTimeout = setTimeout(() => setRotated(false), 1000)
@@ -85,7 +87,7 @@ const Pod = ({
               className={styles.image}
               src={pod.photoLink}
               height={320}
-              width={320}
+              width={isSmall ? 300 : 320}
               alt={pod.name}
             />
           </div>

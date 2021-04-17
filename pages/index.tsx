@@ -6,7 +6,7 @@ import { Layout, Pod, LoadingContent, AddButton, SnackBar } from '../components'
 import { withAuth } from '../hoc'
 import useUser from '../hooks/useUser'
 import { PodType } from '../types'
-// import useWindowSize from '../hooks/useWindowSize'
+import useWindowSize from '../hooks/useWindowSize'
 import styles from '../styles/index.module.css'
 
 interface SnackbarState {
@@ -18,6 +18,7 @@ interface SnackbarState {
 const Home = () => {
   const { loggedIn, user } = useUser()
   const [loading, setLoading] = useState<boolean>(true)
+  const { isSmall } = useWindowSize()
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
     message: '',
     open: false,
@@ -74,7 +75,7 @@ const Home = () => {
     }
     return (
       <>
-        <div className={styles.podGrid}>
+        <div className={isSmall ? styles.podGridSmall : styles.podGrid}>
           {pods.map((pod) => (
             <Pod
               key={pod.docId}
