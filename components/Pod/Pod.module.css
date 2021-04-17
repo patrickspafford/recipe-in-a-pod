@@ -6,10 +6,12 @@
   -webkit-transition: -webkit-transform 0.35s ease-in-out;
 }
 
+/*
 .outerContainer:hover {
   transform: scale(1.025);
   -webkit-transform: scale(1.025);
 }
+*/
 
 .podContainer {
   height: 20rem;

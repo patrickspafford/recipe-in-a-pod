@@ -2,9 +2,9 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  width: fit-content;
 }
 
 .image {

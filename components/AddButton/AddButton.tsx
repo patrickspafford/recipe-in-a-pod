@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { AddIcon } from '../../icons'
 import useWindowSize from '../../hooks/useWindowSize'
 import styles from './AddButton.module.css'
+import colors from '../../utils/colors'
 
 const AddButton = () => {
   const { isSmall } = useWindowSize()
@@ -12,7 +13,7 @@ const AddButton = () => {
         <IconButton
           className={isSmall ? styles.containerSmall : styles.container}
         >
-          <AddIcon size="inherit" />
+          <AddIcon size="inherit" style={{ color: colors.primary }} />
         </IconButton>
       </a>
     </Link>

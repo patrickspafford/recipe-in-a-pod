@@ -33,7 +33,7 @@ const TemporaryDrawer = () => {
         </IconButton>
       </Tooltip>
       <Drawer
-        anchor="left"
+        anchor="right"
         open={open}
         onClose={toggleDrawer(false)}
         PaperProps={{

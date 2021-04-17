@@ -37,9 +37,8 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <AppBar position="sticky">
-        {loggedIn ? <Drawer /> : <IconButton />}
         <Link href="/">
-          <a>
+          <a style={{ float: 'left' }}>
             <div className={styles.imageContainer}>
               {!isTiny && <Typography variant="h6">Recipe</Typography>}
               <img
@@ -53,19 +52,27 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
             </div>
           </a>
         </Link>
-        {!hideLogInOut ? (
-          <ProfileMenu
-            anchor={menuAnchor}
-            imageSrc={user ? user.profilePhotoLink : ''}
-            isLoggedIn={loggedIn}
-            username={user ? user.username : ''}
-            handleClose={handleMenuClose}
-            handleClick={handleMenuClick}
-            handleLogInOut={handleLogInOut}
-          />
-        ) : (
-          <Typography variant="h6" />
-        )}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {!hideLogInOut ? (
+            <ProfileMenu
+              anchor={menuAnchor}
+              imageSrc={user ? user.profilePhotoLink : ''}
+              isLoggedIn={loggedIn}
+              username={user ? user.username : ''}
+              handleClose={handleMenuClose}
+              handleClick={handleMenuClick}
+              handleLogInOut={handleLogInOut}
+            />
+          ) : (
+            <Typography variant="h6" />
+          )}
+          {loggedIn ? <Drawer /> : <IconButton />}
+        </div>
       </AppBar>
       <div className={styles.childrenContainer}>{children}</div>
     </>
