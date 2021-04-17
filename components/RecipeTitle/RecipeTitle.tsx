@@ -46,6 +46,7 @@ const RecipeTitle = ({
           InputLabelProps={{
             style: {
               color: colors.white,
+              transform: 'none',
             },
           }}
           error={error.length > 0}

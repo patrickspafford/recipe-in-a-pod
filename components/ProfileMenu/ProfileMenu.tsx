@@ -6,6 +6,8 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
+import BrowseIcon from '@material-ui/icons/Apps'
+import AddIcon from '@material-ui/icons/AddCircleOutline'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import { AccountCircle } from '@material-ui/icons'
@@ -31,7 +33,7 @@ const ProfileMenu = ({
   handleLogInOut,
 }: IProfileMenu) => (
   <div>
-    <Tooltip placement="bottom" title="Profile">
+    <Tooltip placement="bottom" title="Menu">
       <IconButton
         aria-controls="recipe-menu"
         aria-haspopup="true"
@@ -60,6 +62,16 @@ const ProfileMenu = ({
     >
       {isLoggedIn ? (
         <div>
+          {/* <Link href="/">
+            <a>
+              <MenuItem>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                Home
+              </MenuItem>
+            </a>
+      </Link> */}
           <Link href="/">
             <a>
               <MenuItem>
@@ -67,6 +79,26 @@ const ProfileMenu = ({
                   <HomeIcon />
                 </ListItemIcon>
                 Home
+              </MenuItem>
+            </a>
+          </Link>
+          <Link href="/create">
+            <a>
+              <MenuItem>
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                Create
+              </MenuItem>
+            </a>
+          </Link>
+          <Link href="/browse">
+            <a>
+              <MenuItem>
+                <ListItemIcon>
+                  <BrowseIcon />
+                </ListItemIcon>
+                Browse
               </MenuItem>
             </a>
           </Link>

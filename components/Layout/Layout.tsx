@@ -71,7 +71,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
           ) : (
             <Typography variant="h6" />
           )}
-          {loggedIn ? <Drawer /> : <IconButton />}
+          {/* loggedIn ? <Drawer /> : <IconButton /> */}
         </div>
       </AppBar>
       <div className={styles.childrenContainer}>{children}</div>
