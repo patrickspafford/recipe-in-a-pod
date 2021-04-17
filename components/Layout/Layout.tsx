@@ -22,7 +22,7 @@ interface ILayout {
 const Layout = ({ children, title, hideLogInOut }: ILayout) => {
   const { user, loggedIn, logout } = useUser()
   const router = useRouter()
-  const { isTiny } = useWindowSize()
+  const { isSmall } = useWindowSize()
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLButtonElement>(null)
   const handleMenuClick = (e: MouseEvent<HTMLButtonElement>) =>
     setMenuAnchor(e.currentTarget)
@@ -40,7 +40,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
         <Link href="/">
           <a style={{ float: 'left' }}>
             <div className={styles.imageContainer}>
-              {!isTiny && <Typography variant="h6">Recipe</Typography>}
+              {!isSmall && <Typography variant="h6">Recipe</Typography>}
               <img
                 className={styles.image}
                 src="/pea_people.png"
@@ -48,7 +48,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
                 height={60}
                 width={136}
               />
-              {!isTiny && <Typography variant="h6">Pods</Typography>}
+              {!isSmall && <Typography variant="h6">Pods</Typography>}
             </div>
           </a>
         </Link>
