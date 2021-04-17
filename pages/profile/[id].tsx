@@ -33,7 +33,7 @@ interface IProfilePage {
 
 const ProfilePage = ({ username }: IProfilePage) => {
   const { user, setUser } = useUser()
-  const [image, setImage] = useState<string>()
+  const [image, setImage] = useState<string>(user.profilePhotoLink)
   const [loading, setLoading] = useState<boolean>(false)
   const [newUsername, setNewUsername] = useState<string>(username)
   const [editingUsername, setEditingUsername] = useState<boolean>(false)
@@ -124,6 +124,10 @@ const ProfilePage = ({ username }: IProfilePage) => {
       setUsernameError('')
     }
   }, [editingUsername])
+
+  useEffect(() => {
+    setImage(user.profilePhotoLink)
+  }, [user.profilePhotoLink])
 
   return (
     <Layout title={username}>
