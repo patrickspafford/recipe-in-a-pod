@@ -40,6 +40,13 @@ interface ShowFields {
   confirmPassword: boolean
 }
 
+interface FormUpdate {
+  key: string
+  value: string
+}
+
+type MultipleFormUpdate = FormUpdate[]
+
 const SignUpForm = () => {
   const { apiService } = useContext(ApiContext)
   const router = useRouter()
@@ -77,6 +84,15 @@ const SignUpForm = () => {
     })
   }
 
+  const updateFormErrorMultiple = (newValues: MultipleFormUpdate) => {
+    const [firstValue, secondValue] = newValues
+    setFormErrors({
+      ...formErrors,
+      [firstValue.key]: firstValue.value,
+      [secondValue.key]: secondValue.value,
+    })
+  }
+
   const handleUsernameChange = (e: TextFieldChange) => {
     const currentUsernameValue = e.target.value
     const updateError = (val: string) => updateFormError('username', val)
@@ -98,7 +114,26 @@ const SignUpForm = () => {
     ignoreHasEditedPassword?: boolean,
   ) => {
     const currentPasswordValue = e.target.value
-    const updateError = (val: string) => updateFormError('password', val)
+    const updateError = (val: string) => {
+      updateFormError('password', val)
+      let confirmPasswordError = ''
+      if (
+        currentPasswordValue !== formValues.confirmPassword &&
+        hasEdited.confirmPassword
+      ) {
+        confirmPasswordError = 'Passwords did not match.'
+      }
+      updateFormErrorMultiple([
+        {
+          key: 'password',
+          value: val,
+        },
+        {
+          key: 'confirmPassword',
+          value: confirmPasswordError,
+        },
+      ])
+    }
     setFormValues({ ...formValues, password: currentPasswordValue })
     if (!hasEdited.password) setHasEdited({ ...hasEdited, password: true })
     if (currentPasswordValue.length === 0 && !ignoreHasEditedPassword) {
@@ -113,21 +148,6 @@ const SignUpForm = () => {
     } else if (currentPasswordValue.length === 1) {
       updateError(`Password must be at least ${minLength} characters.`)
     } else updateError('')
-
-    if (
-      currentPasswordValue !== formValues.confirmPassword &&
-      hasEdited.confirmPassword
-    ) {
-      setFormErrors({
-        ...formErrors,
-        confirmPassword: 'Passwords did not match.',
-      })
-    } else {
-      setFormErrors({
-        ...formErrors,
-        confirmPassword: '',
-      })
-    }
   }
 
   const handleConfirmPasswordChange = (
