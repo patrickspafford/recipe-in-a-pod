@@ -24,7 +24,7 @@ const withAuth = (WrappedComponent: any) => (props: any) => {
     if (!windowSize) {
       return 680
     }
-    return Math.round(3 * (windowSize / 4))
+    return Math.min(Math.round(3 * (windowSize / 4)), 680)
   }
 
   const peaHeight = () => Math.round(peaWidth() * 0.41)
