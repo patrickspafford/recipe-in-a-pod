@@ -7,7 +7,7 @@
 .podGridSmall {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-left: -1rem;
 }
 

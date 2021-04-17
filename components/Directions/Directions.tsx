@@ -38,7 +38,7 @@ const useStyles = makeStyles(
         minWidth: '25rem',
         marginTop: '3rem',
         position: 'relative',
-        height: '100%',
+        height: 'min-content',
         backgroundColor: colors.primary,
         padding: '2rem',
         border: `1px solid ${colors.quinary}`,
