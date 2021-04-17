@@ -190,6 +190,10 @@ const SignUpForm = () => {
       e.preventDefault()
       setLoading(true)
       await apiService.signUp(data)
+      await apiService.signIn({
+        email: formValues.email,
+        currentPassword: formValues.password,
+      })
       await router.push('/')
     } catch (error) {
       const updateError = (val: string) => updateFormError('signUp', val)
