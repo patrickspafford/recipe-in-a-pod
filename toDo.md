@@ -1,5 +1,3 @@
 - Show creator and date
-- Make UI prettier
 - Snackbars indicating successful edit
 - Share recipes with users not signed in, but no more
-- Make mobile-friendly

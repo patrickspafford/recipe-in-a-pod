@@ -2,13 +2,7 @@ import { ReactNode, useState, MouseEvent } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import {
-  AppBar,
-  Typography,
-  ProfileMenu,
-  IconButton,
-  Drawer,
-} from '../../components'
+import { AppBar, Typography, ProfileMenu } from '../../components'
 import useWindowSize from '../../hooks/useWindowSize'
 import useUser from '../../hooks/useUser'
 import styles from './Layout.module.css'
