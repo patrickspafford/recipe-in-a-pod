@@ -2,6 +2,7 @@ import { TextField } from '@material-ui/core'
 import { Ref, ChangeEvent, CSSProperties } from 'react'
 import { AddIcon, DeleteIcon } from '../../icons'
 import { IconButton } from '../../components'
+import useWindowSize from '../../hooks/useWindowSize'
 import colors from '../../utils/colors'
 
 interface IIngredientTextField {
@@ -32,55 +33,59 @@ const IngredientTextField = ({
   deleteButton,
   onDeleteClicked,
   containerStyles,
-}: IIngredientTextField) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      backgroundColor: isAlternate ? colors.quinary : colors.white,
-      borderRadius: '1rem',
-      ...containerStyles,
-    }}
-  >
-    <TextField
-      variant="standard"
+}: IIngredientTextField) => {
+  const { isSmall } = useWindowSize()
+  return (
+    <div
       style={{
-        marginLeft: '1rem',
-        padding: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: isAlternate ? colors.quinary : colors.white,
+        borderRadius: '1rem',
+        ...containerStyles,
       }}
-      value={children}
-      fullWidth
-      disabled={disabled}
-      error={error.length > 0}
-      helperText={!!error && error}
-      placeholder={placeholder}
-      InputProps={{
-        disableUnderline: true,
-      }}
-      // eslint-disable-next-line react/jsx-no-duplicate-props
-      inputProps={{
-        style: {
-          color: colors.black,
-          lineHeight: '2rem',
-        },
-        'aria-readonly': disabled,
-        readOnly: disabled,
-      }}
-      inputRef={inputRef}
-      onChange={onChange}
-    />
-    {deleteButton && (
-      <IconButton onClick={onDeleteClicked} disableFocusRipple>
-        <DeleteIcon style={{ color: colors.primary }} />
-      </IconButton>
-    )}
-    {addButton && (
-      <IconButton onClick={onButtonClicked} disableFocusRipple>
-        <AddIcon style={{ color: colors.primary }} />
-      </IconButton>
-    )}
-  </div>
-)
+    >
+      <TextField
+        variant="standard"
+        style={{
+          marginLeft: '1rem',
+          padding: '0.5rem',
+        }}
+        value={children}
+        fullWidth
+        multiline={isSmall || disabled}
+        disabled={disabled}
+        error={error.length > 0}
+        helperText={!!error && error}
+        placeholder={placeholder}
+        InputProps={{
+          disableUnderline: true,
+        }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
+        inputProps={{
+          style: {
+            color: colors.black,
+            lineHeight: '2rem',
+          },
+          'aria-readonly': disabled,
+          readOnly: disabled,
+        }}
+        inputRef={inputRef}
+        onChange={onChange}
+      />
+      {deleteButton && (
+        <IconButton onClick={onDeleteClicked} disableFocusRipple>
+          <DeleteIcon style={{ color: colors.primary }} />
+        </IconButton>
+      )}
+      {addButton && (
+        <IconButton onClick={onButtonClicked} disableFocusRipple>
+          <AddIcon style={{ color: colors.primary }} />
+        </IconButton>
+      )}
+    </div>
+  )
+}
 
 IngredientTextField.defaultProps = {
   inputRef: null,
