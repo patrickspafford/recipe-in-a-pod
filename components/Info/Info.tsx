@@ -61,7 +61,7 @@ const Info = ({
   minutesError,
   editable,
 }: IInfo) => {
-  const { isSmall, isTiny } = useWindowSize()
+  const { isSmall } = useWindowSize()
   return (
     <ThemeProvider theme={theme}>
       <div className={styles.container}>

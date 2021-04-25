@@ -11,9 +11,15 @@ interface ILayout {
   children: ReactNode
   title: string
   hideLogInOut?: boolean
+  preview?: {
+    image: string
+    overrideTitle: string
+    description?: string
+  }
 }
 
-const Layout = ({ children, title, hideLogInOut }: ILayout) => {
+// eslint-disable-next-line object-curly-newline
+const Layout = ({ children, title, hideLogInOut, preview }: ILayout) => {
   const { user, loggedIn, logout } = useUser()
   const router = useRouter()
   const { isSmall } = useWindowSize()
@@ -24,11 +30,26 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
 
   const handleLogInOut = () => (loggedIn ? logout() : router.push('/login'))
 
+  const handleTitle = () => {
+    if (preview === null) {
+      return title ? `${title} | Recipe Pods` : 'Recipe Pods'
+    }
+    return `${preview.overrideTitle} | Recipe Pods`
+  }
+
   return (
     <>
       <Head>
-        <title>{title ? `${title} | Recipe Pods` : 'Recipe Pods'}</title>
+        <title>{handleTitle()}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        {preview !== null && (
+          <>
+            <meta property="og:title" content={preview.overrideTitle} />
+            <meta property="og:image" content={preview.image} />
+            <meta property="og:description" content={preview.description} />
+            <meta property="og:type" content="website" />
+          </>
+        )}
       </Head>
       <AppBar position="sticky">
         <Link href="/">
@@ -65,7 +86,6 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
           ) : (
             <Typography variant="h6" />
           )}
-          {/* loggedIn ? <Drawer /> : <IconButton /> */}
         </div>
       </AppBar>
       <div className={styles.childrenContainer}>{children}</div>
@@ -75,6 +95,7 @@ const Layout = ({ children, title, hideLogInOut }: ILayout) => {
 
 Layout.defaultProps = {
   hideLogInOut: false,
+  preview: null,
 }
 
 export default Layout

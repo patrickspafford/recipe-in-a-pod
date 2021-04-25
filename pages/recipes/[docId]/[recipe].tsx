@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { GetServerSideProps } from 'next'
+import firebase from 'firebase/app'
 import {
   Layout,
   Directions,
@@ -9,6 +10,7 @@ import {
   PhotoFrame,
   LoadingContent,
 } from '../../../components'
+import 'firebase/functions'
 import { withAuth } from '../../../hoc'
 import { PodType } from '../../../types'
 import styles from '../../../styles/create.module.css'
@@ -18,9 +20,14 @@ import { ApiContext } from '../../../contexts/apiContext'
 
 interface IRecipe {
   podDocId: string
+  preview: {
+    overrideTitle: string
+    image: string
+    description: string
+  }
 }
 
-const Recipe = ({ podDocId }: IRecipe) => {
+const Recipe = ({ podDocId, preview }: IRecipe) => {
   // States Section
   const [pod, setPod] = useState<PodType>()
   const [loading, setLoading] = useState(true)
@@ -48,7 +55,7 @@ const Recipe = ({ podDocId }: IRecipe) => {
   }, [loggedIn, user])
 
   return (
-    <Layout title={pod ? pod.name : 'Loading...'}>
+    <Layout title={pod ? pod.name : 'Loading...'} preview={preview}>
       {loading ? (
         <LoadingContent />
       ) : (
@@ -86,10 +93,25 @@ const Recipe = ({ podDocId }: IRecipe) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => ({
-  props: {
-    podDocId: context.params.docId,
-  },
-})
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const getPodPreview = firebase.functions().httpsCallable('getPodPreview')
+    const preview = await getPodPreview({
+      podDocId: context.params.docId,
+    })
+    return {
+      props: {
+        podDocId: context.params.docId,
+        preview: preview.data,
+      },
+    }
+  } catch (e) {
+    return {
+      props: {
+        podDocId: context.params.docId,
+      },
+    }
+  }
+}
 
 export default withAuth(Recipe)
