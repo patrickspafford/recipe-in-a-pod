@@ -26,7 +26,6 @@ This app uses:
 
 ### Future Enhancements
 
-- Use server-side rendering to show previews of recipes when shared by link
 - Upload multiple photos per recipe
 - Show username and creation date in public pods
 - Show stats about average rating received, given, and number of recipes created
